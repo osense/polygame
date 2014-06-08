@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Polygame" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Polygame" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-std=c++98" />
+					<Add option="-g" />
+					<Add directory="../../irrlicht-code/include" />
+					<Add directory="jni/" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libgcc -lstdc++" />
+					<Add library="C:/Dev/android/irrgame/Irrlicht.dll" />
+				</Linker>
+			</Target>
+			<Target title="Debug-GLES">
+				<Option output="Polygame" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-std=c++98" />
+					<Add option="-g" />
+					<Add option="-DDEBUG_GLES" />
+					<Add directory="../irrlicht-ogl-es/include" />
+					<Add directory="jni/" />
+				</Compiler>
+				<Linker>
+					<Add library="../irrlicht-ogl-es/lib/Linux/libIrrlicht.a" />
+					<Add library="Xxf86vm" />
+					<Add library="X11" />
+					<Add library="EGL" />
+					<Add library="GL" />
+					<Add library="GLESv1_CM" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="jni/Context.h" />
+		<Unit filename="jni/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
