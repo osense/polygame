@@ -1,8 +1,0 @@
-#ifndef CONTEXT_H_INCLUDED
-#define CONTEXT_H_INCLUDED
-
-#define DESKTOP_WND_X 854
-#define DESKTOP_WND_Y 480
-
-
-#endif // CONTEXT_H_INCLUDED

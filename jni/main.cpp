@@ -4,7 +4,12 @@
 	#include <android_native_app_glue.h>
 #endif
 
-#include "Context.h"
+#include "SContext.h"
+#include "ObjectUpdater.h"
+#include "ObjectStateGame.h"
+
+#include "ShaderCBSimple.h"
+#include "ObjectGrid.h"
 
 using namespace irr;
 
@@ -43,15 +48,36 @@ int main(int argc, char *argv[])
 #else
     dev = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(DESKTOP_WND_X, DESKTOP_WND_Y), 32, false);
     dev->setWindowCaption(L"IrrGame Desktop Debug Build    " __DATE__ " " __TIME__);
-    dev->getFileSystem()->changeWorkingDirectoryTo(dev->getFileSystem()->getAbsolutePath("./assets/"));
+    dev->getFileSystem()->changeWorkingDirectoryTo(dev->getFileSystem()->getAbsolutePath("assets/"));
 #endif
 
+    SContext* cont = new SContext();
+    cont->Device = dev;
 
-    //context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    cont->ObjManager = new ObjectManager(cont);
+    ObjectUpdater* updater = new ObjectUpdater(cont);
+    //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
+
+    dev->getSceneManager()->addCameraSceneNode()->setPosition(core::vector3df(0, 1.5, -3));
+
+    /*scene::ISceneManager* smgr = dev->getSceneManager();
+    scene::IMeshSceneNode* plane = smgr->addMeshSceneNode(smgr->getMesh("plane.obj"));
+    video::E_MATERIAL_TYPE mat = (video::E_MATERIAL_TYPE)dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("test.vert", "test.frag", new ShaderCBSimple(cont));
+    plane->setMaterialType(mat);
+    plane->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
+    plane->setMaterialFlag(video::EMF_WIREFRAME, true);*/
+
+    //plane->addAnimator(smgr->createRotationAnimator(core::vector3df(0, 0.05, 0)));
+
+    new ObjectGrid(cont);
 
 
     ITimer* timer = dev->getTimer();
     u32 timeLast = timer->getTime();
+
+    video::SMaterial mat;
+    mat.Thickness = 5.0;
 
     while(dev->run())
     {
@@ -62,6 +88,8 @@ int main(int argc, char *argv[])
         dev->getVideoDriver()->beginScene();
         dev->getSceneManager()->drawAll();
         dev->getGUIEnvironment()->drawAll();
+
+        updater->broadcastUpdate(timeDelta);
 
         dev->getVideoDriver()->endScene();
     }
