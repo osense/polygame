@@ -57,24 +57,14 @@ int main(int argc, char *argv[])
 
     cont->ObjManager = new ObjectManager(cont);
     ObjectUpdater* updater = new ObjectUpdater(cont);
-    new ObjectDebugInfo(cont);
+
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
+    new ObjectStateGame(cont);
 
-    scene::ICameraSceneNode* cam = dev->getSceneManager()->addCameraSceneNodeFPS(0, 100, 0.015);
-    cam->setPosition(core::vector3df(0, 2.5, 0));
-    cam->setTarget(core::vector3df(-5, 0, 10));
-
-    /*scene::ISceneManager* smgr = dev->getSceneManager();
-    scene::IMeshSceneNode* plane = smgr->addMeshSceneNode(smgr->getMesh("plane.obj"));
-    video::E_MATERIAL_TYPE mat = (video::E_MATERIAL_TYPE)dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("test.vert", "test.frag", new ShaderCBSimple(cont));
-    plane->setMaterialType(mat);
-    plane->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-    plane->setMaterialFlag(video::EMF_WIREFRAME, true);*/
-
-    //plane->addAnimator(smgr->createRotationAnimator(core::vector3df(0, 0.05, 0)));
-
-    new ObjectGrid(cont);
+    #ifdef DEBUG_FPS
+    new ObjectDebugInfo(cont);
+    #endif // DEBUG_FPS
 
 
     ITimer* timer = dev->getTimer();

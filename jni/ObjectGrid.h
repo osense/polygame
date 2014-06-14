@@ -4,8 +4,8 @@
 #include "Object.h"
 #include "ObjectManager.h"
 
-#include "LinePool.h"
 #include <irrlicht.h>
+#include <vector>
 
 // uncomment to enable debugging of the grid
 #define DEBUG_GRID
@@ -23,15 +23,22 @@ public:
 
 
 private:
-    static const u32 NumPoints = 25;
+    static const u32 NumPoints = 30;
     static const f32 LineThickness = 0.015;
 
-    core::matrix4 Translation;
+    core::vector3df Position;
     f32 Points[NumPoints][NumPoints];
+
 
     scene::SMeshBuffer* Buffer;
     scene::IMeshSceneNode* Node;
     scene::SMeshBuffer* LineBuffer;
+
+
+    void addPlusX();
+    void addMinusX();
+    void addPlusY();
+    void addMinusY();
 
 };
 

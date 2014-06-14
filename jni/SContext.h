@@ -2,6 +2,7 @@
 #define SContext_H_INCLUDED
 
 
+#define DEBUG_FPS
 #define DEBUG_OBJS
 
 #define DESKTOP_WND_X 854

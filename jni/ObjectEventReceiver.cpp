@@ -48,6 +48,15 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return true;
     }*/
+    else if (event.EventType == EET_GYROSCOPE_EVENT)
+    {
+        SMessage msg(this, EMT_GYRO);
+        msg.Gyro.Roll = event.GyroscopeEvent.X;
+        msg.Gyro.Pitch = event.GyroscopeEvent.Y;
+
+        broadcastMessage(msg);
+        return true;
+    }
 
     return false;
 }

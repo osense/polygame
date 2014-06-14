@@ -5,9 +5,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont)
     Name = "ObjectGrid";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
-
-    Translation.makeIdentity();
-    Translation.setTranslation(core::vector3df(0));
+    Position = core::vector3df(0);
 
     for (u32 i = 0; i < NumPoints; i++)
         for (u32 j = 0; j < NumPoints; j++)
@@ -17,6 +15,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont)
     Points[11][15] = 1;
     Points[11][14] = 0.4;
     Points[12][15] = 1;
+    Points[2][20] = 2;
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
@@ -25,8 +24,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont)
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setAutomaticCulling(scene::EAC_OFF);
-
-    //LineBuffer = static_cast<scene::SMeshBuffer*>(Context->Device->getSceneManager()->getMesh("line.obj")->getMesh(0)->getMeshBuffer(0));
 
     regenerate();
 }
@@ -38,10 +35,37 @@ ObjectGrid::~ObjectGrid()
 
 void ObjectGrid::onMessage(SMessage msg)
 {
-    if (msg.Type == EMT_UPDATE)
+    if (msg.Type == EMT_OBJ_SPAWNED)
     {
-        core::vector3df center(0);
+        if (msg.Dispatcher->getName() == "ObjectPlayer")
+            msg.Dispatcher->registerObserver(this);
+    }
+    else if (msg.Type == EMT_OBJ_POS)
+    {
+        core::vector3df pPos(msg.Position.X, 0, msg.Position.Z);
+        core::vector3df diffVect = pPos - Position;
 
+        if (diffVect.getLength() > 1.0)
+        {
+            #ifdef DEBUG_GRID
+            u32 updStart = Context->Device->getTimer()->getTime();
+            #endif // DEBUG_GRID
+
+            if (diffVect.Z > 0.5)
+                addPlusX();
+            else if (diffVect.Z < -0.5)
+                addMinusX();
+
+            if (diffVect.X > 0.5)
+                addPlusY();
+            else if (diffVect.X < -0.5)
+                addMinusY();
+
+            #ifdef DEBUG_GRID
+            u32 updEnd = Context->Device->getTimer()->getTime();
+            debugLog(core::stringc("Updated grid: ") + core::stringc(updStart - updEnd) + "ms");
+            #endif // DEBUG_GRID
+        }
     }
 }
 
@@ -55,6 +79,8 @@ void ObjectGrid::regenerate()
     Buffer->Indices.clear();
 
     core::vector3df center(NumPoints/2.0, 0, NumPoints/2.0);
+    center -= Position;
+    center.Y = 0;
 
     for (u32 i = 1; i < NumPoints; i++)
     {
@@ -120,6 +146,43 @@ void ObjectGrid::regenerate()
 
     #ifdef DEBUG_GRID
     u32 genEnd = Context->Device->getTimer()->getTime();
-    debugLog(core::stringc("Regenerated grid: ") + core::stringc(genStart - genEnd));
+    debugLog(core::stringc("Regenerated grid: ") + core::stringc(genStart - genEnd) + "ms");
     #endif // DEBUG_GRID
+}
+
+
+void ObjectGrid::addPlusX()
+{
+    for (u32 x = 0; x < NumPoints; x++)
+        for (u32 y = 0; y < NumPoints-1; y++)
+            Points[x][y] = Points[x][y+1];
+
+    // init new points
+    for (u32 x = 0; x < NumPoints; x++)
+        Points[x][NumPoints-1] = 1;
+
+    Position += core::vector3df(0, 0, 1);
+    regenerate();
+}
+
+void ObjectGrid::addMinusX()
+{
+
+}
+
+void ObjectGrid::addPlusY()
+{
+    memmove(Points, Points[1], sizeof(f32) * NumPoints * (NumPoints-1));
+
+    // init new points
+    for (u32 y = 0; y < NumPoints; y++)
+        Points[NumPoints-1][y] = 1.5;
+
+    Position += core::vector3df(1, 0, 0);
+    regenerate();
+}
+
+void ObjectGrid::addMinusY()
+{
+
 }

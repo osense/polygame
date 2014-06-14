@@ -53,8 +53,6 @@
 		</Compiler>
 		<Unit filename="jni/GridSceneNode.cpp" />
 		<Unit filename="jni/GridSceneNode.h" />
-		<Unit filename="jni/LinePool.cpp" />
-		<Unit filename="jni/LinePool.h" />
 		<Unit filename="jni/Object.cpp" />
 		<Unit filename="jni/Object.h" />
 		<Unit filename="jni/ObjectDebugInfo.cpp" />
@@ -65,6 +63,8 @@
 		<Unit filename="jni/ObjectGrid.h" />
 		<Unit filename="jni/ObjectManager.cpp" />
 		<Unit filename="jni/ObjectManager.h" />
+		<Unit filename="jni/ObjectPlayer.cpp" />
+		<Unit filename="jni/ObjectPlayer.h" />
 		<Unit filename="jni/ObjectStateGame.cpp" />
 		<Unit filename="jni/ObjectStateGame.h" />
 		<Unit filename="jni/ObjectStateMenu.cpp" />

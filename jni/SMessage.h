@@ -11,7 +11,9 @@ enum E_MESSAGE_TYPE
     EMT_UPDATE,
     EMT_OBJ_SPAWNED,
     EMT_OBJ_DIED,
+    EMT_OBJ_POS,
     EMT_INPUT,
+    EMT_GYRO,
     EMT_GUI,
     EMT_DAMAGE
 };
@@ -34,16 +36,28 @@ struct SMessage
         irr::u32 ID;
     };
 
+    struct GyroMessage
+    {
+        irr::f64 Roll, Pitch;
+    };
+
     struct UpdateMessage
     {
         irr::u32 Delta;
+    };
+
+    struct ObjectPositionMessage
+    {
+        irr::f32 X, Y, Z;
     };
 
     union
     {
         GUIMessage GUI;
         InputMessage Input;
+        GyroMessage Gyro;
         UpdateMessage Update;
+        ObjectPositionMessage Position;
     };
 
 

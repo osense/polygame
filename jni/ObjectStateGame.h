@@ -4,6 +4,9 @@
 #include "Object.h"
 #include "ObjectManager.h"
 
+#include "ObjectGrid.h"
+#include "ObjectPlayer.h"
+
 
 class ObjectStateGame : public Object
 {
