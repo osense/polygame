@@ -7,6 +7,7 @@
 #include "SContext.h"
 #include "ObjectUpdater.h"
 #include "ObjectStateGame.h"
+#include "ObjectDebugInfo.h"
 
 #include "ShaderCBSimple.h"
 #include "ObjectGrid.h"
@@ -56,10 +57,13 @@ int main(int argc, char *argv[])
 
     cont->ObjManager = new ObjectManager(cont);
     ObjectUpdater* updater = new ObjectUpdater(cont);
+    new ObjectDebugInfo(cont);
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
 
-    dev->getSceneManager()->addCameraSceneNode()->setPosition(core::vector3df(0, 1.5, -3));
+    scene::ICameraSceneNode* cam = dev->getSceneManager()->addCameraSceneNodeFPS(0, 100, 0.015);
+    cam->setPosition(core::vector3df(0, 2.5, 0));
+    cam->setTarget(core::vector3df(-5, 0, 10));
 
     /*scene::ISceneManager* smgr = dev->getSceneManager();
     scene::IMeshSceneNode* plane = smgr->addMeshSceneNode(smgr->getMesh("plane.obj"));

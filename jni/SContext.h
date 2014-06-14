@@ -1,6 +1,9 @@
 #ifndef SContext_H_INCLUDED
 #define SContext_H_INCLUDED
 
+
+#define DEBUG_OBJS
+
 #define DESKTOP_WND_X 854
 #define DESKTOP_WND_Y 480
 

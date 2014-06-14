@@ -56,6 +56,6 @@ irr::core::stringc Object::getName() const
 void Object::debugLog(core::stringc text) const
 {
 #ifdef DEBUG_OBJS
-    SContext->Device->getLogger()->log(getName().c_str(), text.c_str());
+    Context->Device->getLogger()->log(getName().c_str(), text.c_str());
 #endif
 }
