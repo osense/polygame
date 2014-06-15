@@ -1,11 +1,14 @@
 #include "ObjectPlayer.h"
 
-ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont)
+ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
+    Speed(MinSpeed),
+    Accelerating(false)
 {
     Name = "ObjectPlayer";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
+    Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
     scene::ISceneManager* smgr = Context->Device->getSceneManager();
 
@@ -14,9 +17,10 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont)
 
     #else
     Context->Device->activateGyroscope();
+    Context->Device->activateAccelerometer();
     Camera = smgr->addCameraSceneNode();
 
-    #endif // DEBUG_GLES
+    #endif
 
     Camera->setPosition(core::vector3df(0, 2, 0));
 }
@@ -34,7 +38,17 @@ void ObjectPlayer::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
-        Camera->setPosition(Camera->getPosition() + core::vector3df(0, 0, 0.02));
+        if (Accelerating)
+            Speed += Acceleration * msg.Update.fDelta;
+        else
+            Speed -= (Acceleration * 1.5) * msg.Update.fDelta;
+
+        if (Speed > MaxSpeed)
+            Speed = MaxSpeed;
+        else if (Speed < MinSpeed)
+            Speed = MinSpeed;
+
+        Camera->setPosition(Camera->getPosition() + getDirection() * Speed);
 
         SMessage msg(this, EMT_OBJ_POS);
         core::vector3df camPos = Camera->getPosition();
@@ -43,4 +57,28 @@ void ObjectPlayer::onMessage(SMessage msg)
         msg.Position.Z = camPos.Z;
         broadcastMessage(msg);
     }
+    else if (msg.Type == EMT_INPUT)
+    {
+        if (msg.Input.Type == ETIE_PRESSED_DOWN)
+            Accelerating = true;
+        else if (msg.Input.Type == ETIE_LEFT_UP)
+            Accelerating = false;
+    }
+    else if (msg.Type == EMT_GYRO)
+    {
+        Camera->setPosition(Camera->getPosition() + core::vector3df(0, msg.Gyro.Pitch * 0.001, 0));
+    }
+}
+
+
+f32 ObjectPlayer::getSpeed() const
+{
+    return Speed;
+}
+
+core::vector3df ObjectPlayer::getDirection() const
+{
+    core::vector3df rot = Camera->getRotation();
+
+    return core::vector3df(sin(core::degToRad(rot.Y)), 0, cos(core::degToRad(rot.Y))).normalize();
 }

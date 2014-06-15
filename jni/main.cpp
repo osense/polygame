@@ -6,6 +6,7 @@
 
 #include "SContext.h"
 #include "ObjectUpdater.h"
+#include "ObjectEventReceiver.h"
 #include "ObjectStateGame.h"
 #include "ObjectDebugInfo.h"
 
@@ -54,24 +55,23 @@ int main(int argc, char *argv[])
 
     SContext* cont = new SContext();
     cont->Device = dev;
-
+    cont->GUIScale = 1;
     cont->ObjManager = new ObjectManager(cont);
-    ObjectUpdater* updater = new ObjectUpdater(cont);
-
-    //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
-
-    new ObjectStateGame(cont);
 
     #ifdef DEBUG_FPS
     new ObjectDebugInfo(cont);
     #endif // DEBUG_FPS
 
+    ObjectUpdater* updater = new ObjectUpdater(cont);
+    new ObjectEventReceiver(cont);
+
+    //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
+    new ObjectStateGame(cont);
+
 
     ITimer* timer = dev->getTimer();
     u32 timeLast = timer->getTime();
-
-    video::SMaterial mat;
-    mat.Thickness = 5.0;
 
     while(dev->run())
     {

@@ -82,19 +82,19 @@ void ObjectGrid::regenerate()
     center -= Position;
     center.Y = 0;
 
-    for (u32 i = 1; i < NumPoints; i++)
+    for (u32 x = 1; x < NumPoints; x++)
     {
-        for (u32 j = 1; j < NumPoints; j++)
+        for (u32 y = 1; y < NumPoints; y++)
         {
             core::vector3df l1start, l2start, l1end, l2end;
             l1start = l2start = l1end = l2end = -center;
 
-            l1start += core::vector3df(i-1, Points[i-1][j], j);
-            l2start += core::vector3df(i, Points[i][j-1], j-1);
-            l1end += core::vector3df(i, Points[i][j], j);
-            l2end += core::vector3df(i, Points[i][j], j);
+            l1start += core::vector3df(x-1, Points[x-1][y], y);
+            l2start += core::vector3df(x, Points[x][y-1], y-1);
+            l1end += core::vector3df(x, Points[x][y], y);
+            l2end += core::vector3df(x, Points[x][y], y);
 
-            f32 thicknessCorrection = ((i-NumPoints/2.0)/NumPoints) * ((j-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
+            f32 thicknessCorrection = ((x-NumPoints/2.0)/NumPoints) * ((y-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
             thicknessCorrection *= 0.1;
             if (thicknessCorrection < 0) thicknessCorrection *= -1;
             thicknessCorrection += LineThickness;

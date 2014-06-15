@@ -5,6 +5,15 @@
 #include "ObjectManager.h"
 #include <irrlicht.h>
 
+
+#ifdef DEBUG_GYRO
+#include "ObjectEventReceiver.h"
+#endif
+
+#ifdef DEBUG_PLAYER
+#include "ObjectPlayer.h"
+#endif
+
 using namespace irr;
 using namespace gui;
 
@@ -17,6 +26,13 @@ class ObjectDebugInfo : public Object
         virtual void onMessage(SMessage msg);
 
     private:
+        #ifdef DEBUG_GYRO
+        core::vector2d<f64> Gyro;
+        #endif
+
+        #ifdef DEBUG_PLAYER
+        ObjectPlayer* Player;
+        #endif
 };
 
 #endif // OBJECTDEBUGINFO_H

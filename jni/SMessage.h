@@ -44,6 +44,7 @@ struct SMessage
     struct UpdateMessage
     {
         irr::u32 Delta;
+        irr::f32 fDelta;
     };
 
     struct ObjectPositionMessage

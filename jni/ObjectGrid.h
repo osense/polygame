@@ -7,9 +7,6 @@
 #include <irrlicht.h>
 #include <vector>
 
-// uncomment to enable debugging of the grid
-#define DEBUG_GRID
-
 using namespace irr;
 
 class ObjectGrid : public Object

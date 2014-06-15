@@ -3,7 +3,10 @@
 
 
 #define DEBUG_FPS
+#define DEBUG_GYRO
+#define DEBUG_PLAYER
 #define DEBUG_OBJS
+#define DEBUG_GRID
 
 #define DESKTOP_WND_X 854
 #define DESKTOP_WND_Y 480
@@ -23,6 +26,8 @@ struct SContext
 
     Object* State;
     ObjectManager* ObjManager;
+
+    irr::f32 GUIScale;
 };
 
 #endif // SContext_H_INCLUDED

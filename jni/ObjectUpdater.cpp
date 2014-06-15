@@ -21,5 +21,6 @@ void ObjectUpdater::broadcastUpdate(irr::u32 tDelta)
 {
     SMessage msg(this, EMT_UPDATE);
     msg.Update.Delta = tDelta;
+    msg.Update.fDelta = tDelta / 1000.0;
     broadcastMessage(msg);
 }

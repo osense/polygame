@@ -40,19 +40,43 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return true;
     }
-    /*else if (event.EventType == EET_TOUCH_INPUT_EVENT)
+    #ifndef DEBUG_GLES
+    else if (event.EventType == EET_TOUCH_INPUT_EVENT)
     {
         SMessage msg(this, EMT_INPUT);
-        msg.KeyCode = event.KeyInput.Key;
+        msg.Input.Type = event.TouchInput.Event;
+        msg.Input.ID = event.TouchInput.ID;
+        msg.Input.X = event.TouchInput.X;
+        msg.Input.Y = event.TouchInput.Y;
 
         broadcastMessage(msg);
         return true;
-    }*/
-    else if (event.EventType == EET_GYROSCOPE_EVENT)
+    }
+    #else
+    else if (event.EventType == EET_MOUSE_INPUT_EVENT)
+    {
+        SMessage msg(this, EMT_INPUT);
+
+        if (event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
+            msg.Input.Type = ETIE_PRESSED_DOWN;
+        else if (event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP)
+            msg.Input.Type = ETIE_LEFT_UP;
+        else if (event.MouseInput.Event == EMIE_MOUSE_MOVED)
+            msg.Input.Type = ETIE_MOVED;
+
+        msg.Input.ID = 0;
+        msg.Input.X = event.MouseInput.X;
+        msg.Input.Y = event.MouseInput.Y;
+
+        broadcastMessage(msg);
+        return false;
+    }
+    #endif
+    else if (event.EventType == EET_ACCELEROMETER_EVENT)
     {
         SMessage msg(this, EMT_GYRO);
-        msg.Gyro.Roll = event.GyroscopeEvent.X;
-        msg.Gyro.Pitch = event.GyroscopeEvent.Y;
+        msg.Gyro.Roll = event.AccelerometerEvent.X;
+        msg.Gyro.Pitch = event.AccelerometerEvent.Y;
 
         broadcastMessage(msg);
         return true;
