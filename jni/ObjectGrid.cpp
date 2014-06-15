@@ -154,8 +154,7 @@ void ObjectGrid::regenerate()
 void ObjectGrid::addPlusX()
 {
     for (u32 x = 0; x < NumPoints; x++)
-        for (u32 y = 0; y < NumPoints-1; y++)
-            Points[x][y] = Points[x][y+1];
+        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPoints-1));
 
     // init new points
     for (u32 x = 0; x < NumPoints; x++)
