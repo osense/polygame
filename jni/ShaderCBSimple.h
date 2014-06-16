@@ -7,7 +7,7 @@
 using namespace irr;
 
 
-class ShaderCBSimple : public irr::video::IShaderConstantSetCallBack
+class ShaderCBSimple : public video::IShaderConstantSetCallBack
 {
     public:
         ShaderCBSimple(SContext* cont);

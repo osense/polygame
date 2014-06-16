@@ -18,6 +18,7 @@ namespace irr
 
 class Object;
 class ObjectManager;
+struct SMaterials;
 
 
 struct SContext
@@ -26,6 +27,8 @@ struct SContext
 
     Object* State;
     ObjectManager* ObjManager;
+
+    SMaterials* Mtls;
 
     irr::f32 GUIScale;
 };

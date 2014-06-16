@@ -21,6 +21,7 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
 
     #endif
 
+    Camera->setFarValue(20);
     Camera->setPosition(core::vector3df(0, 2, 0));
 }
 
@@ -30,6 +31,7 @@ ObjectPlayer::~ObjectPlayer()
     if (updater)
         updater->unregisterObserver(this);
 
+    Context->Device->deactivateAccelerometer();
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
@@ -67,8 +69,8 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_ACC)
     {
-        Camera->setRotation(Camera->getRotation() + core::vector3df(0, msg.Acc.Y * 0.1, 0));
-        //Camera->setRotation(Camera->getRotation() + core::vector3df(msg.Acc.Z * 0.1, 0, 0));
+        Camera->setRotation(Camera->getRotation() + core::vector3df(0, msg.Acc.Y * 0.1, msg.Acc.Y * 0.1));
+        //Camera->setRotation(Camera->getRotation() + core::vector3df(0, 0, msg.Acc.Y * 0.1));
     }
 }
 

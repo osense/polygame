@@ -10,8 +10,8 @@
 #include "ObjectStateGame.h"
 #include "ObjectDebugInfo.h"
 
-#include "ShaderCBSimple.h"
-#include "ObjectGrid.h"
+#include "ShaderCBDepth.h"
+#include "SMaterials.h"
 
 using namespace irr;
 
@@ -47,10 +47,6 @@ int main(int argc, char *argv[])
 
     dev->setWindowCaption(L"Polygame Desktop GLES Debug Build    " __DATE__ " " __TIME__);
     dev->getFileSystem()->changeWorkingDirectoryTo(dev->getFileSystem()->getAbsolutePath("assets/"));
-#else
-    dev = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(DESKTOP_WND_X, DESKTOP_WND_Y), 32, false);
-    dev->setWindowCaption(L"IrrGame Desktop Debug Build    " __DATE__ " " __TIME__);
-    dev->getFileSystem()->changeWorkingDirectoryTo(dev->getFileSystem()->getAbsolutePath("assets/"));
 #endif
 
     SContext* cont = new SContext();
@@ -62,10 +58,12 @@ int main(int argc, char *argv[])
     new ObjectDebugInfo(cont);
     #endif // DEBUG_FPS
 
+    cont->Mtls = new SMaterials;
     ObjectUpdater* updater = new ObjectUpdater(cont);
     new ObjectEventReceiver(cont);
 
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    cont->Mtls->Depth = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag", new ShaderCBDepth(cont));
 
     new ObjectStateGame(cont);
 

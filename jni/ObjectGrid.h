@@ -3,9 +3,9 @@
 
 #include "Object.h"
 #include "ObjectManager.h"
+#include "SMaterials.h"
 
 #include <irrlicht.h>
-#include <vector>
 
 using namespace irr;
 
