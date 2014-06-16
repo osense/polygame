@@ -16,7 +16,6 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Camera = smgr->addCameraSceneNodeFPS(0, 100, 0.015);
 
     #else
-    Context->Device->activateGyroscope();
     Context->Device->activateAccelerometer();
     Camera = smgr->addCameraSceneNode();
 
@@ -48,7 +47,9 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (Speed < MinSpeed)
             Speed = MinSpeed;
 
-        Camera->setPosition(Camera->getPosition() + getDirection() * Speed);
+        core::vector3df dir = getDirection();
+        Camera->setPosition(Camera->getPosition() + dir * Speed);
+        Camera->setTarget(Camera->getPosition() + dir);
 
         SMessage msg(this, EMT_OBJ_POS);
         core::vector3df camPos = Camera->getPosition();
@@ -64,9 +65,10 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (msg.Input.Type == ETIE_LEFT_UP)
             Accelerating = false;
     }
-    else if (msg.Type == EMT_GYRO)
+    else if (msg.Type == EMT_ACC)
     {
-        Camera->setPosition(Camera->getPosition() + core::vector3df(0, msg.Gyro.Pitch * 0.001, 0));
+        Camera->setRotation(Camera->getRotation() + core::vector3df(0, msg.Acc.Y * 0.1, 0));
+        //Camera->setRotation(Camera->getRotation() + core::vector3df(msg.Acc.Z * 0.1, 0, 0));
     }
 }
 

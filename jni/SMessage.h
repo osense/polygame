@@ -13,7 +13,7 @@ enum E_MESSAGE_TYPE
     EMT_OBJ_DIED,
     EMT_OBJ_POS,
     EMT_INPUT,
-    EMT_GYRO,
+    EMT_ACC,
     EMT_GUI,
     EMT_DAMAGE
 };
@@ -36,9 +36,9 @@ struct SMessage
         irr::u32 ID;
     };
 
-    struct GyroMessage
+    struct AccMessage
     {
-        irr::f64 Roll, Pitch;
+        irr::f64 X, Y, Z;
     };
 
     struct UpdateMessage
@@ -56,7 +56,7 @@ struct SMessage
     {
         GUIMessage GUI;
         InputMessage Input;
-        GyroMessage Gyro;
+        AccMessage Acc;
         UpdateMessage Update;
         ObjectPositionMessage Position;
     };

@@ -20,7 +20,7 @@ public:
 
 
 private:
-    static const u32 NumPoints = 30;
+    static const u32 NumPoints = 25;
     static const f32 LineThickness = 0.015;
 
     core::vector3df Position;

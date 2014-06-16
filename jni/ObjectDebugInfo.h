@@ -26,8 +26,8 @@ class ObjectDebugInfo : public Object
         virtual void onMessage(SMessage msg);
 
     private:
-        #ifdef DEBUG_GYRO
-        core::vector2d<f64> Gyro;
+        #ifdef DEBUG_ACC
+        core::vector3d<f64> Accel;
         #endif
 
         #ifdef DEBUG_PLAYER

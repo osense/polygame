@@ -74,9 +74,10 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
     #endif
     else if (event.EventType == EET_ACCELEROMETER_EVENT)
     {
-        SMessage msg(this, EMT_GYRO);
-        msg.Gyro.Roll = event.AccelerometerEvent.X;
-        msg.Gyro.Pitch = event.AccelerometerEvent.Y;
+        SMessage msg(this, EMT_ACC);
+        msg.Acc.X = event.AccelerometerEvent.X;
+        msg.Acc.Y = event.AccelerometerEvent.Y;
+        msg.Acc.Z = event.AccelerometerEvent.Z;
 
         broadcastMessage(msg);
         return true;

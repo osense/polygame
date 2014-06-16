@@ -7,7 +7,7 @@ ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont)
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
     #ifdef DEBUG_GYRO
-    Gyro = core::vector2d<f64>(90);
+    Accel = core::vector2d<f64>(0);
     #endif
 }
 
@@ -32,31 +32,39 @@ void ObjectDebugInfo::onMessage(SMessage msg)
 
         Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 
-        #ifdef DEBUG_GYRO
+        #ifdef DEBUG_ACC
         core::dimension2d<u32> screenSize = Context->Device->getVideoDriver()->getScreenSize();
         f32 lineL = 50 * Context->GUIScale;
 
-        core::position2d<s32> rollStart, rollEnd;
-        rollStart.X = screenSize.Width - 50;
-        rollStart.Y = 30;
-        //rollEnd.X = lineL * cos(core::degToRad(Gyro.X)) + rollStart.X;
-        //rollEnd.Y = lineL * sin(core::degToRad(Gyro.X)) + rollStart.Y;
-        rollEnd.X = lineL * cos(Gyro.X) + rollStart.X;
-        rollEnd.Y = lineL * sin(Gyro.X) + rollStart.Y;
+        core::position2d<s32> XStart, XEnd;
+        XStart.X = screenSize.Width - (150*Context->GUIScale);
+        XStart.Y = 50*Context->GUIScale;
+        XEnd.X = lineL * cos(Accel.X) + XStart.X;
+        XEnd.Y = lineL * sin(Accel.X) + XStart.Y;
+        Context->Device->getVideoDriver()->draw2DLine(XStart, XEnd);
 
-        core::stringw rollS = "Roll: ";
-        rollS += (int)Gyro.X;
-        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(rollS.c_str(), core::rect<s32>(screenSize.Width - 65, 10, screenSize.Width, 30),
-                                                                         video::SColor(255, 255, 255, 255));
-        Context->Device->getVideoDriver()->draw2DLine(rollStart, rollEnd);
+        core::position2d<s32> YStart, YEnd;
+        YStart.X = screenSize.Width - (100*Context->GUIScale);
+        YStart.Y = 50*Context->GUIScale;
+        YEnd.X = lineL * cos(Accel.Y) + YStart.X;
+        YEnd.Y = lineL * sin(Accel.Y) + YStart.Y;
+        Context->Device->getVideoDriver()->draw2DLine(YStart, YEnd);
+
+        core::position2d<s32> ZStart, ZEnd;
+        ZStart.X = screenSize.Width - (50*Context->GUIScale);
+        ZStart.Y = 50*Context->GUIScale;
+        ZEnd.X = lineL * cos(Accel.Z) + ZStart.X;
+        ZEnd.Y = lineL * sin(Accel.Z) + ZStart.Y;
+        Context->Device->getVideoDriver()->draw2DLine(ZStart, ZEnd);
 
         #endif
     }
-    #ifdef DEBUG_GYRO
-    else if (msg.Type == EMT_GYRO)
+    #ifdef DEBUG_ACC
+    else if (msg.Type == EMT_ACC)
     {
-        Gyro.X = msg.Gyro.Roll;
-        Gyro.Y = msg.Gyro.Pitch;
+        Accel.X = msg.Acc.X;
+        Accel.Y = msg.Acc.Y;
+        Accel.Z = msg.Acc.Z;
     }
     #endif
     else if (msg.Type == EMT_OBJ_SPAWNED)
@@ -69,7 +77,7 @@ void ObjectDebugInfo::onMessage(SMessage msg)
             Player = static_cast<ObjectPlayer*>(msg.Dispatcher);
         #endif
 
-        #ifdef DEBUG_GYRO
+        #ifdef DEBUG_ACC
         if (msg.Dispatcher->getName() == "ObjectEventReceiver")
             msg.Dispatcher->registerObserver(this);
         #endif
