@@ -34,6 +34,10 @@
 			<Add option="-g" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="assets/shaders/depth.frag" />
+		<Unit filename="assets/shaders/depth.vert" />
+		<Unit filename="assets/shaders/grid.frag" />
+		<Unit filename="assets/shaders/grid.vert" />
 		<Unit filename="jni/GridSceneNode.cpp" />
 		<Unit filename="jni/GridSceneNode.h" />
 		<Unit filename="jni/Object.cpp" />

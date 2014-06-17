@@ -23,7 +23,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont)
     mesh->addMeshBuffer(Buffer);
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-    Node->setMaterialType(Context->Mtls->Depth);
+    Node->setMaterialType(Context->Mtls->Grid);
     Node->setAutomaticCulling(scene::EAC_OFF);
 
     regenerate();
