@@ -1,7 +1,7 @@
 #ifndef OBJECTGRID_H
 #define OBJECTGRID_H
 
-#include "Object.h"
+#include "ObjectVisual.h"
 #include "ObjectManager.h"
 #include "SMaterials.h"
 
@@ -9,7 +9,7 @@
 
 using namespace irr;
 
-class ObjectGrid : public Object
+class ObjectGrid : public ObjectVisual
 {
 public:
     ObjectGrid(SContext* cont);
@@ -28,7 +28,6 @@ private:
 
 
     scene::SMeshBuffer* Buffer;
-    scene::IMeshSceneNode* Node;
     scene::SMeshBuffer* LineBuffer;
 
 

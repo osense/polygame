@@ -1,6 +1,6 @@
 #include "ObjectGrid.h"
 
-ObjectGrid::ObjectGrid(SContext* cont) : Object(cont)
+ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
 {
     Name = "ObjectGrid";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
