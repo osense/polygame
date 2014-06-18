@@ -5,11 +5,14 @@
 #endif
 
 #include "SContext.h"
+#include "EffectRenderer.h"
+#include "ObjectManager.h"
+#include "ObjectDebugInfo.h"
 #include "ObjectUpdater.h"
 #include "ObjectEventReceiver.h"
-#include "ObjectStateGame.h"
-#include "ObjectDebugInfo.h"
 
+
+#include "ObjectStateGame.h"
 #include "ShaderCBDepth.h"
 #include "SMaterials.h"
 
@@ -61,6 +64,8 @@ int main(int argc, char *argv[])
     cont->Mtls = new SMaterials;
     ObjectUpdater* updater = new ObjectUpdater(cont);
     new ObjectEventReceiver(cont);
+    cont->Renderer = new EffectRenderer(cont);
+    cont->Renderer->setDoFEnabled(true);
 
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
     cont->Mtls->Depth = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag", new ShaderCBDepth(cont));
@@ -79,7 +84,7 @@ int main(int argc, char *argv[])
         timeLast = timeNow;
 
         dev->getVideoDriver()->beginScene();
-        dev->getSceneManager()->drawAll();
+        cont->Renderer->drawAll();
         dev->getGUIEnvironment()->drawAll();
 
         updater->broadcastUpdate(timeDelta);

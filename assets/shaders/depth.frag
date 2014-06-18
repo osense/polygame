@@ -5,6 +5,6 @@ varying float Depth;
 
 void main()
 {
-    gl_FragColor = vec4(vec3(0.5 - Depth), 1.0);
+    gl_FragColor = vec4(vec3(Depth), 1.0);
 }
 

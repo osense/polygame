@@ -24,7 +24,7 @@ endif
 
 LOCAL_C_INCLUDES:=../irrlicht-ogl-es/include
 
-LOCAL_SRC_FILES:=jni/main.cpp jni/ShaderCBSimple.cpp jni/ShaderCBDepth.cpp jni/Object.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/ObjectPlayer.cpp
+LOCAL_SRC_FILES:=jni/main.cpp jni/EffectRenderer.cpp jni/IQuadSceneNode.cpp jni/ShaderCBSimple.cpp jni/ShaderCBDepth.cpp jni/ShaderCBDoF.cpp jni/Object.cpp jni/ObjectVisual.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/ObjectPlayer.cpp
 LOCAL_LDLIBS:=-lEGL -llog -lGLESv1_CM -lGLESv2 -lz -landroid
 
 LOCAL_STATIC_LIBRARIES:=android_native_app_glue Irrlicht

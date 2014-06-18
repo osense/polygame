@@ -25,8 +25,9 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Grid);
     Node->setAutomaticCulling(scene::EAC_OFF);
-
     regenerate();
+
+
 }
 
 ObjectGrid::~ObjectGrid()

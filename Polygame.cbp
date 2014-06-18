@@ -36,10 +36,16 @@
 		</Compiler>
 		<Unit filename="assets/shaders/depth.frag" />
 		<Unit filename="assets/shaders/depth.vert" />
+		<Unit filename="assets/shaders/dof.frag" />
 		<Unit filename="assets/shaders/grid.frag" />
 		<Unit filename="assets/shaders/grid.vert" />
+		<Unit filename="assets/shaders/quad.vert" />
+		<Unit filename="jni/EffectRenderer.cpp" />
+		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GridSceneNode.cpp" />
 		<Unit filename="jni/GridSceneNode.h" />
+		<Unit filename="jni/IQuadSceneNode.cpp" />
+		<Unit filename="jni/IQuadSceneNode.h" />
 		<Unit filename="jni/Object.cpp" />
 		<Unit filename="jni/Object.h" />
 		<Unit filename="jni/ObjectDebugInfo.cpp" />
@@ -58,11 +64,15 @@
 		<Unit filename="jni/ObjectStateMenu.h" />
 		<Unit filename="jni/ObjectUpdater.cpp" />
 		<Unit filename="jni/ObjectUpdater.h" />
+		<Unit filename="jni/ObjectVisual.cpp" />
+		<Unit filename="jni/ObjectVisual.h" />
 		<Unit filename="jni/SContext.h" />
 		<Unit filename="jni/SMaterials.h" />
 		<Unit filename="jni/SMessage.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
+		<Unit filename="jni/ShaderCBDoF.cpp" />
+		<Unit filename="jni/ShaderCBDoF.h" />
 		<Unit filename="jni/ShaderCBSimple.cpp" />
 		<Unit filename="jni/ShaderCBSimple.h" />
 		<Unit filename="jni/functions.h" />
