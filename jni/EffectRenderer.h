@@ -4,12 +4,20 @@
 #include "SContext.h"
 #include "ObjectVisual.h"
 #include <irrlicht.h>
+#include <irrPP.h>
 #include "IQuadSceneNode.h"
 #include "SMaterials.h"
 #include "ShaderCBDoF.h"
 
 
 using namespace irr;
+
+enum E_EFFECT_TYPE
+{
+    EET_FXAA = 0,
+    EET_DOF,
+    EET_MOTION_BLUR
+};
 
 
 class EffectRenderer
@@ -22,29 +30,23 @@ public:
     // is at least one effect active?
     bool isActive() const;
 
-    void setDoFEnabled(bool enable);
+    void init(E_EFFECT_TYPE type);
 
 private:
     static const f32 SceneQuality = 1.0;
-    static const f32 EffectQuality = 0.5;
-
-    enum E_EFFECT_TYPE
-    {
-        EET_DOF = 0
-    };
-
-    void initRT(E_EFFECT_TYPE type);
+    static const video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality = video::EPQ_QUARTER;
 
     SContext* Context;
 
+    video::irrPP* PP;
     scene::ISceneManager* Smgr, *EffectSmgr;
     scene::ICameraSceneNode* Camera;
-    scene::IQuadSceneNode* Quad;
     video::ITexture* Scene, *Depth;
 
-    bool DoFEnabled;
+    video::CPostProcessingEffect* FXAA;
+
+    video::CPostProcessingEffectChain* DoF;
     core::array<ObjectVisual*> DoFObjects;
-    video::E_MATERIAL_TYPE DoFMaterial;
 };
 
 #endif // OBJECTEFFECTRENDERER_H

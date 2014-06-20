@@ -7,7 +7,7 @@
 #define DEBUG_PLAYER
 #define DEBUG_OBJS
 //#define DEBUG_GRID
-#define DEBUG_EFFECTS
+//#define DEBUG_EFFECTS
 
 #define DESKTOP_WND_X 854
 #define DESKTOP_WND_Y 480

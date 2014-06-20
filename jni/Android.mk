@@ -7,6 +7,11 @@ LOCAL_SRC_FILES:=../irrlicht-ogl-es/lib/Android/libIrrlicht.a
 include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE:=irrPP
+LOCAL_SRC_FILES:=../irrpp/lib/android/libirrPP.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
 
 LOCAL_MODULE:=Polygame
 
@@ -22,12 +27,12 @@ ifeq ($(TARGET_ARCH_ABI),x86)
 LOCAL_CFLAGS+=-fno-stack-protector
 endif
 
-LOCAL_C_INCLUDES:=../irrlicht-ogl-es/include
+LOCAL_C_INCLUDES:=../irrlicht-ogl-es/include ../irrpp/include
 
-LOCAL_SRC_FILES:=jni/main.cpp jni/EffectRenderer.cpp jni/IQuadSceneNode.cpp jni/ShaderCBSimple.cpp jni/ShaderCBDepth.cpp jni/ShaderCBDoF.cpp jni/Object.cpp jni/ObjectVisual.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/ObjectPlayer.cpp
+LOCAL_SRC_FILES:=jni/main.cpp jni/EffectRenderer.cpp jni/ShaderCBSimple.cpp jni/ShaderCBDepth.cpp jni/ShaderCBDoF.cpp jni/Object.cpp jni/ObjectVisual.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/ObjectPlayer.cpp
 LOCAL_LDLIBS:=-lEGL -llog -lGLESv1_CM -lGLESv2 -lz -landroid
 
-LOCAL_STATIC_LIBRARIES:=android_native_app_glue Irrlicht
+LOCAL_STATIC_LIBRARIES:=android_native_app_glue Irrlicht irrPP
 
 include $(BUILD_SHARED_LIBRARY)
 

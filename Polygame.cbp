@@ -17,10 +17,12 @@
 					<Add option="-g" />
 					<Add option="-DDEBUG_GLES" />
 					<Add directory="../irrlicht-ogl-es/include" />
+					<Add directory="../irrpp/include" />
 					<Add directory="jni/" />
 				</Compiler>
 				<Linker>
 					<Add library="../irrlicht-ogl-es/lib/Linux/libIrrlicht.a" />
+					<Add library="../irrpp/lib/linux/debug/libirrPP.a" />
 					<Add library="Xxf86vm" />
 					<Add library="X11" />
 					<Add library="EGL" />

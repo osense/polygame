@@ -1,8 +1,10 @@
 #include "EffectRenderer.h"
 
 EffectRenderer::EffectRenderer(SContext* cont) :
+    PP(0),
     Scene(0), Depth(0),
-    DoFEnabled(false), DoFMaterial(video::EMT_SOLID) // = uninitialized
+    FXAA(0),
+    DoF(0)
 {
     Context = cont;
 
@@ -25,7 +27,7 @@ void EffectRenderer::drawAll()
         video->setRenderTarget(Scene);
         Smgr->drawAll();
 
-        if (DoFEnabled)
+        /*if (DoF)
         {
             video->setRenderTarget(Depth);
 
@@ -40,11 +42,11 @@ void EffectRenderer::drawAll()
             Smgr->drawAll();
 
             video->getOverrideMaterial().EnablePasses = 0;
-        }
+        }*/
 
         video->setRenderTarget(video::ERT_FRAME_BUFFER);
 
-        Quad->render();
+        PP->render(Scene);
 
         #ifdef DEBUG_EFFECTS
         if (Depth)
@@ -57,46 +59,47 @@ void EffectRenderer::drawAll()
     }
 }
 
-void EffectRenderer::setDoFEnabled(bool enable)
-{
-    if (enable && DoFMaterial == video::EMT_SOLID)
-    {
-        video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
-        DoFMaterial = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/quad.vert", "shaders/dof.frag", new ShaderCBDoF());
-
-        initRT(EET_DOF);
-    }
-
-    DoFEnabled = enable;
-}
-
 bool EffectRenderer::isActive() const
 {
-    return DoFEnabled;
+    return (PP != 0);
 }
 
 
-void EffectRenderer::initRT(E_EFFECT_TYPE type)
+void EffectRenderer::init(E_EFFECT_TYPE type)
 {
     video::IVideoDriver* video = Context->Device->getVideoDriver();
     core::dimension2d<u32> screenSize = video->getScreenSize();
 
-    if (!Scene)
+    if (!PP)
     {
-        core::dimension2d<u32> res(1024, 512);// = screenSize / (1.0/SceneQuality);
-        Scene = video->addRenderTargetTexture(res, "scene-RT", video::ECF_R5G6B5);
+        PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
-        Quad = new scene::IQuadSceneNode(0, EffectSmgr, -1);
-        Quad->setMaterialTexture(0, Scene);
-        Quad->setMaterialType(DoFMaterial);
+        core::dimension2d<u32> res;
+        res.Width = core::round32(screenSize.Width * SceneQuality);
+        res.Height = core::round32(screenSize.Height * SceneQuality);
+        Scene = video->addRenderTargetTexture(res, "scene-RT", video::ECF_R5G6B5);
     }
 
     switch (type)
     {
+    case EET_FXAA:
+        FXAA = PP->createEffect(video::EPE_FXAA);
+        FXAA->setQuality(video::EPQ_FULL);
+        break;
+
     case EET_DOF:
-        core::dimension2d<u32> res = Scene->getOriginalSize() / (1.0/EffectQuality);
-        Depth = video->addRenderTargetTexture(res, "depth-RT", video::ECF_R5G6B5);
-        Quad->setMaterialTexture(1, Depth);
+        DoF = PP->createEffectChain();
+        //DoF->createEffect(video::EPE_ALBEDO);
+        DoF->createEffect(video::EPE_BLUR_V);
+        DoF->createEffect(video::EPE_BLUR_H);
+        video::CPostProcessingEffect* add2 = DoF->createEffect(video::EPE_ADD2);
+        if (FXAA)
+            add2->addTextureToShader(FXAA->getCustomRTT());
+        else
+            add2->addTextureToShader(Scene);
+
+        /*core::dimension2d<u32> res = Scene->getOriginalSize() / (u32)EffectQuality;
+        Depth = video->addRenderTargetTexture(res, "depth-RT", video::ECF_R5G6B5);*/
         break;
     }
 }

@@ -57,6 +57,8 @@ int main(int argc, char *argv[])
     cont->GUIScale = 1;
     cont->ObjManager = new ObjectManager(cont);
 
+    //((video::COGLES2Driver *) driver)->queryOpenGLFeature(video::COGLES2ExtensionHandler::IRR_OES_texture_npot);
+
     #ifdef DEBUG_FPS
     new ObjectDebugInfo(cont);
     #endif // DEBUG_FPS
@@ -65,7 +67,8 @@ int main(int argc, char *argv[])
     ObjectUpdater* updater = new ObjectUpdater(cont);
     new ObjectEventReceiver(cont);
     cont->Renderer = new EffectRenderer(cont);
-    cont->Renderer->setDoFEnabled(true);
+    //cont->Renderer->init(EET_FXAA);
+    cont->Renderer->init(EET_DOF);
 
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
     cont->Mtls->Depth = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag", new ShaderCBDepth(cont));
