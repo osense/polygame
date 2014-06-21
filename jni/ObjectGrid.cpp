@@ -15,11 +15,11 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
     Points[11][15] = 1;
     Points[11][14] = 0.4;
     Points[12][15] = 1;
-    Points[2][20] = 2;
+    Points[2][20] = -0.5;
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
-    mesh->setHardwareMappingHint(scene::EHM_DYNAMIC);
+    mesh->setHardwareMappingHint(scene::EHM_STREAM);
     mesh->addMeshBuffer(Buffer);
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
@@ -80,71 +80,78 @@ void ObjectGrid::regenerate()
     Buffer->Vertices.clear();
     Buffer->Indices.clear();
 
+
+    video::SColor white(255, 255, 255, 255);
+    core::vector2df null2d(0);
+    core::vector3df null3d(0);
+
     core::vector3df center(NumPoints/2.0, 0, NumPoints/2.0);
     center -= Position;
     center.Y = 0;
 
-    for (u32 x = 1; x < NumPoints; x++)
-    {
-        for (u32 y = 1; y < NumPoints; y++)
-        {
-            core::vector3df l1start, l2start, l1end, l2end;
-            l1start = l2start = l1end = l2end = -center;
+    core::vector3df pointVec(0, Points[0][0], 0);
+    pointVec -= center;
 
-            l1start += core::vector3df(x-1, Points[x-1][y], y);
-            l2start += core::vector3df(x, Points[x][y-1], y-1);
-            l1end += core::vector3df(x, Points[x][y], y);
-            l2end += core::vector3df(x, Points[x][y], y);
+    f32 thicknessCorrection = 0;
+    thicknessCorrection += LineThickness;
+    core::vector3df distModX(thicknessCorrection, 0, 0);
+    core::vector3df distModY(0, thicknessCorrection, 0);
+    core::vector3df distModZ(0, 0, thicknessCorrection);
+
+
+    // iterate the grid, spawning vertices and faces
+    for (u32 y = 0; y < NumPoints; y++)
+    {
+        pointVec.Z = y - center.Z;
+
+        for (u32 x = 0; x < NumPoints; x++)
+        {
+            pointVec.X = x - center.X;
+            pointVec.Y = Points[x][y];
 
             f32 thicknessCorrection = ((x-NumPoints/2.0)/NumPoints) * ((y-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
             thicknessCorrection *= 0.1;
             if (thicknessCorrection < 0) thicknessCorrection *= -1;
             thicknessCorrection += LineThickness;
 
-            core::vector3df distModX(thicknessCorrection, 0, 0);
-            core::vector3df distModY(0, thicknessCorrection, 0);
-            core::vector3df distModZ(0, 0, thicknessCorrection);
+            distModX.X = thicknessCorrection;
+            distModY.Y = thicknessCorrection;
+            distModZ.Z = thicknessCorrection;
 
-            // line 1
-            u32 indS = Buffer->Vertices.size();
-            Buffer->Vertices.push_back(video::S3DVertex(l1start - distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1start + distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1end - distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 1.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1end + distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 1.0)));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModX, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModY, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModY, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, null3d, white, null2d));
 
-            Buffer->Vertices.push_back(video::S3DVertex(l1start - distModZ, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1start + distModZ, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1end - distModZ, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 1.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l1end + distModZ, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 1.0)));
+            if (x > 0)
+            {
+                const u32 vertC = Buffer->Vertices.size();
+                //Y quad
+                Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
+                Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
+                //Z quad
+                Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
+                Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
+            }
+            if (y > 0)
+            {
+                const u32 vertC = Buffer->Vertices.size();
+                const u32 prevYVertC = ((y - 1) * NumPoints + x) * 6;
+                //X quad
+                Buffer->Indices.push_back(vertC-5); Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC+1);
+                Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC); Buffer->Indices.push_back(prevYVertC+1);
+                //Y quad
+                Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+2);
+                Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+3); Buffer->Indices.push_back(prevYVertC+2);
+            }
 
-            Buffer->Indices.push_back(indS); Buffer->Indices.push_back(indS+1); Buffer->Indices.push_back(indS+2);
-            Buffer->Indices.push_back(indS+1); Buffer->Indices.push_back(indS+3); Buffer->Indices.push_back(indS+2);
-
-            Buffer->Indices.push_back(indS+4); Buffer->Indices.push_back(indS+5); Buffer->Indices.push_back(indS+6);
-            Buffer->Indices.push_back(indS+5); Buffer->Indices.push_back(indS+7); Buffer->Indices.push_back(indS+6);
-
-            // line 2
-            indS = Buffer->Vertices.size();
-            Buffer->Vertices.push_back(video::S3DVertex(l2start - distModX, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2start + distModX, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2end - distModX, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 1.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2end + distModX, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 1.0)));
-
-            Buffer->Vertices.push_back(video::S3DVertex(l2start - distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2start + distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 0.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2end - distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(0.0, 1.0)));
-            Buffer->Vertices.push_back(video::S3DVertex(l2end + distModY, irr::core::vector3df(0), irr::video::SColor(255,255,255,255), irr::core::vector2df(1.0, 1.0)));
-
-            Buffer->Indices.push_back(indS); Buffer->Indices.push_back(indS+1); Buffer->Indices.push_back(indS+2);
-            Buffer->Indices.push_back(indS+1); Buffer->Indices.push_back(indS+3); Buffer->Indices.push_back(indS+2);
-
-            Buffer->Indices.push_back(indS+4); Buffer->Indices.push_back(indS+5); Buffer->Indices.push_back(indS+6);
-            Buffer->Indices.push_back(indS+5); Buffer->Indices.push_back(indS+7); Buffer->Indices.push_back(indS+6);
         }
     }
 
     Buffer->setDirty();
-    Buffer->recalculateBoundingBox();
+    //Buffer->recalculateBoundingBox();
 
     #ifdef DEBUG_GRID
     u32 genEnd = Context->Device->getTimer()->getTime();
