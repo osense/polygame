@@ -48,10 +48,10 @@ void EffectRenderer::drawAll()
 
         PP->render(Scene);
 
-        #ifdef DEBUG_EFFECTS
+        /*#ifdef DEBUG_EFFECTS
         if (Depth)
             video->draw2DImage(Depth, core::position2d<s32>(0, 0));
-        #endif
+        #endif*/
     }
     else
     {
@@ -74,9 +74,9 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     {
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
-        core::dimension2d<u32> res;
-        res.Width = core::round32(screenSize.Width * SceneQuality);
-        res.Height = core::round32(screenSize.Height * SceneQuality);
+        core::dimension2d<u32> res(1024, 512);
+        //res.Width = core::round32(screenSize.Width * SceneQuality);
+        //res.Height = core::round32(screenSize.Height * SceneQuality);
         Scene = video->addRenderTargetTexture(res, "scene-RT", video::ECF_R5G6B5);
     }
 
@@ -89,7 +89,6 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     case EET_DOF:
         DoF = PP->createEffectChain();
-        //DoF->createEffect(video::EPE_ALBEDO);
         DoF->createEffect(video::EPE_BLUR_V);
         DoF->createEffect(video::EPE_BLUR_H);
         video::CPostProcessingEffect* add2 = DoF->createEffect(video::EPE_ADD2);

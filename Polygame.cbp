@@ -46,8 +46,6 @@
 		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GridSceneNode.cpp" />
 		<Unit filename="jni/GridSceneNode.h" />
-		<Unit filename="jni/IQuadSceneNode.cpp" />
-		<Unit filename="jni/IQuadSceneNode.h" />
 		<Unit filename="jni/Object.cpp" />
 		<Unit filename="jni/Object.h" />
 		<Unit filename="jni/ObjectDebugInfo.cpp" />
