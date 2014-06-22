@@ -42,6 +42,9 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         XEnd.X = lineL * cos(Accel.X) + XStart.X;
         XEnd.Y = lineL * sin(Accel.X) + XStart.Y;
         Context->Device->getVideoDriver()->draw2DLine(XStart, XEnd);
+        core::stringc Xstr = "X: ";
+        Xstr += (s32)Accel.X;
+        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(Xstr.c_str(), core::rect<s32>(XStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
 
         core::position2d<s32> YStart, YEnd;
         YStart.X = screenSize.Width - (100*Context->GUIScale);
@@ -49,6 +52,9 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         YEnd.X = lineL * cos(Accel.Y) + YStart.X;
         YEnd.Y = lineL * sin(Accel.Y) + YStart.Y;
         Context->Device->getVideoDriver()->draw2DLine(YStart, YEnd);
+        core::stringc Ystr = "Y: ";
+        Ystr += (s32)Accel.Y;
+        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(Ystr.c_str(), core::rect<s32>(YStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
 
         core::position2d<s32> ZStart, ZEnd;
         ZStart.X = screenSize.Width - (50*Context->GUIScale);
@@ -56,6 +62,9 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         ZEnd.X = lineL * cos(Accel.Z) + ZStart.X;
         ZEnd.Y = lineL * sin(Accel.Z) + ZStart.Y;
         Context->Device->getVideoDriver()->draw2DLine(ZStart, ZEnd);
+        core::stringc Zstr = "Z: ";
+        Zstr += (s32)Accel.Z;
+        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(Zstr.c_str(), core::rect<s32>(ZStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
 
         #endif
     }
