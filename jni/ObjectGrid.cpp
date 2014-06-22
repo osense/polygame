@@ -19,7 +19,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
-    mesh->setHardwareMappingHint(scene::EHM_STREAM);
+    mesh->setHardwareMappingHint(scene::EHM_NEVER);
     mesh->addMeshBuffer(Buffer);
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
@@ -109,9 +109,9 @@ void ObjectGrid::regenerate()
             pointVec.X = x - center.X;
             pointVec.Y = Points[x][y];
 
-            f32 thicknessCorrection = ((x-NumPoints/2.0)/NumPoints) * ((y-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
-            thicknessCorrection *= 0.1;
-            if (thicknessCorrection < 0) thicknessCorrection *= -1;
+            f32 thicknessCorrection = 0;// = ((x-NumPoints/2.0)/NumPoints) * ((y-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
+            //thicknessCorrection *= 0.1;
+            //if (thicknessCorrection < 0) thicknessCorrection *= -1;
             thicknessCorrection += LineThickness;
 
             distModX.X = thicknessCorrection;
@@ -167,7 +167,7 @@ void ObjectGrid::addPlusX()
 
     // init new points
     for (u32 x = 0; x < NumPoints; x++)
-        Points[x][NumPoints-1] = 1;
+        Points[x][NumPoints-1] = Points[x][NumPoints-2] + (Context->Device->getRandomizer()->frand()-0.5);
 
     Position += core::vector3df(0, 0, 1);
     regenerate();

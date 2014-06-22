@@ -41,7 +41,6 @@
 		<Unit filename="assets/shaders/dof.frag" />
 		<Unit filename="assets/shaders/grid.frag" />
 		<Unit filename="assets/shaders/grid.vert" />
-		<Unit filename="assets/shaders/quad.vert" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GridSceneNode.cpp" />
