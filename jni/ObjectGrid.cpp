@@ -25,6 +25,17 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Grid);
     Node->setAutomaticCulling(scene::EAC_OFF);
+
+    BufferAppx = new scene::SMeshBuffer();
+    scene::SMesh* backMesh = new scene::SMesh();
+    backMesh->setHardwareMappingHint(scene::EHM_NEVER);
+    backMesh->addMeshBuffer(BufferAppx);
+    BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
+    BackNode->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
+    BackNode->setMaterialType(Context->Mtls->Solid);
+    BackNode->setAutomaticCulling(scene::EAC_OFF);
+
+
     regenerate();
 
 
@@ -79,9 +90,11 @@ void ObjectGrid::regenerate()
 
     Buffer->Vertices.clear();
     Buffer->Indices.clear();
+    BufferAppx->Vertices.clear();
+    BufferAppx->Indices.clear();
 
 
-    video::SColor white(255, 255, 255, 255);
+    video::SColor white(255, 255, 255, 255), black(255, 0, 0, 0);
     core::vector2df null2d(0);
     core::vector3df null3d(0);
 
@@ -125,6 +138,8 @@ void ObjectGrid::regenerate()
             Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, null3d, white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, null3d, white, null2d));
 
+            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec - distModY, null3d, black, null2d));
+
             if (x > 0)
             {
                 const u32 vertC = Buffer->Vertices.size();
@@ -146,11 +161,19 @@ void ObjectGrid::regenerate()
                 Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+2);
                 Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+3); Buffer->Indices.push_back(prevYVertC+2);
             }
+            if (x > 0 && y > 0)
+            {
+                const u32 vertC = y * NumPoints + x;
+                const u32 prevYVertC = vertC - NumPoints;
+                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(prevYVertC-1);
+                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1);
+            }
 
         }
     }
 
     Buffer->setDirty();
+    BufferAppx->setDirty();
     //Buffer->recalculateBoundingBox();
 
     #ifdef DEBUG_GRID

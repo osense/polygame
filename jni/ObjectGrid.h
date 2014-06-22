@@ -27,8 +27,11 @@ private:
     f32 Points[NumPoints][NumPoints];
 
 
+    // lines geometry
     scene::SMeshBuffer* Buffer;
-    scene::SMeshBuffer* LineBuffer;
+    // approximation mesh
+    scene::SMeshBuffer* BufferAppx;
+    scene::IMeshSceneNode* BackNode;
 
 
     void addPlusX();

@@ -9,6 +9,7 @@ struct SMaterials
 {
     video::E_MATERIAL_TYPE Depth;
     video::E_MATERIAL_TYPE Grid;
+    video::E_MATERIAL_TYPE Solid;
 };
 
 

@@ -51,7 +51,9 @@ void ObjectPlayer::onMessage(SMessage msg)
 
         core::vector3df dir = getDirection();
         Camera->setPosition(Camera->getPosition() + dir * Speed);
+        #ifndef DEBUG_GLES
         Camera->setTarget(Camera->getPosition() + dir);
+        #endif // DEBUG_GLES
 
         SMessage msg(this, EMT_OBJ_POS);
         core::vector3df camPos = Camera->getPosition();
@@ -69,8 +71,7 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_ACC)
     {
-        Camera->setRotation(Camera->getRotation() + core::vector3df(0, msg.Acc.Y * 0.1, msg.Acc.Y * 0.1));
-        //Camera->setRotation(Camera->getRotation() + core::vector3df(0, 0, msg.Acc.Y * 0.1));
+        Camera->setRotation(Camera->getRotation() + core::vector3df(msg.Acc.Z * 0.1, msg.Acc.Y * 0.1, 0));
     }
 }
 
@@ -84,5 +85,5 @@ core::vector3df ObjectPlayer::getDirection() const
 {
     core::vector3df rot = Camera->getRotation();
 
-    return core::vector3df(sin(core::degToRad(rot.Y)), 0, cos(core::degToRad(rot.Y))).normalize();
+    return core::vector3df(sin(core::degToRad(rot.Y)), -sin(core::degToRad(rot.X)), cos(core::degToRad(rot.Y))).normalize();
 }
