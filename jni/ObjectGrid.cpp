@@ -31,7 +31,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
     backMesh->setHardwareMappingHint(scene::EHM_NEVER);
     backMesh->addMeshBuffer(BufferAppx);
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
-    BackNode->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     BackNode->setMaterialType(Context->Mtls->Solid);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
 
@@ -122,21 +121,21 @@ void ObjectGrid::regenerate()
             pointVec.X = x - center.X;
             pointVec.Y = Points[x][y];
 
-            f32 thicknessCorrection = 0;// = ((x-NumPoints/2.0)/NumPoints) * ((y-NumPoints/2.0)/NumPoints);//  //((i*j - ((NumPoints*NumPoints)/2.0)) / (NumPoints*NumPoints));
-            //thicknessCorrection *= 0.1;
-            //if (thicknessCorrection < 0) thicknessCorrection *= -1;
-            thicknessCorrection += LineThickness;
+            /*f32 thicknessCorrection = (x-NumPoints/2.0)/NumPoints;// + ((y-NumPoints/2.0)/NumPoints);
+            thicknessCorrection *= 0.1;
+            if (thicknessCorrection < 0) thicknessCorrection *= -1;
+            thicknessCorrection += LineThickness;*/
 
             distModX.X = thicknessCorrection;
             distModY.Y = thicknessCorrection;
             distModZ.Z = thicknessCorrection;
 
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, null3d, white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModX, null3d, white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModY, null3d, white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModY, null3d, white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, null3d, white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, null3d, white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, core::vector3df(1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModX, core::vector3df(-1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModY, core::vector3df(0, 1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModY, core::vector3df(0, -1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, core::vector3df(0, 0, 1), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, core::vector3df(0, 0, -1), white, null2d));
 
             BufferAppx->Vertices.push_back(video::S3DVertex(pointVec - distModY, null3d, black, null2d));
 
@@ -146,6 +145,8 @@ void ObjectGrid::regenerate()
                 //Y quad
                 Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
                 Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
+                //Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC); Buffer->Indices.push_back(vertC-2);
+                //Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-2);
                 //Z quad
                 Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
                 Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);

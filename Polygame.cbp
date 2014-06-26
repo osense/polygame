@@ -38,7 +38,6 @@
 		</Compiler>
 		<Unit filename="assets/shaders/depth.frag" />
 		<Unit filename="assets/shaders/depth.vert" />
-		<Unit filename="assets/shaders/dof.frag" />
 		<Unit filename="assets/shaders/grid.frag" />
 		<Unit filename="assets/shaders/grid.vert" />
 		<Unit filename="assets/shaders/solid.frag" />

@@ -1,5 +1,6 @@
 attribute vec3 inVertexPosition;
 attribute vec3 inVertexNormal;
+//attribute vec2 inTexCoord0;
 
 uniform mat4 WorldViewProjMat;
 uniform mat4 WorldViewMat;
@@ -17,6 +18,9 @@ void main()
 
     Alpha = min(1.0, 5.5 - 10.0*depth);
 
-    gl_Position = WorldViewProjMat * vec4(inVertexPosition, 1.0);
+    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * depth * 0.075, 1.0);
+    /*vec3 dir = inVertexNormal;
+    clipPos.xyz += dir * 0.05;*/
+    gl_Position = clipPos;
 }
 

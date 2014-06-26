@@ -21,7 +21,7 @@ public:
 
 private:
     static const u32 NumPoints = 25;
-    static const f32 LineThickness = 0.015;
+    static const f32 LineThickness = 0.01;
 
     core::vector3df Position;
     f32 Points[NumPoints][NumPoints];
