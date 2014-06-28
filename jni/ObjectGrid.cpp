@@ -170,13 +170,17 @@ void ObjectGrid::regenerate()
             {
                 const u32 vertC = y * NumPoints + x;
                 const u32 prevYVertC = vertC - NumPoints;
-                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC);
-                if (Points[x][y] > Points[x-1][y] || Points[x][y] < Points[x-1][y-1]) BufferAppx->Indices.push_back(vertC-1);
-                else BufferAppx->Indices.push_back(prevYVertC-1);
 
-                BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1);
-                if (Points[x][y] > Points[x-1][y] || Points[x][y] < Points[x-1][y-1]) BufferAppx->Indices.push_back(prevYVertC);
-                else BufferAppx->Indices.push_back(vertC);
+                if (Points[x][y] + Points[x-1][y-1] > Points[x-1][y] + Points[x][y-1])
+                {
+                    BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(vertC-1);
+                    BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(prevYVertC);
+                }
+                else
+                {
+                    BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(prevYVertC-1);
+                    BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(vertC);
+                }
             }
 
         }
