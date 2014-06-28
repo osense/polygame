@@ -44,6 +44,8 @@
 		<Unit filename="assets/shaders/solid.vert" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
+		<Unit filename="jni/GridGenerator.cpp" />
+		<Unit filename="jni/GridGenerator.h" />
 		<Unit filename="jni/GridSceneNode.cpp" />
 		<Unit filename="jni/GridSceneNode.h" />
 		<Unit filename="jni/Object.cpp" />

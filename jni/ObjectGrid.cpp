@@ -1,6 +1,7 @@
 #include "ObjectGrid.h"
 
-ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
+ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont),
+    Generator(NumPoints)
 {
     Name = "ObjectGrid";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -11,11 +12,14 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont)
         for (u32 j = 0; j < NumPoints; j++)
             Points[i][j] = 0;
 
+    Generator.setType(EGT_PLAINS);
+
     Points[10][15] = 2;
     Points[11][15] = 1;
     Points[11][14] = 0.4;
     Points[12][15] = 1;
-    Points[2][20] = -0.5;
+    Points[20][20] = 1;
+    Points[21][19] = 1;
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
@@ -137,7 +141,7 @@ void ObjectGrid::regenerate()
             Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, core::vector3df(0, 0, 1), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, core::vector3df(0, 0, -1), white, null2d));
 
-            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec - distModY, null3d, black, null2d));
+            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec - distModY - distModY, null3d, black, null2d));
 
             if (x > 0)
             {
@@ -166,8 +170,13 @@ void ObjectGrid::regenerate()
             {
                 const u32 vertC = y * NumPoints + x;
                 const u32 prevYVertC = vertC - NumPoints;
-                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(prevYVertC-1);
-                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1);
+                BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC);
+                if (Points[x][y] > Points[x-1][y] || Points[x][y] < Points[x-1][y-1]) BufferAppx->Indices.push_back(vertC-1);
+                else BufferAppx->Indices.push_back(prevYVertC-1);
+
+                BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1);
+                if (Points[x][y] > Points[x-1][y] || Points[x][y] < Points[x-1][y-1]) BufferAppx->Indices.push_back(prevYVertC);
+                else BufferAppx->Indices.push_back(vertC);
             }
 
         }
@@ -186,12 +195,19 @@ void ObjectGrid::regenerate()
 
 void ObjectGrid::addPlusX()
 {
-    for (u32 x = 0; x < NumPoints; x++)
-        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPoints-1));
+    Generator.reset();
 
-    // init new points
     for (u32 x = 0; x < NumPoints; x++)
-        Points[x][NumPoints-1] = Points[x][NumPoints-2] + (Context->Device->getRandomizer()->frand()-0.5);
+    {
+        Generator.addPoint(Points[x][NumPoints-1]);
+        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPoints-1));
+    }
+
+
+    Generator.generate();
+
+    for (u32 x = 0; x < NumPoints; x++)
+        Points[x][NumPoints-1] = Generator.getGenerated(x);
 
     Position += core::vector3df(0, 0, 1);
     regenerate();
@@ -199,16 +215,32 @@ void ObjectGrid::addPlusX()
 
 void ObjectGrid::addMinusX()
 {
+    Generator.reset();
 
+    for (u32 x = 0; x < NumPoints; x++)
+    {
+        Generator.addPoint(Points[x][0]);
+        memmove(&Points[x][1], Points[x], sizeof(f32) * (NumPoints-1));
+    }
+
+
+    Generator.generate();
+
+    for (u32 x = 0; x < NumPoints; x++)
+        Points[x][0] = Generator.getGenerated(x);
+
+    Position += core::vector3df(0, 0, -1);
+    regenerate();
 }
 
 void ObjectGrid::addPlusY()
 {
+    Generator.reset();
+    Generator.setPoints(Points[NumPoints-1]);
+
     memmove(Points, Points[1], sizeof(f32) * NumPoints * (NumPoints-1));
 
-    // init new points
-    for (u32 y = 0; y < NumPoints; y++)
-        Points[NumPoints-1][y] = 1.5;
+    memcpy(Points[NumPoints-1], Generator.generate(), sizeof(f32) * NumPoints);
 
     Position += core::vector3df(1, 0, 0);
     regenerate();
@@ -216,5 +248,13 @@ void ObjectGrid::addPlusY()
 
 void ObjectGrid::addMinusY()
 {
+    Generator.reset();
+    Generator.setPoints(Points[0]);
 
+    memmove(Points[1], Points, sizeof(f32) * NumPoints * (NumPoints-1));
+
+    memcpy(Points[0], Generator.generate(), sizeof(f32) * NumPoints);
+
+    Position += core::vector3df(-1, 0, 0);
+    regenerate();
 }

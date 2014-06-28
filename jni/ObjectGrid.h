@@ -3,6 +3,7 @@
 
 #include "ObjectVisual.h"
 #include "ObjectManager.h"
+#include "GridGenerator.h"
 #include "SMaterials.h"
 
 #include <irrlicht.h>
@@ -21,10 +22,11 @@ public:
 
 private:
     static const u32 NumPoints = 25;
-    static const f32 LineThickness = 0.01;
+    static const f32 LineThickness = 0.005;
 
     core::vector3df Position;
     f32 Points[NumPoints][NumPoints];
+    GridGenerator Generator;
 
 
     // lines geometry
