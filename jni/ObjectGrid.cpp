@@ -77,6 +77,8 @@ void ObjectGrid::onMessage(SMessage msg)
             else if (diffVect.X < -0.5)
                 addMinusY();
 
+            regenerate();
+
             #ifdef DEBUG_GRID
             u32 updEnd = Context->Device->getTimer()->getTime();
             debugLog(core::stringc("Updated grid: ") + core::stringc(updStart - updEnd) + "ms");
@@ -214,7 +216,6 @@ void ObjectGrid::addPlusX()
         Points[x][NumPoints-1] = Generator.getGenerated(x);
 
     Position += core::vector3df(0, 0, 1);
-    regenerate();
 }
 
 void ObjectGrid::addMinusX()
@@ -234,7 +235,6 @@ void ObjectGrid::addMinusX()
         Points[x][0] = Generator.getGenerated(x);
 
     Position += core::vector3df(0, 0, -1);
-    regenerate();
 }
 
 void ObjectGrid::addPlusY()
@@ -247,7 +247,6 @@ void ObjectGrid::addPlusY()
     memcpy(Points[NumPoints-1], Generator.generate(), sizeof(f32) * NumPoints);
 
     Position += core::vector3df(1, 0, 0);
-    regenerate();
 }
 
 void ObjectGrid::addMinusY()
@@ -260,5 +259,4 @@ void ObjectGrid::addMinusY()
     memcpy(Points[0], Generator.generate(), sizeof(f32) * NumPoints);
 
     Position += core::vector3df(-1, 0, 0);
-    regenerate();
 }
