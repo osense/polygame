@@ -21,11 +21,12 @@ public:
 
 
 private:
-    static const u32 NumPoints = 25;
+    static const u32 NumPointsX = 25;
+    static const u32 NumPointsY = NumPointsX / (16.0 / 9.0);
     static const f32 LineThickness = 0.005;
 
     core::vector3df Position;
-    f32 Points[NumPoints][NumPoints];
+    f32 Points[NumPointsX][NumPointsY];
     GridGenerator Generator;
 
 
@@ -36,8 +37,7 @@ private:
     scene::IMeshSceneNode* BackNode;
 
 
-    void addPlusX();
-    void addMinusX();
+    void addX();
     void addPlusY();
     void addMinusY();
 

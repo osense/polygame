@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "ObjectManager.h"
+#include "EffectRenderer.h"
 #include <irrlicht.h>
 
 using namespace irr;
@@ -19,6 +20,7 @@ class ObjectPlayer : public Object
 
     private:
         scene::ICameraSceneNode* Camera;
+        scene::IQuadSceneNode* Quad;
         f32 Speed;
         bool Accelerating;
 
