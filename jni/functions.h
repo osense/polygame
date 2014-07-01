@@ -31,4 +31,10 @@ inline gui::IGUIButton* addButton(rect<s32> rect, video::ITexture* tex, SContext
 }*/
 
 
+inline void clamp(f32 &in, f32 min, f32 max)
+{
+    in = in > max ? max : in < min ? min : in;
+}
+
+
 #endif // FUNCTIONS_H_INCLUDED

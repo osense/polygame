@@ -21,8 +21,8 @@ public:
 
 
 private:
-    static const u32 NumPointsX = 25;
-    static const u32 NumPointsY = NumPointsX / (16.0 / 9.0);
+    static const u32 NumPointsY = 15;
+    static const u32 NumPointsX = NumPointsY * (16.0 / 9.0);
     static const f32 LineThickness = 0.005;
 
     core::vector3df Position;

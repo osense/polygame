@@ -2,7 +2,9 @@
 
 ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Speed(MinSpeed),
-    Accelerating(false)
+    MaxAbsRotY(DefaultMaxAbsRotY),
+    Accelerating(false),
+    AccLastSampleIdx(0)
 {
     Name = "ObjectPlayer";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -11,15 +13,16 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
     #ifdef _IRR_ANDROID_PLATFORM_
-    Context->Device->activateAccelerometer();
+    Context->Device->activateAccelerometer(0.02);
     #endif
 
     Camera = Context->Device->getSceneManager()->addCameraSceneNode();
-    Camera->setFarValue(25);
+    Camera->setFarValue(20);
     Camera->setNearValue(0.05);
     Camera->setPosition(core::vector3df(0, 0.4, 0));
 
-    //Quad = Context->Renderer->PP->getQuadNode();
+    for (u32 i = 0 ; i < AccSamplesSize; i++)
+        AccSamples[i] = 0;
 }
 
 ObjectPlayer::~ObjectPlayer()
@@ -46,15 +49,12 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (Speed < MinSpeed)
             Speed = MinSpeed;
 
-        Camera->setRotation(Camera->getRotation() + core::vector3df(0, -(Camera->getRotation().Y*msg.Update.fDelta), 0));
-
+        Camera->setRotation((Camera->getRotation() + core::vector3df(0, TargetRotY, 0)) / 2.0);
         debugLog(core::stringc(Camera->getRotation().Y).c_str());
 
         core::vector3df dir = getDirection();
         Camera->setPosition(Camera->getPosition() + dir * Speed);
-        #ifndef DEBUG_GLES
         Camera->setTarget(Camera->getPosition() + dir);
-        #endif // DEBUG_GLES
 
         //Quad->setMaterialTexture(0, Context->Renderer->getCrashEffectTexture());
         //Quad->setMaterialType(Context->Mtls->ColorBlend);
@@ -76,11 +76,34 @@ void ObjectPlayer::onMessage(SMessage msg)
             Accelerating = true;
         else if (msg.Input.Type == ETIE_LEFT_UP)
             Accelerating = false;
+
+        #ifdef DEBUG_GLES
+        else if (msg.Input.Type == ETIE_MOVED)
+        {
+            const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
+            TargetRotY = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
+            clamp(TargetRotY, -1.0, 1.0);
+            debugLog(core::stringc(TargetRotY).c_str());
+            TargetRotY *= MaxAbsRotY;
+        }
+        #endif
     }
     else if (msg.Type == EMT_ACC)
     {
-        //Camera->setRotation(Camera->getRotation() + core::vector3df(msg.Acc.Z * 0.1, msg.Acc.Y * 0.1, 0));
-        Camera->setRotation(Camera->getRotation() + core::vector3df(0, msg.Acc.Y * 0.2, 0));
+        f32 accY = msg.Acc.Y;
+        clamp(accY, -1*(AccCutoff), AccCutoff);
+
+        AccLastSampleIdx++;
+        if (AccLastSampleIdx >= AccSamplesSize)
+            AccLastSampleIdx = 0;
+
+        AccSamples[AccLastSampleIdx] = accY;
+
+        f32 total = 0;
+        for (u32 i = 0; i < AccSamplesSize; i++)
+            total += AccSamples[i];
+
+        TargetRotY = (total/AccSamplesSize) * (1.0 / AccCutoff) * MaxAbsRotY;
     }
 }
 
