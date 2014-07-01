@@ -10,7 +10,7 @@
 
 using namespace irr;
 
-class ObjectGrid : public ObjectVisual
+class ObjectGrid : public Object
 {
 public:
     ObjectGrid(SContext* cont);
@@ -29,9 +29,9 @@ private:
     f32 Points[NumPointsX][NumPointsY];
     GridGenerator Generator;
 
-
     // lines geometry
     scene::SMeshBuffer* Buffer;
+    scene::IMeshSceneNode* Node;
     // approximation mesh
     scene::SMeshBuffer* BufferAppx;
     scene::IMeshSceneNode* BackNode;

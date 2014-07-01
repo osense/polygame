@@ -1,6 +1,6 @@
 #include "ObjectGrid.h"
 
-ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont),
+ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator(NumPointsX)
 {
     Name = "ObjectGrid";
@@ -40,8 +40,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : ObjectVisual(cont),
 
 
     regenerate();
-
-
 }
 
 ObjectGrid::~ObjectGrid()
