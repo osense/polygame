@@ -1,7 +1,9 @@
 #include "ObjectGrid.h"
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
-    Generator(NumPointsX)
+    Generator(NumPointsX),
+    ColorChangeLast(99),
+    ChangingColor(0)
 {
     Name = "ObjectGrid";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -74,6 +76,29 @@ void ObjectGrid::onMessage(SMessage msg)
                 addMinusY();
 
             regenerate();
+
+            ColorChangeLast++;
+            if (ColorChangeLast >= ColorChangeEvery)
+            {
+                ColorFar = Context->Mtls->GridCB->getFarColor();
+                ChangingColor = NumPointsY;
+                ColorChangeLast = 0;
+            }
+            if (ChangingColor > 0)
+            {
+                ShaderCBGrid* callback = Context->Mtls->GridCB;
+
+                video::SColorf target(1, 0, 0);
+                video::SColorf near = callback->getNearColor();
+                video::SColorf far = callback->getFarColor();
+
+                near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+                far = target.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+
+                callback->setNearColor(near);
+                callback->setFarColor(far);
+                ChangingColor--;
+            }
 
             #ifdef DEBUG_GRID
             u32 updEnd = Context->Device->getTimer()->getTime();

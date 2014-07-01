@@ -5,11 +5,15 @@
 
 using namespace irr;
 
+class ShaderCBGrid;
+
 struct SMaterials
 {
     video::E_MATERIAL_TYPE Depth;
     video::E_MATERIAL_TYPE Grid;
+    ShaderCBGrid* GridCB;
     video::E_MATERIAL_TYPE Solid;
+    video::E_MATERIAL_TYPE ColorBlend;
 };
 
 

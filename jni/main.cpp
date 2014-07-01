@@ -14,6 +14,7 @@
 
 #include "ObjectStateGame.h"
 #include "ShaderCBDepth.h"
+#include "ShaderCBGrid.h"
 #include "SMaterials.h"
 
 using namespace irr;
@@ -72,8 +73,10 @@ int main(int argc, char *argv[])
 
     //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
     cont->Mtls->Depth = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag", new ShaderCBDepth(cont));
-    cont->Mtls->Grid = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag", new ShaderCBDepth(cont), video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    cont->Mtls->GridCB = new ShaderCBGrid(cont);
+    cont->Mtls->Grid = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag", cont->Mtls->GridCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
     cont->Mtls->Solid = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/solid.vert", "shaders/solid.frag", new ShaderCBDepth(cont));
+    //cont->Mtls->ColorBlend = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/pp/quad.vert", "shaders/pp/color_blend.frag", new ShaderCBSimple(), video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
     new ObjectStateGame(cont);
 

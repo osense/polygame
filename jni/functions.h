@@ -36,5 +36,14 @@ inline void clamp(f32 &in, f32 min, f32 max)
     in = in > max ? max : in < min ? min : in;
 }
 
+inline video::SColorf addColors(video::SColorf a, video::SColorf b)
+{
+    a.r += b.r;
+    a.g += b.g;
+    a.b += b.b;
+
+    return a;
+}
+
 
 #endif // FUNCTIONS_H_INCLUDED
