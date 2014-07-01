@@ -15,11 +15,11 @@ void main()
     float depth = length(Vertex) / CamFar;//Vertex.z / CamFar;
 
     //Color = mix(vec3(0.7, 0.14, 0.1), vec3(0.5, 0.14, 1.0), depth*(1.25+depth));
-    Color = mix(vec3(0.0, 1.0, 0.0), vec3(1.0, 1.0, 0.0), depth*(1.25+depth));
+    Color = mix(vec3(0.0, 1.0, 0.0), vec3(1.0, 1.0, 0.0), depth*(1.5+depth));
 
     Alpha = min(1.0, 5.5 - 10.0*depth);
 
-    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * depth * 0.08, 1.0);
+    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.08), 1.0);
     /*vec3 dir = inVertexNormal;
     clipPos.xyz += dir * 0.05;*/
     gl_Position = clipPos;

@@ -11,7 +11,7 @@ varying vec2 TexCoord;
 void main()
 {
     vec4 blur = vec4(0.0);
-    vec2 tc = TexCoord + vec2(0.0, PixelSizeY*0.5);
+    vec2 tc = TexCoord + vec2(PixelSizeX*0.5, PixelSizeY*0.5);
 
     blur += texture2D(Render, tc - vec2(0.0, PixelSizeY * 6.0)) * 0.015625;
     blur += texture2D(Render, tc - vec2(0.0, PixelSizeY * 4.0)) * 0.09375;
