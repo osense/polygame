@@ -2,15 +2,29 @@
 
 EffectRenderer::EffectRenderer(SContext* cont) :
     PP(0),
+    Active(false),
     Scene(0), Depth(0),
     FXAA(0),
     DoF(0)
 {
     Context = cont;
-
     Smgr = Context->Device->getSceneManager();
-    EffectSmgr = Smgr->createNewSceneManager();
-    Camera = EffectSmgr->addCameraSceneNode();
+
+    PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
+
+    /*video::IVideoDriver* video = Context->Device->getVideoDriver();
+    core::dimension2d<u32> res(1024, 512);
+    core::dimension2d<u32> screenSize = video->getScreenSize();
+    res.Width = core::round32(screenSize.Width * SceneQuality);
+    res.Height = core::round32(screenSize.Height * SceneQuality);
+    CrashEffectTexture = video->addRenderTargetTexture(res, "CrashEffect-RT", video::ECF_R5G6B5);
+    video::CPostProcessingEffect* crashRender = PP->createEffect(PP->getRootEffectChain()->readShader("crash_effect.frag"));
+    PP->render(0, CrashEffectTexture);
+    PP->getRootEffectChain()->removeEffect(crashRender);*/
+
+
+    /*EffectSmgr = Smgr->createNewSceneManager();
+    Camera = EffectSmgr->addCameraSceneNode();*/
 }
 
 EffectRenderer::~EffectRenderer()
@@ -47,11 +61,6 @@ void EffectRenderer::drawAll()
         video->setRenderTarget(video::ERT_FRAME_BUFFER);
 
         PP->render(Scene);
-
-        /*#ifdef DEBUG_EFFECTS
-        if (Depth)
-            video->draw2DImage(Depth, core::position2d<s32>(0, 0));
-        #endif*/
     }
     else
     {
@@ -61,30 +70,28 @@ void EffectRenderer::drawAll()
 
 bool EffectRenderer::isActive() const
 {
-    return (PP != 0);
+    return Active;
 }
 
 
 void EffectRenderer::init(E_EFFECT_TYPE type)
 {
     video::IVideoDriver* video = Context->Device->getVideoDriver();
-    core::dimension2d<u32> screenSize = video->getScreenSize();
 
-    if (!PP)
+    if (!Scene)
     {
-        PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
-
         core::dimension2d<u32> res(1024, 512);
+        core::dimension2d<u32> screenSize = video->getScreenSize();
         //res.Width = core::round32(screenSize.Width * SceneQuality);
         //res.Height = core::round32(screenSize.Height * SceneQuality);
-        Scene = video->addRenderTargetTexture(res, "scene-RT", video::ECF_R5G6B5);
+        Scene = video->addRenderTargetTexture(res, "scene-RT");
     }
 
     switch (type)
     {
     case EET_FXAA:
         FXAA = PP->createEffect(video::EPE_FXAA);
-        FXAA->setQuality(video::EPQ_FULL);
+        FXAA->setQuality(Scene->getSize());
         break;
 
     case EET_DOF:
@@ -97,8 +104,14 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         else
             add2->addTextureToShader(Scene);
 
-        /*core::dimension2d<u32> res = Scene->getOriginalSize() / (u32)EffectQuality;
-        Depth = video->addRenderTargetTexture(res, "depth-RT", video::ECF_R5G6B5);*/
         break;
     }
+
+    Active = true;
+}
+
+
+video::ITexture* EffectRenderer::getCrashEffectTexture() const
+{
+    return CrashEffectTexture;
 }

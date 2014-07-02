@@ -50,7 +50,6 @@ void ObjectPlayer::onMessage(SMessage msg)
             Speed = MinSpeed;
 
         Camera->setRotation((Camera->getRotation() + core::vector3df(0, TargetRotY, 0)) / 2.0);
-        debugLog(core::stringc(Camera->getRotation().Y).c_str());
 
         core::vector3df dir = getDirection();
         Camera->setPosition(Camera->getPosition() + dir * Speed);
@@ -83,7 +82,6 @@ void ObjectPlayer::onMessage(SMessage msg)
             const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
             TargetRotY = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
             clamp(TargetRotY, -1.0, 1.0);
-            debugLog(core::stringc(TargetRotY).c_str());
             TargetRotY *= MaxAbsRotY;
         }
         #endif

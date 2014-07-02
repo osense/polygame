@@ -2,7 +2,7 @@
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator(NumPointsX),
-    ColorChangeLast(99),
+    ColorChangeLast(0),
     ChangingColor(0)
 {
     Name = "ObjectGrid";
@@ -25,7 +25,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
-    mesh->setHardwareMappingHint(scene::EHM_NEVER);
+    //mesh->setHardwareMappingHint(scene::EHM_NEVER);
     mesh->addMeshBuffer(Buffer);
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
@@ -34,11 +34,12 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     BufferAppx = new scene::SMeshBuffer();
     scene::SMesh* backMesh = new scene::SMesh();
-    backMesh->setHardwareMappingHint(scene::EHM_NEVER);
+    //backMesh->setHardwareMappingHint(scene::EHM_NEVER);
     backMesh->addMeshBuffer(BufferAppx);
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->Solid);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
+    BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
 
 
     regenerate();
@@ -63,56 +64,64 @@ void ObjectGrid::onMessage(SMessage msg)
 
         if (diffVect.getLength() > 1.0)
         {
-            #ifdef DEBUG_GRID
+#ifdef DEBUG_GRID
             u32 updStart = Context->Device->getTimer()->getTime();
-            #endif // DEBUG_GRID
-
-            if (diffVect.Z > 0.5)
-                addX();
+#endif // DEBUG_GRID
 
             if (diffVect.X > 0.5)
                 addPlusY();
             else if (diffVect.X < -0.5)
                 addMinusY();
 
+            if (diffVect.Z > 0.5)
+            {
+                addX();
+
+                ColorChangeLast++;
+                if (ColorChangeLast >= ColorChangeEvery)
+                {
+                    ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
+                    ColorFar = Context->Mtls->GridCB->getFarColor();
+                    ChangingColor = NumPointsY;
+                    ColorChangeLast = 0;
+
+#ifdef DEBUG_GRID
+                    debugLog("Starting color change");
+#endif // DEBUG_GRID
+                }
+                if (ChangingColor > 0)
+                {
+                    ShaderCBGrid* callback = Context->Mtls->GridCB;
+
+                    video::SColorf near = callback->getNearColor();
+                    video::SColorf far = callback->getFarColor();
+
+                    near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+                    far = ColorNext.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+
+                    callback->setNearColor(near);
+                    callback->setFarColor(far);
+                    ChangingColor--;
+                }
+            }
+
             regenerate();
 
-            ColorChangeLast++;
-            if (ColorChangeLast >= ColorChangeEvery)
-            {
-                ColorFar = Context->Mtls->GridCB->getFarColor();
-                ChangingColor = NumPointsY;
-                ColorChangeLast = 0;
-            }
-            if (ChangingColor > 0)
-            {
-                ShaderCBGrid* callback = Context->Mtls->GridCB;
 
-                video::SColorf target(1, 0, 0);
-                video::SColorf near = callback->getNearColor();
-                video::SColorf far = callback->getFarColor();
 
-                near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
-                far = target.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
-
-                callback->setNearColor(near);
-                callback->setFarColor(far);
-                ChangingColor--;
-            }
-
-            #ifdef DEBUG_GRID
+#ifdef DEBUG_GRID
             u32 updEnd = Context->Device->getTimer()->getTime();
             debugLog(core::stringc("Updated grid: ") + core::stringc(updStart - updEnd) + "ms");
-            #endif // DEBUG_GRID
+#endif // DEBUG_GRID
         }
     }
 }
 
 void ObjectGrid::regenerate()
 {
-    #ifdef DEBUG_GRID
+#ifdef DEBUG_GRID
     u32 genStart = Context->Device->getTimer()->getTime();
-    #endif // DEBUG_GRID
+#endif // DEBUG_GRID
 
     Buffer->Vertices.clear();
     Buffer->Indices.clear();
@@ -172,8 +181,6 @@ void ObjectGrid::regenerate()
                 //Y quad
                 Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
                 Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
-                //Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC); Buffer->Indices.push_back(vertC-2);
-                //Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-2);
                 //Z quad
                 Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
                 Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
@@ -213,10 +220,10 @@ void ObjectGrid::regenerate()
     BufferAppx->setDirty();
     //Buffer->recalculateBoundingBox();
 
-    #ifdef DEBUG_GRID
+#ifdef DEBUG_GRID
     u32 genEnd = Context->Device->getTimer()->getTime();
     debugLog(core::stringc("Regenerated grid: ") + core::stringc(genStart - genEnd) + "ms");
-    #endif // DEBUG_GRID
+#endif // DEBUG_GRID
 }
 
 

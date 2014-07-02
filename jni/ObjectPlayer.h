@@ -32,7 +32,7 @@ class ObjectPlayer : public Object
         static const f32 MaxSpeed = 0.08;
         static const f32 DefaultMaxAbsRotY = 35;
         static const f32 AccCutoff = 3.0;
-        static const u32 AccSamplesSize = 10;
+        static const u32 AccSamplesSize = 5;
 
         f32 AccSamples[AccSamplesSize];
         u32 AccLastSampleIdx;

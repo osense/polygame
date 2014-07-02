@@ -2,12 +2,10 @@
 #define OBJECTEFFECTRENDERER_H
 
 #include "SContext.h"
-#include "ObjectVisual.h"
 #include <irrlicht.h>
 #include <irrPP.h>
 #include "IQuadSceneNode.h"
 #include "SMaterials.h"
-#include "ShaderCBDoF.h"
 
 
 using namespace irr;
@@ -32,13 +30,17 @@ public:
 
     void init(E_EFFECT_TYPE type);
 
+    video::ITexture* getCrashEffectTexture() const;
+
+    video::irrPP* PP;
+
 private:
     static const f32 SceneQuality = 1.0;
     static const video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality = video::EPQ_QUARTER;
 
     SContext* Context;
+    bool Active;
 
-    video::irrPP* PP;
     scene::ISceneManager* Smgr, *EffectSmgr;
     scene::ICameraSceneNode* Camera;
     video::ITexture* Scene, *Depth;
@@ -46,7 +48,8 @@ private:
     video::CPostProcessingEffect* FXAA;
 
     video::CPostProcessingEffectChain* DoF;
-    core::array<ObjectVisual*> DoFObjects;
+
+    video::ITexture* CrashEffectTexture;
 };
 
 #endif // OBJECTEFFECTRENDERER_H

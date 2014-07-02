@@ -7,6 +7,7 @@
 #include "ShaderCBGrid.h"
 #include "functions.h"
 
+#include <stdlib.h>
 #include <irrlicht.h>
 
 using namespace irr;
@@ -22,17 +23,17 @@ public:
 
 
 private:
-    static const u32 NumPointsY = 15;
+    static const u32 NumPointsY = 18;
     static const u32 NumPointsX = NumPointsY * (16.0 / 9.0);
     static const f32 LineThickness = 0.005;
-    static const u32 ColorChangeEvery = 100;
+    static const u32 ColorChangeEvery = 35;
 
     core::vector3df Position;
     f32 Points[NumPointsX][NumPointsY];
     GridGenerator Generator;
     u32 ColorChangeLast;
     u32 ChangingColor;
-    video::SColorf ColorFar;
+    video::SColorf ColorFar, ColorNext;
 
     // lines geometry
     scene::SMeshBuffer* Buffer;
