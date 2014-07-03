@@ -42,6 +42,9 @@
 		<Unit filename="assets/shaders/grid.vert" />
 		<Unit filename="assets/shaders/grid_back.frag" />
 		<Unit filename="assets/shaders/grid_back.vert" />
+		<Unit filename="assets/shaders/pp/blur_select.frag" />
+		<Unit filename="assets/shaders/sky.frag" />
+		<Unit filename="assets/shaders/sky.vert" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GridGenerator.cpp" />
@@ -58,6 +61,8 @@
 		<Unit filename="jni/ObjectManager.h" />
 		<Unit filename="jni/ObjectPlayer.cpp" />
 		<Unit filename="jni/ObjectPlayer.h" />
+		<Unit filename="jni/ObjectSky.cpp" />
+		<Unit filename="jni/ObjectSky.h" />
 		<Unit filename="jni/ObjectStateGame.cpp" />
 		<Unit filename="jni/ObjectStateGame.h" />
 		<Unit filename="jni/ObjectStateMenu.cpp" />
@@ -73,6 +78,8 @@
 		<Unit filename="jni/ShaderCBGrid.h" />
 		<Unit filename="jni/ShaderCBGridBack.cpp" />
 		<Unit filename="jni/ShaderCBGridBack.h" />
+		<Unit filename="jni/ShaderCBSky.cpp" />
+		<Unit filename="jni/ShaderCBSky.h" />
 		<Unit filename="jni/functions.h" />
 		<Unit filename="jni/main.cpp" />
 		<Extensions>

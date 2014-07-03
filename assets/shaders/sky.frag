@@ -6,6 +6,6 @@ varying vec2 TexCoord;
 
 void main()
 {
-    gl_FragColor = vec4(vec3((TexCoord.y)), 1.0);
+    gl_FragColor = vec4(vec3(TexCoord.y-0.5), 1.0);
 }
 

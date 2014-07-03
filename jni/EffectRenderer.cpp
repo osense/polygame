@@ -82,8 +82,8 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     {
         core::dimension2d<u32> res(1024, 512);
         core::dimension2d<u32> screenSize = video->getScreenSize();
-        res.Width = core::round32(screenSize.Width * SceneQuality);
-        res.Height = core::round32(screenSize.Height * SceneQuality);
+        //res.Width = core::round32(screenSize.Width * SceneQuality);
+        //res.Height = core::round32(screenSize.Height * SceneQuality);
         Scene = video->addRenderTargetTexture(res, "scene-RT");
     }
 

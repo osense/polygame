@@ -2,7 +2,7 @@
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator(NumPointsX),
-    ColorChangeLast(10),
+    ColorChangeLast(30),
     ChangingColor(0)
 {
     Name = "ObjectGrid";
@@ -80,7 +80,9 @@ void ObjectGrid::onMessage(SMessage msg)
                 ColorChangeLast++;
                 if (ColorChangeLast >= ColorChangeEvery)
                 {
-                    ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
+                    do
+                        ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
+                    while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
                     ColorFar = Context->Mtls->GridCB->getFarColor();
                     ChangingColor = NumPointsY;
                     ColorChangeLast = 0;
