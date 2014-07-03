@@ -25,7 +25,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
-    //mesh->setHardwareMappingHint(scene::EHM_NEVER);
+    mesh->setHardwareMappingHint(scene::EHM_STATIC);
     mesh->addMeshBuffer(Buffer);
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
@@ -34,10 +34,10 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     BufferAppx = new scene::SMeshBuffer();
     scene::SMesh* backMesh = new scene::SMesh();
-    //backMesh->setHardwareMappingHint(scene::EHM_NEVER);
+    backMesh->setHardwareMappingHint(scene::EHM_STATIC);
     backMesh->addMeshBuffer(BufferAppx);
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
-    BackNode->setMaterialType(Context->Mtls->Solid);
+    BackNode->setMaterialType(Context->Mtls->GridBack);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
 
@@ -166,14 +166,20 @@ void ObjectGrid::regenerate()
             distModY.Y = thicknessCorrection;
             distModZ.Z = thicknessCorrection;
 
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, core::vector3df(1, 0, 0), white, null2d));
+            /*Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, core::vector3df(1, 0, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModX, core::vector3df(-1, 0, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModY, core::vector3df(0, 1, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModY, core::vector3df(0, -1, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, core::vector3df(0, 0, 1), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, core::vector3df(0, 0, -1), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, core::vector3df(0, 0, -1), white, null2d));*/
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
 
-            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec - distModY - distModY, null3d, black, null2d));
+            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
 
             if (x > 0)
             {

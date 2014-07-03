@@ -96,8 +96,10 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     case EET_DOF:
         DoF = PP->createEffectChain();
-        DoF->createEffect(video::EPE_BLUR_V);
+        DoF->createEffect(video::EPE_ALBEDO);
         DoF->createEffect(video::EPE_BLUR_H);
+        DoF->createEffect(video::EPE_BLUR_V);
+        //DoF->createEffect(video::EPE_ALBEDO);
         video::CPostProcessingEffect* add2 = DoF->createEffect(video::EPE_ADD2);
         if (FXAA)
             add2->addTextureToShader(FXAA->getCustomRTT());

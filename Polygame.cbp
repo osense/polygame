@@ -40,8 +40,8 @@
 		<Unit filename="assets/shaders/depth.vert" />
 		<Unit filename="assets/shaders/grid.frag" />
 		<Unit filename="assets/shaders/grid.vert" />
-		<Unit filename="assets/shaders/solid.frag" />
-		<Unit filename="assets/shaders/solid.vert" />
+		<Unit filename="assets/shaders/grid_back.frag" />
+		<Unit filename="assets/shaders/grid_back.vert" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GridGenerator.cpp" />
@@ -71,8 +71,8 @@
 		<Unit filename="jni/ShaderCBDepth.h" />
 		<Unit filename="jni/ShaderCBGrid.cpp" />
 		<Unit filename="jni/ShaderCBGrid.h" />
-		<Unit filename="jni/ShaderCBSimple.cpp" />
-		<Unit filename="jni/ShaderCBSimple.h" />
+		<Unit filename="jni/ShaderCBGridBack.cpp" />
+		<Unit filename="jni/ShaderCBGridBack.h" />
 		<Unit filename="jni/functions.h" />
 		<Unit filename="jni/main.cpp" />
 		<Extensions>
