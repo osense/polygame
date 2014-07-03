@@ -5,6 +5,7 @@
 #include "ObjectManager.h"
 
 #include "ObjectGrid.h"
+#include "ObjectSky.h"
 #include "ObjectPlayer.h"
 
 

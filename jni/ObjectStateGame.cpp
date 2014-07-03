@@ -7,6 +7,7 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont)
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
     new ObjectGrid(Context);
+    new ObjectSky(Context);
     new ObjectPlayer(Context);
 }
 

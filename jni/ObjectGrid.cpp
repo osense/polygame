@@ -2,7 +2,7 @@
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator(NumPointsX),
-    ColorChangeLast(0),
+    ColorChangeLast(10),
     ChangingColor(0)
 {
     Name = "ObjectGrid";

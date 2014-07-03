@@ -13,7 +13,7 @@ struct SMaterials
     video::E_MATERIAL_TYPE Grid;
     ShaderCBGrid* GridCB;
     video::E_MATERIAL_TYPE GridBack;
-    video::E_MATERIAL_TYPE ColorBlend;
+    video::E_MATERIAL_TYPE Sky;
 };
 
 

@@ -16,6 +16,7 @@
 #include "ShaderCBDepth.h"
 #include "ShaderCBGrid.h"
 #include "ShaderCBGridBack.h"
+#include "ShaderCBSky.h"
 #include "SMaterials.h"
 
 using namespace irr;
@@ -77,7 +78,7 @@ int main(int argc, char *argv[])
     cont->Mtls->GridCB = new ShaderCBGrid(cont);
     cont->Mtls->Grid = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag", cont->Mtls->GridCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
     cont->Mtls->GridBack = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag", new ShaderCBGridBack(cont));
-    //cont->Mtls->ColorBlend = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/pp/quad.vert", "shaders/pp/color_blend.frag", new ShaderCBSimple(), video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    cont->Mtls->Sky = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag", new ShaderCBSky());
 
     new ObjectStateGame(cont);
 
