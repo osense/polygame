@@ -5,19 +5,18 @@
 #endif
 
 #include "SContext.h"
-#include "EffectRenderer.h"
+
 #include "ObjectManager.h"
-#include "ObjectDebugInfo.h"
 #include "ObjectUpdater.h"
 #include "ObjectEventReceiver.h"
+#include "EffectRenderer.h"
 
+#ifdef DEBUG_FPS
+#include "ObjectDebugInfo.h"
+#endif // DEBUG_FPS
 
-#include "ObjectStateGame.h"
-#include "ShaderCBDepth.h"
-#include "ShaderCBGrid.h"
-#include "ShaderCBGridBack.h"
-#include "ShaderCBSky.h"
-#include "SMaterials.h"
+#include "ObjectStateInit.h"
+
 
 using namespace irr;
 
@@ -58,29 +57,19 @@ int main(int argc, char *argv[])
     SContext* cont = new SContext();
     cont->Device = dev;
     cont->GUIScale = 1;
+
     cont->ObjManager = new ObjectManager(cont);
 
-    //((video::COGLES2Driver *) driver)->queryOpenGLFeature(video::COGLES2ExtensionHandler::IRR_OES_texture_npot);
-
-    #ifdef DEBUG_FPS
+#ifdef DEBUG_FPS
     new ObjectDebugInfo(cont);
-    #endif // DEBUG_FPS
+#endif // DEBUG_FPS
 
     cont->Mtls = new SMaterials;
     ObjectUpdater* updater = new ObjectUpdater(cont);
     new ObjectEventReceiver(cont);
     cont->Renderer = new EffectRenderer(cont);
-    //cont->Renderer->init(EET_FXAA);
-    cont->Renderer->init(EET_DOF);
 
-    //SContext->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
-    cont->Mtls->Depth = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag", new ShaderCBDepth(cont));
-    cont->Mtls->GridCB = new ShaderCBGrid(cont);
-    cont->Mtls->Grid = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag", cont->Mtls->GridCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
-    cont->Mtls->GridBack = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag", new ShaderCBGridBack(cont));
-    cont->Mtls->Sky = (video::E_MATERIAL_TYPE) dev->getVideoDriver()->getGPUProgrammingServices()->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag", new ShaderCBSky());
-
-    new ObjectStateGame(cont);
+    new ObjectStateInit(cont);
 
 
     ITimer* timer = dev->getTimer();

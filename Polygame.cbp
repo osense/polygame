@@ -65,6 +65,8 @@
 		<Unit filename="jni/ObjectSky.h" />
 		<Unit filename="jni/ObjectStateGame.cpp" />
 		<Unit filename="jni/ObjectStateGame.h" />
+		<Unit filename="jni/ObjectStateInit.cpp" />
+		<Unit filename="jni/ObjectStateInit.h" />
 		<Unit filename="jni/ObjectStateMenu.cpp" />
 		<Unit filename="jni/ObjectStateMenu.h" />
 		<Unit filename="jni/ObjectUpdater.cpp" />

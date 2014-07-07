@@ -26,6 +26,8 @@ class ObjectDebugInfo : public Object
         virtual void onMessage(SMessage msg);
 
     private:
+        IGUIFont* Font;
+
         #ifdef DEBUG_ACC
         core::vector3d<f64> Accel;
         #endif

@@ -1,10 +1,13 @@
 #include "ObjectDebugInfo.h"
 
-ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont)
+ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont),
+    Player(0)
 {
     Name = "ObjectDebugInfo";
     setPersistent(true);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
+
+    Font = Context->Device->getGUIEnvironment()->getBuiltInFont();// Context->Device->getGUIEnvironment()->getFont("gui/asap.xml");
 
     #ifdef DEBUG_GYRO
     Accel = core::vector2d<f64>(0);
@@ -13,6 +16,7 @@ ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont)
 
 ObjectDebugInfo::~ObjectDebugInfo()
 {
+    Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
@@ -26,11 +30,14 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
 
         #ifdef DEBUG_PLAYER
-        dbg += "\nSpeed: ";
-        dbg += Player->getSpeed();
+        if (Player)
+        {
+            dbg += "\nSpeed: ";
+            dbg += Player->getSpeed();
+        }
         #endif
 
-        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
+        Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 
         #ifdef DEBUG_ACC
         core::dimension2d<u32> screenSize = Context->Device->getVideoDriver()->getScreenSize();
@@ -45,7 +52,7 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         core::stringc accStr = "Accelerometer\n    ";
         accStr += "Y: ";
         accStr += (s32)Accel.Y;
-        Context->Device->getGUIEnvironment()->getSkin()->getFont()->draw(accStr.c_str(), core::rect<s32>(lineStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
+        Font->draw(accStr.c_str(), core::rect<s32>(lineStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
         #endif
     }
     #ifdef DEBUG_ACC
