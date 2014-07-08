@@ -40,7 +40,7 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return true;
     }
-    #ifndef DEBUG_GLES
+#ifndef DEBUG_GLES
     else if (event.EventType == EET_TOUCH_INPUT_EVENT)
     {
         SMessage msg(this, EMT_INPUT);
@@ -50,9 +50,43 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         msg.Input.Y = event.TouchInput.Y;
 
         broadcastMessage(msg);
+
+        // fix for irrlicht gui
+        SEvent fakeMouseEvent;
+        fakeMouseEvent.EventType = EET_MOUSE_INPUT_EVENT;
+        fakeMouseEvent.MouseInput.X = event.TouchInput.X;
+        fakeMouseEvent.MouseInput.Y = event.TouchInput.Y;
+        fakeMouseEvent.MouseInput.Shift = false;
+        fakeMouseEvent.MouseInput.Control = false;
+        fakeMouseEvent.MouseInput.ButtonStates = 0;
+
+        switch ( event.TouchInput.Event)
+        {
+        case ETIE_PRESSED_DOWN:
+        {
+            fakeMouseEvent.MouseInput.Event = EMIE_LMOUSE_PRESSED_DOWN;
+            break;
+        }
+        case ETIE_MOVED:
+        {
+            fakeMouseEvent.MouseInput.Event = EMIE_MOUSE_MOVED;
+            fakeMouseEvent.MouseInput.ButtonStates = EMBSM_LEFT;
+            break;
+        }
+        case ETIE_LEFT_UP:
+        {
+            fakeMouseEvent.MouseInput.Event = EMIE_LMOUSE_LEFT_UP;
+            break;
+        }
+        default:
+            break;
+        }
+        Context->Device->postEventFromUser(fakeMouseEvent);
+
+
         return true;
     }
-    #else
+#else
     else if (event.EventType == EET_MOUSE_INPUT_EVENT)
     {
         SMessage msg(this, EMT_INPUT);
@@ -71,7 +105,7 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return false;
     }
-    #endif
+#endif
     else if (event.EventType == EET_ACCELEROMETER_EVENT)
     {
         SMessage msg(this, EMT_ACC);
