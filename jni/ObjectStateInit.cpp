@@ -75,7 +75,7 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_DONE)
         {
-            new ObjectStateGame(Context);
+            new ObjectStateMenu(Context);
 
             Image->remove();
             delete this;

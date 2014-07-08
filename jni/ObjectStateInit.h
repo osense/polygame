@@ -3,7 +3,7 @@
 
 #include "Object.h"
 #include "ObjectManager.h"
-#include "ObjectStateGame.h"
+#include "ObjectStateMenu.h"
 
 #include "EffectRenderer.h"
 #include "ShaderCBDepth.h"

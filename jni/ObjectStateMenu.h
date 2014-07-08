@@ -32,8 +32,9 @@ class ObjectStateMenu : public Object
         virtual void onMessage(SMessage msg);
 
     private:
-        gui::IGUIWindow* create_menu();
+        void create_menu();
 
+        gui::IGUIWindow* Window;
         scene::ICameraSceneNode* Camera;
 };
 

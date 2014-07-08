@@ -2,20 +2,21 @@
 #define FUNCTIONS_H_INCLUDED
 
 #include <irrlicht.h>
+#include "SContext.h"
 
 using namespace irr;
 using namespace core;
 
-/*inline void scaleGUIPos(position2d<s32> &p, vector2df gscale)
+/*inline void scaleGUIPos(position2d<s32> &p, f32 gscale)
 {
     p.X = p.X * gscale.X;
     p.Y = p.Y * gscale.Y;
-}
+}*/
 
-inline void scaleGUIRect(rect<s32> &r, vector2df gscale)
+inline void scaleGUIRect(rect<s32> &r, f32 gscale)
 {
-    scaleGUIPos(r.LowerRightCorner, gscale);
-    scaleGUIPos(r.UpperLeftCorner, gscale);
+    r.LowerRightCorner *= gscale;
+    r.UpperLeftCorner *= gscale;
 }
 
 inline gui::IGUIButton* addButton(rect<s32> rect, video::ITexture* tex, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
@@ -28,7 +29,7 @@ inline gui::IGUIButton* addButton(rect<s32> rect, video::ITexture* tex, SContext
     btn->setUseAlphaChannel(true);
 
     return btn;
-}*/
+}
 
 
 inline void clamp(f32 &in, f32 min, f32 max)

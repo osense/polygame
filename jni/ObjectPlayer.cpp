@@ -2,6 +2,7 @@
 
 ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Speed(MinSpeed),
+    TargetRotY(0),
     MaxAbsRotY(DefaultMaxAbsRotY),
     Accelerating(false),
     AccLastSampleIdx(0)
