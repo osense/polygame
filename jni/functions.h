@@ -7,11 +7,17 @@
 using namespace irr;
 using namespace core;
 
-/*inline void scaleGUIPos(position2d<s32> &p, f32 gscale)
+inline void scaleGUIPos(position2d<s32> &p, f32 gscale)
 {
-    p.X = p.X * gscale.X;
-    p.Y = p.Y * gscale.Y;
-}*/
+    p.X *= gscale;
+    p.Y *= gscale;
+}
+
+inline void scaleGUIDim(dimension2d<s32> &p, f32 gscale)
+{
+    p.Width *= gscale;
+    p.Height *= gscale;
+}
 
 inline void scaleGUIRect(rect<s32> &r, f32 gscale)
 {
@@ -19,10 +25,11 @@ inline void scaleGUIRect(rect<s32> &r, f32 gscale)
     r.UpperLeftCorner *= gscale;
 }
 
-inline gui::IGUIButton* addButton(rect<s32> rect, video::ITexture* tex, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
+inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, video::ITexture* tex, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
 {
-    scaleGUIRect(rect, cont->GUIScale);
-    gui::IGUIButton* btn = cont->Device->getGUIEnvironment()->addButton(rect, parent, id);
+    scaleGUIPos(pos, cont->GUIScale);
+    scaleGUIDim(size, cont->GUIScale);
+    gui::IGUIButton* btn = cont->Device->getGUIEnvironment()->addButton(rect<s32>(pos, size), parent, id);
     btn->setDrawBorder(false);
     btn->setImage(tex);
     btn->setScaleImage(true);

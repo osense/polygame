@@ -6,6 +6,7 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     setPersistent(true);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
+    debugLog((core::stringc("GUI Scale is ") + core::stringc(Context->GUIScale)).c_str());
 
     create_menu();
 
@@ -64,14 +65,14 @@ void ObjectStateMenu::create_menu()
     Window->getCloseButton()->remove();
 
     // we'll assume a gui for 854x480, our functions will take care of the scaling
-    addButton(rect<s32>(position2d<s32>(363, 100), dimension2d<s32>(128, 64)),
+    addButton(position2d<s32>(363, 100), dimension2d<s32>(128, 64),
               video->getTexture("gui/continue.png"), Context, EGI_CONTINUE, Window);
-    addButton(rect<s32>(position2d<s32>(363, 200), dimension2d<s32>(128, 64)),
+    addButton(position2d<s32>(363, 200), dimension2d<s32>(128, 64),
               video->getTexture("gui/new_game.png"), Context, EGI_NEWGAME, Window);
 
 
-    addButton(rect<s32>(position2d<s32>(740, 380), dimension2d<s32>(64, 64)),
+    addButton(position2d<s32>(740, 380), dimension2d<s32>(64, 64),
               video->getTexture("gui/exit.png"), Context, EGI_EXIT, Window);
-    addButton(rect<s32>(position2d<s32>(660, 380), dimension2d<s32>(64, 64)),
+    addButton(position2d<s32>(660, 380), dimension2d<s32>(64, 64),
               video->getTexture("gui/options.png"), Context, EGI_OPTIONS, Window);
 }

@@ -56,7 +56,9 @@ int main(int argc, char *argv[])
 
     SContext* cont = new SContext();
     cont->Device = dev;
-    cont->GUIScale = 1;
+    f32 gScaleX = dev->getVideoDriver()->getScreenSize().Width / float(DESKTOP_WND_X);
+    f32 gScaleY = dev->getVideoDriver()->getScreenSize().Height / float(DESKTOP_WND_Y);
+    cont->GUIScale = gScaleX > gScaleY ? gScaleX : gScaleY;
 
     cont->ObjManager = new ObjectManager(cont);
 
