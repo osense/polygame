@@ -35,6 +35,9 @@ class ObjectStateInit : public Object
     private:
         E_INIT_LOADING_STATE LoadingState;
 
+        u32 TexturesLoaded;
+        core::array<core::stringc> TextureNames;
+
         gui::IGUIImage* Image;
 };
 

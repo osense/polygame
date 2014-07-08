@@ -18,6 +18,11 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
     Image = Context->Device->getGUIEnvironment()->addImage(imgTex, imgPos);
 
     LoadingState = EILS_RENDERER;
+
+    TextureNames.push_back("gui/continue.png");
+    TextureNames.push_back("gui/new_game.png");
+    TextureNames.push_back("gui/exit.png");
+    TextureNames.push_back("gui/options.png");
 }
 
 ObjectStateInit::~ObjectStateInit()
@@ -32,6 +37,7 @@ void ObjectStateInit::onMessage(SMessage msg)
     {
         if (LoadingState == EILS_RENDERER)
         {
+            debugLog("precaching resources...");
             //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_DOF);
 
@@ -56,12 +62,17 @@ void ObjectStateInit::onMessage(SMessage msg)
                                  new ShaderCBSky());
 
             LoadingState = EILS_TEXTURES;
+            TexturesLoaded = 0;
             return;
         }
 
         else if (LoadingState == EILS_TEXTURES)
         {
-            LoadingState = EILS_FONTS;
+            Context->Device->getVideoDriver()->getTexture(TextureNames[TexturesLoaded++]);
+
+            if (TexturesLoaded >= TextureNames.size())
+                LoadingState = EILS_FONTS;
+
             return;
         }
 
@@ -75,6 +86,7 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_DONE)
         {
+            debugLog("done precaching resources");
             new ObjectStateMenu(Context);
 
             Image->remove();
