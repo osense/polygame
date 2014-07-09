@@ -13,7 +13,7 @@ using namespace irr;
 enum E_EFFECT_TYPE
 {
     EET_FXAA = 0,
-    EET_DOF,
+    EET_GLOW,
     EET_MOTION_BLUR
 };
 
@@ -30,8 +30,6 @@ public:
 
     void init(E_EFFECT_TYPE type);
 
-    video::ITexture* getCrashEffectTexture() const;
-
     video::irrPP* PP;
 
 private:
@@ -41,15 +39,12 @@ private:
     SContext* Context;
     bool Active;
 
-    scene::ISceneManager* Smgr, *EffectSmgr;
+    scene::ISceneManager* Smgr;
     scene::ICameraSceneNode* Camera;
-    video::ITexture* Scene, *Depth;
+    video::ITexture* Scene;
 
     video::CPostProcessingEffect* FXAA;
-
-    video::CPostProcessingEffectChain* DoF;
-
-    video::ITexture* CrashEffectTexture;
+    video::CPostProcessingEffectChain* Glow;
 };
 
 #endif // OBJECTEFFECTRENDERER_H

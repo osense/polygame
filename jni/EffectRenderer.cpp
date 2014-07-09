@@ -3,28 +3,12 @@
 EffectRenderer::EffectRenderer(SContext* cont) :
     PP(0),
     Active(false),
-    Scene(0), Depth(0),
+    Scene(0),
     FXAA(0),
-    DoF(0)
+    Glow(0)
 {
     Context = cont;
     Smgr = Context->Device->getSceneManager();
-
-    PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
-
-    /*video::IVideoDriver* video = Context->Device->getVideoDriver();
-    core::dimension2d<u32> res(1024, 512);
-    core::dimension2d<u32> screenSize = video->getScreenSize();
-    res.Width = core::round32(screenSize.Width * SceneQuality);
-    res.Height = core::round32(screenSize.Height * SceneQuality);
-    CrashEffectTexture = video->addRenderTargetTexture(res, "CrashEffect-RT", video::ECF_R5G6B5);
-    video::CPostProcessingEffect* crashRender = PP->createEffect(PP->getRootEffectChain()->readShader("crash_effect.frag"));
-    PP->render(0, CrashEffectTexture);
-    PP->getRootEffectChain()->removeEffect(crashRender);*/
-
-
-    /*EffectSmgr = Smgr->createNewSceneManager();
-    Camera = EffectSmgr->addCameraSceneNode();*/
 }
 
 EffectRenderer::~EffectRenderer()
@@ -40,23 +24,6 @@ void EffectRenderer::drawAll()
 
         video->setRenderTarget(Scene);
         Smgr->drawAll();
-
-        /*if (DoF)
-        {
-            video->setRenderTarget(Depth);
-
-            scene::ICameraSceneNode* activeCam = Smgr->getActiveCamera();
-            Camera->setPosition(activeCam->getPosition());
-            Camera->setTarget(activeCam->getTarget());
-
-            video->getOverrideMaterial().EnablePasses = scene::ESNRP_SOLID;
-            video->getOverrideMaterial().EnableFlags = video::EMF_MATERIAL_TYPE;
-            video->getOverrideMaterial().Material.MaterialType = Context->Mtls->Depth;
-
-            Smgr->drawAll();
-
-            video->getOverrideMaterial().EnablePasses = 0;
-        }*/
 
         video->setRenderTarget(video::ERT_FRAME_BUFFER);
 
@@ -80,6 +47,8 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     if (!Scene)
     {
+        PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
+
         core::dimension2d<u32> res(1024, 512);
         core::dimension2d<u32> screenSize = video->getScreenSize();
         //res.Width = core::round32(screenSize.Width * SceneQuality);
@@ -90,16 +59,24 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     switch (type)
     {
     case EET_FXAA:
+        if (FXAA)
+            break;
+
+        Context->Device->getLogger()->log("EffectRenderer", "initializing fxaa");
         FXAA = PP->createEffect(video::EPE_FXAA);
         FXAA->setQuality(Scene->getSize());
         break;
 
-    case EET_DOF:
-        DoF = PP->createEffectChain();
-        DoF->createEffect(PP->getRootEffectChain()->readShader("blur_select.frag"));
-        DoF->createEffect(video::EPE_BLUR_H);
-        DoF->createEffect(video::EPE_BLUR_V);
-        video::CPostProcessingEffect* add2 = DoF->createEffect(video::EPE_ADD2);
+    case EET_GLOW:
+        if (Glow)
+            break;
+
+        Context->Device->getLogger()->log("EffectRenderer", "initializing glow effect");
+        Glow = PP->createEffectChain();
+        Glow->createEffect(PP->getRootEffectChain()->readShader("blur_select.frag"));
+        Glow->createEffect(video::EPE_BLUR_H);
+        Glow->createEffect(video::EPE_BLUR_V);
+        video::CPostProcessingEffect* add2 = Glow->createEffect(video::EPE_ADD2);
         if (FXAA)
             add2->addTextureToShader(FXAA->getCustomRTT());
         else
@@ -109,10 +86,4 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     }
 
     Active = true;
-}
-
-
-video::ITexture* EffectRenderer::getCrashEffectTexture() const
-{
-    return CrashEffectTexture;
 }
