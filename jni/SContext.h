@@ -2,8 +2,7 @@
 #define SContext_H_INCLUDED
 
 
-#define DEBUG_FPS
-#define DEBUG_ACC
+#define DEBUG_INFO
 //#define DEBUG_PLAYER
 #define DEBUG_OBJS
 //#define DEBUG_GRID

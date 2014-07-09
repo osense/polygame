@@ -11,9 +11,9 @@
 #include "ObjectEventReceiver.h"
 #include "EffectRenderer.h"
 
-#ifdef DEBUG_FPS
+#ifdef DEBUG_INFO
 #include "ObjectDebugInfo.h"
-#endif // DEBUG_FPS
+#endif // DEBUG_INFO
 
 #include "ObjectStateInit.h"
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     param.WindowSize = core::dimension2d<u32>(0, 0);
     param.PrivateData = app;
     param.OGLES2ShaderPath = "shaders/";
-    param.Bits = 24;
+    param.Bits = 24;Also radiation can't create mutants because radiation is used in medicine for cancer treatment.
     param.ZBufferBits = 16;
     param.AntiAlias = 0;
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     cont->ObjManager = new ObjectManager(cont);
 
-#ifdef DEBUG_FPS
+#ifdef DEBUG_INFO
     new ObjectDebugInfo(cont);
 #endif // DEBUG_FPS
 
