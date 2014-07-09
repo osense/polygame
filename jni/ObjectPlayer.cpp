@@ -13,9 +13,9 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
     Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
-    #ifdef _IRR_ANDROID_PLATFORM_
+#ifdef _IRR_ANDROID_PLATFORM_
     Context->Device->activateAccelerometer(0.02);
-    #endif
+#endif
 
     Camera = Context->Device->getSceneManager()->addCameraSceneNode();
     Camera->setFarValue(20);
@@ -24,6 +24,14 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
 
     for (u32 i = 0 ; i < AccSamplesSize; i++)
         AccSamples[i] = 0;
+
+#ifdef DEBUG_PLAYER
+    DebugCamera = Context->Device->getSceneManager()->addCameraSceneNode();
+    DebugCamera->setFarValue(21);
+    DebugCamera->setNearValue(0.05);
+    scene::ISceneNode* camVisual = Context->Device->getSceneManager()->addCubeSceneNode(0.1, Camera);
+    camVisual->setScale(core::vector3df(0.5, 0.5, 1));
+#endif // DEBUG_PLAYER
 }
 
 ObjectPlayer::~ObjectPlayer()
@@ -56,6 +64,11 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setPosition(Camera->getPosition() + dir * Speed);
         Camera->setTarget(Camera->getPosition() + dir);
 
+        #ifdef DEBUG_PLAYER
+        DebugCamera->setPosition(Camera->getPosition() + core::vector3df(0, 0.5, -1));
+        DebugCamera->setTarget(Camera->getPosition());
+        #endif // DEBUG_PLAYER
+
         //Quad->setMaterialTexture(0, Context->Renderer->getCrashEffectTexture());
         //Quad->setMaterialType(Context->Mtls->ColorBlend);
         //Quad->render();
@@ -77,7 +90,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (msg.Input.Type == ETIE_LEFT_UP)
             Accelerating = false;
 
-        #ifdef DEBUG_GLES
+#ifdef DEBUG_GLES
         else if (msg.Input.Type == ETIE_MOVED)
         {
             const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
@@ -85,7 +98,7 @@ void ObjectPlayer::onMessage(SMessage msg)
             clamp(TargetRotY, -1.0, 1.0);
             TargetRotY *= MaxAbsRotY;
         }
-        #endif
+#endif
     }
     else if (msg.Type == EMT_ACC)
     {
