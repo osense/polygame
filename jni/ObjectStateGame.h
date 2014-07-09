@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "ObjectManager.h"
 
+#include "ObjectStateInit.h"
 #include "ObjectGrid.h"
 #include "ObjectSky.h"
 #include "ObjectPlayer.h"

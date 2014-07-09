@@ -39,7 +39,7 @@ void ObjectStateInit::onMessage(SMessage msg)
         {
             debugLog("precaching resources...");
             //Context->Renderer->init(EET_FXAA);
-            Context->Renderer->init(EET_DOF);
+            //Context->Renderer->init(EET_DOF);
 
             LoadingState = EILS_SHADERS;
             return;

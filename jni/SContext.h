@@ -4,7 +4,7 @@
 
 #define DEBUG_FPS
 #define DEBUG_ACC
-#define DEBUG_PLAYER
+//#define DEBUG_PLAYER
 #define DEBUG_OBJS
 //#define DEBUG_GRID
 //#define DEBUG_EFFECTS

@@ -18,5 +18,11 @@ ObjectStateGame::~ObjectStateGame()
 
 void ObjectStateGame::onMessage(SMessage msg)
 {
-
+    if (msg.Type == EMT_PLAYER_CRASHED)
+    {
+        debugLog("player crashed");
+        Context->ObjManager->clear();
+        new ObjectStateInit(Context);
+        delete this;
+    }
 }

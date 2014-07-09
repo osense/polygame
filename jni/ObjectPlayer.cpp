@@ -36,9 +36,10 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
 
 ObjectPlayer::~ObjectPlayer()
 {
-    Object* updater = Context->ObjManager->getObjectFromName("ObjectUpdater");
-    if (updater)
-        updater->unregisterObserver(this);
+    Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
+    Context->ObjManager->getObjectFromName("ObjectEventReceiver")->unregisterObserver(this);
+
+    Camera->remove();
 
     Context->Device->deactivateAccelerometer();
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));

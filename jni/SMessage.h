@@ -15,7 +15,7 @@ enum E_MESSAGE_TYPE
     EMT_INPUT,
     EMT_ACC,
     EMT_GUI,
-    EMT_REQUEST_DDOF
+    EMT_PLAYER_CRASHED
 };
 
 struct SMessage

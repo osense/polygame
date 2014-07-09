@@ -20,8 +20,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Points[11][15] = 1;
     Points[11][14] = 0.4;
     Points[12][15] = 1;
-    Points[20][20] = 1;
-    Points[21][19] = 1;
 
     Buffer = new scene::SMeshBuffer();
     scene::SMesh* mesh = new scene::SMesh();
@@ -39,7 +37,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->GridBack);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
-    BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+    //BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
 
 
     regenerate();
@@ -47,6 +45,11 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
 ObjectGrid::~ObjectGrid()
 {
+    Node->remove();
+    BackNode->remove();
+
+    Context->Device->getSceneManager()->getMeshCache()->clearUnusedMeshes();
+
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
@@ -61,6 +64,9 @@ void ObjectGrid::onMessage(SMessage msg)
     {
         core::vector3df pPos(msg.Position.X, 0, msg.Position.Z);
         core::vector3df diffVect = pPos - Position;
+
+        if (handleCollision(core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z), diffVect))
+            return;
 
         if (diffVect.getLength() > 1.0)
         {
@@ -77,39 +83,10 @@ void ObjectGrid::onMessage(SMessage msg)
             {
                 addX();
 
-                ColorChangeLast++;
-                if (ColorChangeLast >= ColorChangeEvery)
-                {
-                    do
-                        ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
-                    while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
-                    ColorFar = Context->Mtls->GridCB->getFarColor();
-                    ChangingColor = NumPointsY;
-                    ColorChangeLast = 0;
-
-#ifdef DEBUG_GRID
-                    debugLog("Starting color change");
-#endif // DEBUG_GRID
-                }
-                if (ChangingColor > 0)
-                {
-                    ShaderCBGrid* callback = Context->Mtls->GridCB;
-
-                    video::SColorf near = callback->getNearColor();
-                    video::SColorf far = callback->getFarColor();
-
-                    near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
-                    far = ColorNext.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
-
-                    callback->setNearColor(near);
-                    callback->setFarColor(far);
-                    ChangingColor--;
-                }
+                handleColors();
             }
 
             regenerate();
-
-
 
 #ifdef DEBUG_GRID
             u32 updEnd = Context->Device->getTimer()->getTime();
@@ -159,21 +136,10 @@ void ObjectGrid::regenerate()
             pointVec.X = x - center.X;
             pointVec.Y = Points[x][y];
 
-            /*f32 thicknessCorrection = (x-NumPoints/2.0)/NumPoints;// + ((y-NumPoints/2.0)/NumPoints);
-            thicknessCorrection *= 0.1;
-            if (thicknessCorrection < 0) thicknessCorrection *= -1;
-            thicknessCorrection += LineThickness;*/
-
             distModX.X = thicknessCorrection;
             distModY.Y = thicknessCorrection;
             distModZ.Z = thicknessCorrection;
 
-            /*Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModX, core::vector3df(1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModX, core::vector3df(-1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModY, core::vector3df(0, 1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModY, core::vector3df(0, -1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec + distModZ, core::vector3df(0, 0, 1), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec - distModZ, core::vector3df(0, 0, -1), white, null2d));*/
             Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
@@ -226,12 +192,6 @@ void ObjectGrid::regenerate()
 
     Buffer->setDirty();
     BufferAppx->setDirty();
-    //Buffer->recalculateBoundingBox();
-
-#ifdef DEBUG_GRID
-    u32 genEnd = Context->Device->getTimer()->getTime();
-    debugLog(core::stringc("Regenerated grid: ") + core::stringc(genStart - genEnd) + "ms");
-#endif // DEBUG_GRID
 }
 
 
@@ -276,4 +236,116 @@ void ObjectGrid::addMinusY()
     }
 
     Position += core::vector3df(-1, 0, 0);
+}
+
+void ObjectGrid::handleColors()
+{
+    ColorChangeLast++;
+    if (ColorChangeLast >= ColorChangeEvery)
+    {
+        do
+            ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
+        while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
+        ColorFar = Context->Mtls->GridCB->getFarColor();
+        ChangingColor = NumPointsY;
+        ColorChangeLast = 0;
+
+#ifdef DEBUG_GRID
+        debugLog("Starting color change");
+#endif // DEBUG_GRID
+    }
+    if (ChangingColor > 0)
+    {
+        ShaderCBGrid* callback = Context->Mtls->GridCB;
+
+        video::SColorf near = callback->getNearColor();
+        video::SColorf far = callback->getFarColor();
+
+        near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+        far = ColorNext.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+
+        callback->setNearColor(near);
+        callback->setFarColor(far);
+        ChangingColor--;
+    }
+}
+
+bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
+{
+    u32 halfPtsX = NumPointsX / 2;
+    u32 posXOffset = diffV.X < 0 ? 1 : 0;
+    u32 posZOffset = diffV.Z > 0.5 ? 1 : 0;
+    f32 posX = Position.X - posXOffset;
+    f32 posZ = Position.Z + posZOffset - 0.5;
+
+    core::vector3df ld(posX, 0, posZ);
+    ld.Y = Points[halfPtsX - posXOffset][posZOffset];
+
+    core::vector3df rd(posX + 1, 0, posZ);
+    rd.Y = Points[halfPtsX - posXOffset + 1][posZOffset];
+
+    core::vector3df lu(posX, 0, posZ + 1);
+    lu.Y = Points[halfPtsX - posXOffset][posZOffset + 1];
+
+    core::vector3df ru(posX + 1, 0, posZ + 1);
+    ru.Y = Points[halfPtsX - posXOffset + 1][posZOffset + 1];
+
+
+    core::triangle3df t1, t2;
+
+    if (ld.Y + ru.Y <= rd.Y + lu.Y)
+    {
+        t1.pointA = rd;
+        t1.pointB = ld;
+        t1.pointC = ru;
+        t2.pointA = ld;
+        t2.pointB = lu;
+        t2.pointC = ru;
+    }
+    else
+    {
+        t1.pointA = rd;
+        t1.pointB = ld;
+        t1.pointC = lu;
+        t2.pointA = rd;
+        t2.pointB = lu;
+        t2.pointC = ru;
+    }
+
+    core::line3df t1l(pPos, pPos -999 * t1.getNormal());
+    core::line3df t2l(pPos, pPos -999 * t2.getNormal());
+
+    core::vector3df t1Int, t2Int;
+    if (t1.getIntersectionWithLimitedLine(t1l, t1Int))
+    {
+        t1l.end = t1Int;
+        if (t1l.getLength() < PLayerSize)
+        {
+            Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
+            return true;
+        }
+
+#ifdef DEBUG_PLAYER
+    Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+    Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+    Context->Device->getVideoDriver()->draw3DLine(t1l.start, t1l.end);
+#endif // DEBUG_PLAYER
+    }
+    if (t2.getIntersectionWithLimitedLine(t2l, t2Int))
+    {
+        t2l.end = t2Int;
+        if (t2l.getLength() < PLayerSize)
+        {
+            Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
+            return true;
+        }
+
+#ifdef DEBUG_PLAYER
+    Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+    Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+    Context->Device->getVideoDriver()->draw3DLine(t2l.start, t2l.end);
+#endif // DEBUG_PLAYER
+    }
+
+
 }

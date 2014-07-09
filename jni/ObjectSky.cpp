@@ -5,13 +5,15 @@ ObjectSky::ObjectSky(SContext* cont) : Object(cont)
     Name = "ObjectSky";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
-    SkyNode = Context->Device->getSceneManager()->addSkyDomeSceneNode(Context->Device->getVideoDriver()->getTexture("sky.png"), 16, 18, 0.9, 2.0, 19);
+    SkyNode = Context->Device->getSceneManager()->addSkyDomeSceneNode(0, 16, 18, 0.9, 2.0, 19);
     SkyNode->setMaterialType(Context->Mtls->Sky);
 }
 
 ObjectSky::~ObjectSky()
 {
-    //dtor
+    SkyNode->remove();
+
+    Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
 void ObjectSky::onMessage(SMessage msg)
