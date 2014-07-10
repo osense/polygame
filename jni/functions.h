@@ -21,8 +21,8 @@ inline void scaleGUIDim(dimension2d<s32> &p, f32 gscale)
 
 inline void scaleGUIRect(rect<s32> &r, f32 gscale)
 {
-    r.LowerRightCorner *= gscale;
-    r.UpperLeftCorner *= gscale;
+    scaleGUIPos(r.LowerRightCorner, gscale);
+    scaleGUIPos(r.UpperLeftCorner, gscale);
 }
 
 inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, video::ITexture* tex, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
@@ -36,6 +36,22 @@ inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, vi
     btn->setUseAlphaChannel(true);
 
     return btn;
+}
+
+inline gui::IGUIWindow* addOverlayWindow(SContext* cont)
+{
+    gui::IGUIEnvironment* gui = cont->Device->getGUIEnvironment();
+    video::IVideoDriver* video = cont->Device->getVideoDriver();
+    position2d<s32> screenSize;
+    screenSize.X = cont->Device->getVideoDriver()->getScreenSize().Width;
+    screenSize.Y = cont->Device->getVideoDriver()->getScreenSize().Height;
+
+    gui::IGUIWindow* wnd = gui->addWindow(rect<s32>(position2d<s32>(0, 0), screenSize));
+    wnd->setDraggable(false);
+    wnd->setDrawBackground(false);
+    wnd->getCloseButton()->remove();
+
+    return wnd;
 }
 
 

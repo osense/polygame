@@ -23,6 +23,8 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
     TextureNames.push_back("gui/new_game.png");
     TextureNames.push_back("gui/exit.png");
     TextureNames.push_back("gui/options.png");
+    TextureNames.push_back("gui/game_over.png");
+    TextureNames.push_back("gui/ok.png");
 }
 
 ObjectStateInit::~ObjectStateInit()

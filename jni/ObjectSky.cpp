@@ -13,6 +13,10 @@ ObjectSky::~ObjectSky()
 {
     SkyNode->remove();
 
+    Object* player = Context->ObjManager->getObjectFromName("ObjectPlayer");
+    if (player)
+        player->unregisterObserver(this);
+
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 

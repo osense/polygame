@@ -118,6 +118,15 @@ void ObjectPlayer::onMessage(SMessage msg)
 
         TargetRotY = (total/AccSamplesSize) * (1.0 / AccCutoff) * MaxAbsRotY;
     }
+    else if (msg.Type == EMT_PLAYER_CRASHED)
+    {
+        Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
+
+        Camera->setTarget(Camera->getPosition() + core::vector3df(0, 0, 0.001));
+        Camera->addAnimator(Context->Device->getSceneManager()->createFlyStraightAnimator(Camera->getPosition(),
+                                                                                        Camera->getPosition() + core::vector3df(0, 0.5, -0.75),
+                                                                                        500));
+    }
 }
 
 

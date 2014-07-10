@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     param.WindowSize = core::dimension2d<u32>(0, 0);
     param.PrivateData = app;
     param.OGLES2ShaderPath = "shaders/";
-    param.Bits = 24;Also radiation can't create mutants because radiation is used in medicine for cancer treatment.
     param.ZBufferBits = 16;
     param.AntiAlias = 0;
 

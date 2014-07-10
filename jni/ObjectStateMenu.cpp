@@ -53,16 +53,9 @@ void ObjectStateMenu::onMessage(SMessage msg)
 
 void ObjectStateMenu::create_menu()
 {
-    gui::IGUIEnvironment* gui = Context->Device->getGUIEnvironment();
     video::IVideoDriver* video = Context->Device->getVideoDriver();
-    position2d<s32> screenSize;
-    screenSize.X = Context->Device->getVideoDriver()->getScreenSize().Width;
-    screenSize.Y = Context->Device->getVideoDriver()->getScreenSize().Height;
 
-    Window = gui->addWindow(rect<s32>(position2d<s32>(0, 0), screenSize));
-    Window->setDraggable(false);
-    Window->setDrawBackground(false);
-    Window->getCloseButton()->remove();
+    Window = addOverlayWindow(Context);
 
     // we'll assume a gui for 854x480, our functions will take care of the scaling
     addButton(position2d<s32>(363, 100), dimension2d<s32>(128, 64),

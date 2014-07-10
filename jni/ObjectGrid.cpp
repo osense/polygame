@@ -48,7 +48,9 @@ ObjectGrid::~ObjectGrid()
     Node->remove();
     BackNode->remove();
 
-    Context->Device->getSceneManager()->getMeshCache()->clearUnusedMeshes();
+    Object* pl = Context->ObjManager->getObjectFromName("ObjectPlayer");
+    if (pl)
+        pl->unregisterObserver(this);
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
