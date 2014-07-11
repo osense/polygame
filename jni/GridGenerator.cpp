@@ -31,7 +31,7 @@ void GridGenerator::reset()
     ArraySize = 0;
 }
 
-f32* GridGenerator::generate()
+f32* GridGenerator::generate(core::vector3df position)
 {
     switch(Type)
     {
@@ -39,10 +39,10 @@ f32* GridGenerator::generate()
         genNone();
         break;
     case EGT_PLAINS:
-        genPlains();
+        genPlains(position);
         break;
     case EGT_CANYONS:
-        genCanyons();
+        genCanyons(position);
         break;
     }
 
@@ -67,22 +67,25 @@ void GridGenerator::genNone()
     }
 }
 
-void GridGenerator::genPlains()
+void GridGenerator::genPlains(core::vector3df pos)
 {
     NewPts[0] = 0;
     NewPts[NumPoints-1] = 0;
 
     for (u32 i = 1; i < NumPoints-1; i++)
     {
-        u32 rnd = rand()%100;
+        NewPts[i] = PerlinN.GetValue(pos.X*0.1 + 0.5 + i, 0, pos.Z*0.1 + 0.5);
+        if (NewPts[i] < 0)
+            NewPts[i] = 0;
+        /*u32 rnd = rand()%100;
         if (rnd > 75)
             NewPts[i] = (LastPts[i-1] + LastPts[i] +LastPts[i+1]) / 3 + (rnd/25.0-3.1);
         else
-            NewPts[i] = 0;
+            NewPts[i] = 0;*/
     }
 }
 
-void GridGenerator::genCanyons()
+void GridGenerator::genCanyons(core::vector3df pos)
 {
 
 }

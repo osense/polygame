@@ -208,7 +208,7 @@ void ObjectGrid::addX()
     }
 
 
-    Generator.generate();
+    Generator.generate(Position);
 
     for (u32 x = 0; x < NumPointsX; x++)
         Points[x][NumPointsY-1] = Generator.getGenerated(x);
@@ -349,5 +349,5 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 #endif // DEBUG_PLAYER
     }
 
-
+    return false;
 }

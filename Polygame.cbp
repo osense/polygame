@@ -83,6 +83,14 @@
 		<Unit filename="jni/ShaderCBSky.cpp" />
 		<Unit filename="jni/ShaderCBSky.h" />
 		<Unit filename="jni/functions.h" />
+		<Unit filename="jni/libnoise/basictypes.h" />
+		<Unit filename="jni/libnoise/exception.h" />
+		<Unit filename="jni/libnoise/interp.h" />
+		<Unit filename="jni/libnoise/noisegen.cpp" />
+		<Unit filename="jni/libnoise/noisegen.h" />
+		<Unit filename="jni/libnoise/perlin.cpp" />
+		<Unit filename="jni/libnoise/perlin.h" />
+		<Unit filename="jni/libnoise/vectortable.h" />
 		<Unit filename="jni/main.cpp" />
 		<Extensions>
 			<code_completion />
