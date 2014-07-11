@@ -54,15 +54,19 @@ int main(int argc, char *argv[])
 #endif
 
     SContext* cont = new SContext();
+#ifdef _IRR_ANDROID_PLATFORM_
+    cont->App = app;
+#endif
     cont->Device = dev;
     f32 gScaleX = dev->getVideoDriver()->getScreenSize().Width / float(DESKTOP_WND_X);
     f32 gScaleY = dev->getVideoDriver()->getScreenSize().Height / float(DESKTOP_WND_Y);
-    cont->GUIScale = gScaleX > gScaleY ? gScaleX : gScaleY;
+    cont->GUIScale = gScaleX < gScaleY ? gScaleX : gScaleY;
 
     cont->ObjManager = new ObjectManager(cont);
 
 #ifdef DEBUG_INFO
     new ObjectDebugInfo(cont);
+    dev->getLogger()->setLogLevel(ELL_DEBUG);
 #endif // DEBUG_FPS
 
     cont->Mtls = new SMaterials;

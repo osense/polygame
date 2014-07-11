@@ -13,6 +13,8 @@
 
 #include <irrTypes.h>
 
+class android_app;
+
 namespace irr
 {
     class IrrlichtDevice;
@@ -26,6 +28,7 @@ struct SMaterials;
 
 struct SContext
 {
+    android_app* App;
     irr::IrrlichtDevice* Device;
 
     Object* State;

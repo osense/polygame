@@ -7,6 +7,10 @@
 #include "IQuadSceneNode.h"
 #include "SMaterials.h"
 
+#ifdef _IRR_ANDROID_PLATFORM_
+#include <android_native_app_glue.h>
+#endif // _IRR_ANDROID_PLATFORM_
+
 
 using namespace irr;
 

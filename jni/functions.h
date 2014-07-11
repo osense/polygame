@@ -41,7 +41,6 @@ inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, vi
 inline gui::IGUIWindow* addOverlayWindow(SContext* cont)
 {
     gui::IGUIEnvironment* gui = cont->Device->getGUIEnvironment();
-    video::IVideoDriver* video = cont->Device->getVideoDriver();
     position2d<s32> screenSize;
     screenSize.X = cont->Device->getVideoDriver()->getScreenSize().Width;
     screenSize.Y = cont->Device->getVideoDriver()->getScreenSize().Height;

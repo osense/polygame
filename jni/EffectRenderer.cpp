@@ -50,10 +50,28 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
+#ifdef DEBUG_GLES
         core::dimension2d<u32> screenSize = video->getScreenSize();
-        //res.Width = core::round32(screenSize.Width * SceneQuality);
-        //res.Height = core::round32(screenSize.Height * SceneQuality);
+        res.Width = core::round32(screenSize.Width * SceneQuality);
+        res.Height = core::round32(screenSize.Height * SceneQuality);
+#elif _IRR_ANDROID_PLATFORM_
+        ANativeWindow* nativeWindow = static_cast<ANativeWindow*>(video->getExposedVideoData().OGLESAndroid.Window);
+        //res.Width = ANativeWindow_getWidth(Context->App->window);
+        //res.Height = ANativeWindow_getHeight(Context->App->window);
+#endif
+        core::stringc resText;
+        resText += res.Width;
+        resText += "x";
+        resText += res.Height;
+        Context->Device->getLogger()->log("Using Scene RTT with resolution", resText.c_str(), ELL_DEBUG);
+        resText = "";
+        resText += res.Width / (int)EffectQuality;
+        resText += "x";
+        resText += res.Height / (int)EffectQuality;
+        Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
+
         Scene = video->addRenderTargetTexture(res, "scene-RT");
+        PP->setQuality(res / (u32)EffectQuality);
     }
 
     switch (type)
@@ -73,7 +91,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
         Context->Device->getLogger()->log("EffectRenderer", "initializing glow effect");
         Glow = PP->createEffectChain();
-        Glow->createEffect(PP->getRootEffectChain()->readShader("blur_select.frag"));
+        Glow->createEffect(video::EPE_ALBEDO);//PP->getRootEffectChain()->readShader("blur_select.frag"));
         Glow->createEffect(video::EPE_BLUR_H);
         Glow->createEffect(video::EPE_BLUR_V);
         video::CPostProcessingEffect* add2 = Glow->createEffect(video::EPE_ADD2);
