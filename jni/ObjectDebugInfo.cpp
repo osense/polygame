@@ -26,14 +26,21 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getFPS();
         dbg += "\nTris: ";
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
-        dbg += "\nMeshes: ";
-        dbg += Context->Device->getSceneManager()->getMeshCache()->getMeshCount();
 
         if (Player)
         {
             dbg += "\nSpeed: ";
             dbg += Player->getSpeed();
         }
+
+#ifdef DEBUG_GRID
+        ObjectGrid* grid = static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"));
+        if (grid)
+        {
+            dbg += "\nDifficulty: ";
+            dbg += grid->getGenerator().getDifficulty();
+        }
+#endif // DEBUG_GRID
 
         Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 

@@ -7,6 +7,12 @@ GridGenerator::GridGenerator(u32 numPoints)
     NewPts = new f32[NumPoints];
     ArraySize = 0;
     Type = EGT_NONE;
+    Slope = EST_NONE;
+    Height = 0;
+    Difficulty = 0;
+
+    PerlinN.SetSeed(0);
+    PerlinN.SetOctaveCount(1);
 }
 
 GridGenerator::~GridGenerator()
@@ -46,6 +52,8 @@ f32* GridGenerator::generate(core::vector3df position)
         break;
     }
 
+    slopeTransform();
+
     return NewPts;
 }
 
@@ -58,6 +66,23 @@ void GridGenerator::setType(E_GEN_TYPE type)
 {
     Type = type;
 }
+
+void GridGenerator::setSlope(E_SLOPE_TYPE type)
+{
+    Slope = type;
+    StepsIntoSlope = 0;
+}
+
+void GridGenerator::setDifficulty(f32 diff)
+{
+    Difficulty = diff;
+}
+
+f32 GridGenerator::getDifficulty() const
+{
+    return Difficulty;
+}
+
 
 void GridGenerator::genNone()
 {
@@ -72,20 +97,40 @@ void GridGenerator::genPlains(core::vector3df pos)
     NewPts[0] = 0;
     NewPts[NumPoints-1] = 0;
 
+    PerlinN.SetFrequency(0.4);
+
     for (u32 i = 1; i < NumPoints-1; i++)
     {
-        NewPts[i] = PerlinN.GetValue(pos.X*0.1 + 0.5 + i, 0, pos.Z*0.1 + 0.5);
+        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, int(pos.Z)%150);
         if (NewPts[i] < 0)
             NewPts[i] = 0;
-        /*u32 rnd = rand()%100;
-        if (rnd > 75)
-            NewPts[i] = (LastPts[i-1] + LastPts[i] +LastPts[i+1]) / 3 + (rnd/25.0-3.1);
-        else
-            NewPts[i] = 0;*/
     }
 }
 
 void GridGenerator::genCanyons(core::vector3df pos)
 {
 
+}
+
+void GridGenerator::slopeTransform()
+{
+    if (Slope == EST_NONE)
+        return;
+
+    f32 slpStep = SlopeStep;
+    if (Slope == EST_DOWN)
+        slpStep = -slpStep;
+
+    if (StepsIntoSlope < SlopeChangeInSteps)
+    {
+        Height += slpStep * (1.0 / (SlopeChangeInSteps - StepsIntoSlope));
+        StepsIntoSlope++;
+    }
+    else
+        Height += slpStep;
+
+    for (u32 i = 0; i < NumPoints-1; i++)
+    {
+        NewPts[i] += Height;
+    }
 }

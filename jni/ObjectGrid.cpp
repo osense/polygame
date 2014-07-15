@@ -2,7 +2,8 @@
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator(NumPointsX),
-    ColorChangeLast(30),
+    GenChangeIn(GenChangeEvery),
+    ColorChangeIn(5),
     ChangingColor(0)
 {
     Name = "ObjectGrid";
@@ -14,7 +15,9 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
         for (u32 y = 0; y < NumPointsY; y++)
             Points[x][y] = 0;
 
+    srand(0);
     Generator.setType(EGT_PLAINS);
+    Generator.setSlope(EST_UP);
 
     Points[10][15] = 2;
     Points[11][15] = 1;
@@ -70,6 +73,7 @@ void ObjectGrid::onMessage(SMessage msg)
         if (handleCollision(core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z), diffVect))
             return;
 
+        // handle all kinds of update stuff
         if (diffVect.getLength() > 1.0)
         {
 #ifdef DEBUG_GRID
@@ -85,6 +89,8 @@ void ObjectGrid::onMessage(SMessage msg)
             {
                 addX();
 
+                handleGenUpdate();
+
                 handleColors();
             }
 
@@ -98,12 +104,14 @@ void ObjectGrid::onMessage(SMessage msg)
     }
 }
 
+const GridGenerator& ObjectGrid::getGenerator() const
+{
+    return Generator;
+}
+
+
 void ObjectGrid::regenerate()
 {
-#ifdef DEBUG_GRID
-    u32 genStart = Context->Device->getTimer()->getTime();
-#endif // DEBUG_GRID
-
     Buffer->Vertices.clear();
     Buffer->Indices.clear();
     BufferAppx->Vertices.clear();
@@ -240,17 +248,29 @@ void ObjectGrid::addMinusY()
     Position += core::vector3df(-1, 0, 0);
 }
 
+void ObjectGrid::handleGenUpdate()
+{
+    Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
+
+    GenChangeIn--;
+
+    if (GenChangeIn <= 0)
+    {
+        Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
+    }
+}
+
 void ObjectGrid::handleColors()
 {
-    ColorChangeLast++;
-    if (ColorChangeLast >= ColorChangeEvery)
+    ColorChangeIn--;
+    if (ColorChangeIn == 0)
     {
         do
             ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
         while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
         ColorFar = Context->Mtls->GridCB->getFarColor();
         ChangingColor = NumPointsY;
-        ColorChangeLast = 0;
+        ColorChangeIn = ColorChangeEvery;
 
 #ifdef DEBUG_GRID
         debugLog("Starting color change");
@@ -328,9 +348,9 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         }
 
 #ifdef DEBUG_PLAYER
-    Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
-    Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
-    Context->Device->getVideoDriver()->draw3DLine(t1l.start, t1l.end);
+        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+        Context->Device->getVideoDriver()->draw3DLine(t1l.start, t1l.end);
 #endif // DEBUG_PLAYER
     }
     if (t2.getIntersectionWithLimitedLine(t2l, t2Int))
@@ -343,11 +363,18 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         }
 
 #ifdef DEBUG_PLAYER
-    Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
-    Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
-    Context->Device->getVideoDriver()->draw3DLine(t2l.start, t2l.end);
+        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+        Context->Device->getVideoDriver()->draw3DLine(t2l.start, t2l.end);
 #endif // DEBUG_PLAYER
     }
+
+    // broadcast triangle underneath player
+    /*core::line3df pl(pPos, pPos + core::vector3df(0, -100, 0));
+    if (t1.getIntersectionWithLimitedLine(pl))
+    {
+
+    }*/
 
     return false;
 }

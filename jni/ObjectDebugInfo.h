@@ -1,12 +1,16 @@
 #ifndef OBJECTDEBUGINFO_H
 #define OBJECTDEBUGINFO_H
 
+//#ifdef DEBUG_INFO
+
 #include "Object.h"
 #include "ObjectManager.h"
 #include <irrlicht.h>
 
 #include "ObjectEventReceiver.h"
 #include "ObjectPlayer.h"
+#include "ObjectGrid.h"
+#include "GridGenerator.h"
 
 using namespace irr;
 using namespace gui;
@@ -26,5 +30,7 @@ class ObjectDebugInfo : public Object
 
         ObjectPlayer* Player;
 };
+
+//#endif // DEBUG_INFO
 
 #endif // OBJECTDEBUGINFO_H
