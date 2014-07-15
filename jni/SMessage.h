@@ -12,6 +12,7 @@ enum E_MESSAGE_TYPE
     EMT_OBJ_SPAWNED,
     EMT_OBJ_DIED,
     EMT_OBJ_POS,
+    EMT_PLAYER_FEEDBACK,
     EMT_INPUT,
     EMT_ACC,
     EMT_GUI,
@@ -52,6 +53,12 @@ struct SMessage
         irr::f32 X, Y, Z;
     };
 
+    struct PlayerFeedbackMessage
+    {
+        irr::f32 Height;
+        irr::f32 GridAngle;
+    };
+
     union
     {
         GUIMessage GUI;
@@ -59,6 +66,7 @@ struct SMessage
         AccMessage Acc;
         UpdateMessage Update;
         ObjectPositionMessage Position;
+        PlayerFeedbackMessage PlayerFeedback;
     };
 
 

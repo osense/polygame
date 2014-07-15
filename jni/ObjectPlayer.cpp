@@ -84,6 +84,11 @@ void ObjectPlayer::onMessage(SMessage msg)
         msg.Position.Z = camPos.Z;
         broadcastMessage(msg);
     }
+    else if (msg.Type == EMT_PLAYER_FEEDBACK)
+    {
+        Camera->setPosition(Camera->getPosition() + core::vector3df(0, 0.4 - msg.PlayerFeedback.Height, 0));
+        Camera->setRotation(Camera->getRotation() + core::vector3df(msg.PlayerFeedback.GridAngle, 0, 0));
+    }
     else if (msg.Type == EMT_INPUT)
     {
         if (msg.Input.Type == ETIE_PRESSED_DOWN)

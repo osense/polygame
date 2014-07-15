@@ -28,7 +28,7 @@ private:
     static const f32 LineThickness = 0.005;
     static const u32 GenChangeEvery = 150;
     static const u32 ColorChangeEvery = 35;
-    static const f32 PLayerSize = 0.05;
+    static const f32 PlayerSize = 0.05;
 
     core::vector3df Position;
     f32 Points[NumPointsX][NumPointsY];

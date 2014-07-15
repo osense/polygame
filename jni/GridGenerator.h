@@ -50,7 +50,7 @@ class GridGenerator
         u32 ArraySize;
 
         E_GEN_TYPE Type;
-        E_SLOPE_TYPE Slope;
+        E_SLOPE_TYPE Slope, PrevSlope, NextSlope;
         f32 Height;
         u32 StepsIntoSlope;
 

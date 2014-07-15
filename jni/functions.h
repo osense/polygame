@@ -59,6 +59,10 @@ inline void clamp(f32 &in, f32 min, f32 max)
     in = in > max ? max : in < min ? min : in;
 }
 
+inline s32 signum(f32 val) {
+    return (0 < val) - (val < 0);
+}
+
 inline video::SColorf addColors(video::SColorf a, video::SColorf b)
 {
     a.r += b.r;

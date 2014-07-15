@@ -8,6 +8,7 @@ GridGenerator::GridGenerator(u32 numPoints)
     ArraySize = 0;
     Type = EGT_NONE;
     Slope = EST_NONE;
+    NextSlope = EST_NONE;
     Height = 0;
     Difficulty = 0;
 
@@ -69,8 +70,24 @@ void GridGenerator::setType(E_GEN_TYPE type)
 
 void GridGenerator::setSlope(E_SLOPE_TYPE type)
 {
-    Slope = type;
+    PrevSlope = Slope;
     StepsIntoSlope = 0;
+
+    if (Slope == EST_UP  && type == EST_DOWN)
+    {
+        NextSlope = EST_DOWN;
+        Slope = EST_NONE;
+    }
+    else if (Slope == EST_DOWN && type == EST_UP)
+    {
+        NextSlope = EST_UP;
+        Slope = EST_NONE;
+    }
+    else
+    {
+        NextSlope = EST_NONE;
+        Slope = type;
+    }
 }
 
 void GridGenerator::setDifficulty(f32 diff)
@@ -88,7 +105,7 @@ void GridGenerator::genNone()
 {
     for (u32 i = 0; i < NumPoints; i++)
     {
-        NewPts[i] = LastPts[i];
+        NewPts[i] = 0;
     }
 }
 
@@ -114,22 +131,38 @@ void GridGenerator::genCanyons(core::vector3df pos)
 
 void GridGenerator::slopeTransform()
 {
-    if (Slope == EST_NONE)
-        return;
+    if (NextSlope != EST_NONE)
+        if (StepsIntoSlope == SlopeChangeInSteps)
+            setSlope(NextSlope);
 
     f32 slpStep = SlopeStep;
-    if (Slope == EST_DOWN)
-        slpStep = -slpStep;
 
-    if (StepsIntoSlope < SlopeChangeInSteps)
+    if (Slope == EST_NONE)
     {
-        Height += slpStep * (1.0 / (SlopeChangeInSteps - StepsIntoSlope));
-        StepsIntoSlope++;
+        if (StepsIntoSlope <= SlopeChangeInSteps)
+        {
+            if (PrevSlope == EST_DOWN)
+                Height -= slpStep * (1.0 / (2 + StepsIntoSlope));
+            else if (PrevSlope == EST_UP)
+                Height += slpStep * (1.0 / (2 + StepsIntoSlope));
+        }
     }
-    else
-        Height += slpStep;
+    else if (Slope == EST_DOWN)
+    {
+        if (StepsIntoSlope <= SlopeChangeInSteps)
+            Height -= slpStep * (1.0 / (1 + SlopeChangeInSteps - StepsIntoSlope));
+        else Height -= slpStep;
+    }
+    else if (Slope == EST_UP)
+    {
+        if (StepsIntoSlope <= SlopeChangeInSteps)
+            Height += slpStep * (1.0 / (1 + SlopeChangeInSteps - StepsIntoSlope));
+        else Height += slpStep;
+    }
 
-    for (u32 i = 0; i < NumPoints-1; i++)
+    StepsIntoSlope++;
+
+    for (u32 i = 0; i < NumPoints; i++)
     {
         NewPts[i] += Height;
     }

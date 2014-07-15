@@ -17,7 +17,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     srand(0);
     Generator.setType(EGT_PLAINS);
-    Generator.setSlope(EST_UP);
+    Generator.setSlope(EST_DOWN);
 
     Points[10][15] = 2;
     Points[11][15] = 1;
@@ -258,6 +258,15 @@ void ObjectGrid::handleGenUpdate()
     {
         Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
     }
+
+    if (GenChangeIn == int(0.8 * GenChangeEvery))
+    {
+        Generator.setSlope(EST_UP);
+    }
+    if (GenChangeIn == int(0.6 * GenChangeEvery))
+    {
+        Generator.setSlope(EST_NONE);
+    }
 }
 
 void ObjectGrid::handleColors()
@@ -334,14 +343,16 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         t2.pointC = ru;
     }
 
-    core::line3df t1l(pPos, pPos -999 * t1.getNormal());
-    core::line3df t2l(pPos, pPos -999 * t2.getNormal());
+    core::vector3df t1n = t1.getNormal().normalize();
+    core::vector3df t2n = t2.getNormal().normalize();
+    core::line3df t1l(pPos, pPos - 999 * t1n);
+    core::line3df t2l(pPos, pPos - 999 * t2n);
 
     core::vector3df t1Int, t2Int;
     if (t1.getIntersectionWithLimitedLine(t1l, t1Int))
     {
         t1l.end = t1Int;
-        if (t1l.getLength() < PLayerSize)
+        if (t1l.getLength() < PlayerSize)
         {
             Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
             return true;
@@ -356,7 +367,7 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     if (t2.getIntersectionWithLimitedLine(t2l, t2Int))
     {
         t2l.end = t2Int;
-        if (t2l.getLength() < PLayerSize)
+        if (t2l.getLength() < PlayerSize)
         {
             Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
             return true;
@@ -369,12 +380,22 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 #endif // DEBUG_PLAYER
     }
 
-    // broadcast triangle underneath player
-    /*core::line3df pl(pPos, pPos + core::vector3df(0, -100, 0));
-    if (t1.getIntersectionWithLimitedLine(pl))
-    {
+    // broadcast triangle underneath player's rot.X and player's distance from it
+    core::line3df pl(pPos, pPos + core::vector3df(0, -100, 0));
+    core::vector3df plInt;
+    SMessage msg(this, EMT_PLAYER_FEEDBACK);
 
-    }*/
+    if (t1.getIntersectionWithLimitedLine(pl, plInt))
+        msg.PlayerFeedback.GridAngle = (90 - radToDeg(asin(t1n.Y))) * signum(t1n.Z);
+    else if (t2.getIntersectionWithLimitedLine(pl, plInt))
+        msg.PlayerFeedback.GridAngle = (90 - radToDeg(asin(t2n.Y))) * signum(t2n.Z);
+
+    debugLog(core::stringc(msg.PlayerFeedback.GridAngle));
+
+    msg.PlayerFeedback.Height = pPos.Y - plInt.Y;
+
+    // "hack"
+    Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);
 
     return false;
 }
