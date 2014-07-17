@@ -26,7 +26,6 @@
 
 #include "noisegen.h"
 #include "basictypes.h"
-#include "exception.h"
 
 namespace noise
 {
@@ -292,7 +291,7 @@ namespace noise
         void SetOctaveCount (int octaveCount)
         {
           if (octaveCount < 1 || octaveCount > PERLIN_MAX_OCTAVE) {
-            throw noise::ExceptionInvalidParam ();
+            return;
           }
           m_octaveCount = octaveCount;
         }
