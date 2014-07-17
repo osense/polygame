@@ -62,7 +62,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setRotation((Camera->getRotation() + core::vector3df(0, TargetRotY, 0)) / 2.0);
 
         core::vector3df dir = getDirection();
-        Camera->setPosition(Camera->getPosition() + dir * Speed);
+        Camera->setPosition(Camera->getPosition() + dir * Speed * msg.Update.fDelta);
         Camera->setTarget(Camera->getPosition() + dir);
 
         #ifdef DEBUG_PLAYER
@@ -86,7 +86,9 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_PLAYER_FEEDBACK)
     {
-        Camera->setPosition(Camera->getPosition() + core::vector3df(0, 0.4 - msg.PlayerFeedback.Height, 0));
+        core::vector3df pPos = Camera->getPosition();
+        pPos.Y = msg.PlayerFeedback.Height + 0.4;
+        Camera->setPosition(pPos);
         Camera->setRotation(Camera->getRotation() + core::vector3df(msg.PlayerFeedback.GridAngle, 0, 0));
     }
     else if (msg.Type == EMT_INPUT)

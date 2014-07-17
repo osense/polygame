@@ -39,6 +39,7 @@ class GridGenerator
 
         void setType(E_GEN_TYPE type);
         void setSlope(E_SLOPE_TYPE type);
+        f32 getHeight() const;
         void setDifficulty(f32 diff);
         f32 getDifficulty() const;
 

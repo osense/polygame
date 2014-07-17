@@ -31,9 +31,9 @@ private:
     f32 MaxAbsRotY;
     bool Accelerating;
 
-    static const f32 Acceleration = 0.02;
-    static const f32 MinSpeed = 0.02;
-    static const f32 MaxSpeed = 0.08;
+    static const f32 Acceleration = 1;
+    static const f32 MinSpeed = 1;
+    static const f32 MaxSpeed = 5;
     static const f32 DefaultMaxAbsRotY = 35;
     static const f32 AccCutoff = 3.0;
     static const u32 AccSamplesSize = 5;

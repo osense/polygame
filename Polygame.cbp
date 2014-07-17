@@ -82,6 +82,7 @@
 		<Unit filename="jni/ShaderCBGridBack.h" />
 		<Unit filename="jni/ShaderCBSky.cpp" />
 		<Unit filename="jni/ShaderCBSky.h" />
+		<Unit filename="jni/circular_buffer.h" />
 		<Unit filename="jni/functions.h" />
 		<Unit filename="jni/libnoise/basictypes.h" />
 		<Unit filename="jni/libnoise/exception.h" />

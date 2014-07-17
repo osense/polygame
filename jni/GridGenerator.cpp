@@ -90,6 +90,11 @@ void GridGenerator::setSlope(E_SLOPE_TYPE type)
     }
 }
 
+f32 GridGenerator::getHeight() const
+{
+    return Height;
+}
+
 void GridGenerator::setDifficulty(f32 diff)
 {
     Difficulty = diff;
@@ -132,7 +137,7 @@ void GridGenerator::genCanyons(core::vector3df pos)
 void GridGenerator::slopeTransform()
 {
     if (NextSlope != EST_NONE)
-        if (StepsIntoSlope == SlopeChangeInSteps)
+        if (StepsIntoSlope >= SlopeChangeInSteps)
             setSlope(NextSlope);
 
     f32 slpStep = SlopeStep;
@@ -142,21 +147,21 @@ void GridGenerator::slopeTransform()
         if (StepsIntoSlope <= SlopeChangeInSteps)
         {
             if (PrevSlope == EST_DOWN)
-                Height -= slpStep * (1.0 / (2 + StepsIntoSlope));
+                Height -= slpStep * (1.0 / (1.5 + StepsIntoSlope));
             else if (PrevSlope == EST_UP)
-                Height += slpStep * (1.0 / (2 + StepsIntoSlope));
+                Height += slpStep * (1.0 / (1.5 + StepsIntoSlope));
         }
     }
     else if (Slope == EST_DOWN)
     {
         if (StepsIntoSlope <= SlopeChangeInSteps)
-            Height -= slpStep * (1.0 / (1 + SlopeChangeInSteps - StepsIntoSlope));
+            Height -= slpStep * (1.0 / (1.5 + SlopeChangeInSteps - StepsIntoSlope));
         else Height -= slpStep;
     }
     else if (Slope == EST_UP)
     {
         if (StepsIntoSlope <= SlopeChangeInSteps)
-            Height += slpStep * (1.0 / (1 + SlopeChangeInSteps - StepsIntoSlope));
+            Height += slpStep * (1.0 / (1.5 + SlopeChangeInSteps - StepsIntoSlope));
         else Height += slpStep;
     }
 

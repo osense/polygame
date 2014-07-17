@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <irrlicht.h>
+#include "circular_buffer.h"
 
 using namespace irr;
 
@@ -18,6 +19,9 @@ public:
     ObjectGrid(SContext* cont);
     ~ObjectGrid();
     virtual void onMessage(SMessage msg);
+
+    f32 getBaseHeight(u32 y) const;
+    f32 getHillHeight(u32 x, u32 y) const;
 
     const GridGenerator& getGenerator() const;
 
@@ -32,6 +36,7 @@ private:
 
     core::vector3df Position;
     f32 Points[NumPointsX][NumPointsY];
+    circular_buffer<f32> BaseHeight;
 
     GridGenerator Generator;
     u32 GenChangeIn;

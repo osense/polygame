@@ -1,6 +1,7 @@
 #include "ObjectGrid.h"
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
+    BaseHeight(NumPointsY),
     Generator(NumPointsX),
     GenChangeIn(GenChangeEvery),
     ColorChangeIn(5),
@@ -11,9 +12,13 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     Position = core::vector3df(0);
 
-    for (u32 x = 0; x < NumPointsX; x++)
-        for (u32 y = 0; y < NumPointsY; y++)
+    for (u32 y = 0; y < NumPointsY; y++)
+    {
+        for (u32 x = 0; x < NumPointsX; x++)
             Points[x][y] = 0;
+
+        BaseHeight.push_back(0);
+    }
 
     srand(0);
     Generator.setType(EGT_PLAINS);
@@ -102,6 +107,17 @@ void ObjectGrid::onMessage(SMessage msg)
 #endif // DEBUG_GRID
         }
     }
+}
+
+f32 ObjectGrid::getBaseHeight(u32 y) const
+{
+    return BaseHeight[BaseHeight.getIndex() + y + 1];
+}
+
+
+f32 ObjectGrid::getHillHeight(u32 x, u32 y) const
+{
+    return Points[x][y] - getBaseHeight(y);
 }
 
 const GridGenerator& ObjectGrid::getGenerator() const
@@ -250,13 +266,16 @@ void ObjectGrid::addMinusY()
 
 void ObjectGrid::handleGenUpdate()
 {
+    BaseHeight.push_back(Generator.getHeight());
+
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
     GenChangeIn--;
 
     if (GenChangeIn <= 0)
     {
-        Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
+        Generator.setType(EGT_NONE);
+        //Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
     }
 
     if (GenChangeIn == int(0.8 * GenChangeEvery))
@@ -386,13 +405,16 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     SMessage msg(this, EMT_PLAYER_FEEDBACK);
 
     if (t1.getIntersectionWithLimitedLine(pl, plInt))
-        msg.PlayerFeedback.GridAngle = (90 - radToDeg(asin(t1n.Y))) * signum(t1n.Z);
+    {
+
+    }
     else if (t2.getIntersectionWithLimitedLine(pl, plInt))
-        msg.PlayerFeedback.GridAngle = (90 - radToDeg(asin(t2n.Y))) * signum(t2n.Z);
+    {
 
-    debugLog(core::stringc(msg.PlayerFeedback.GridAngle));
+    }
 
-    msg.PlayerFeedback.Height = pPos.Y - plInt.Y;
+    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(1) - getBaseHeight(0)));
+    msg.PlayerFeedback.Height = getBaseHeight(0) + (getBaseHeight(1) - getBaseHeight(0)) * (pPos.Z - Position.Z);
 
     // "hack"
     Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);
