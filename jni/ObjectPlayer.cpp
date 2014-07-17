@@ -28,7 +28,7 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
 #ifdef DEBUG_PLAYER
     DebugCamera = Context->Device->getSceneManager()->addCameraSceneNode();
     DebugCamera->setFarValue(21);
-    DebugCamera->setNearValue(0.05);
+    DebugCamera->setNearValue(0.045);
     scene::ISceneNode* camVisual = Context->Device->getSceneManager()->addCubeSceneNode(0.1, Camera);
     camVisual->setScale(core::vector3df(0.5, 0.5, 1));
 #endif // DEBUG_PLAYER

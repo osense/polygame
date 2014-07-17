@@ -100,6 +100,7 @@ void ObjectGrid::onMessage(SMessage msg)
             }
 
             regenerate();
+            broadcastMessage(SMessage(this, EMT_GRID_REGENED));
 
 #ifdef DEBUG_GRID
             u32 updEnd = Context->Device->getTimer()->getTime();
@@ -109,14 +110,24 @@ void ObjectGrid::onMessage(SMessage msg)
     }
 }
 
-f32 ObjectGrid::getBaseHeight(u32 y) const
-{
-    return BaseHeight[BaseHeight.getIndex() + y + 1];
-}
-
 core::vector3df ObjectGrid::getPosition() const
 {
     return Position;
+}
+
+u32 ObjectGrid::getNumPointsX() const
+{
+    return NumPointsX;
+}
+
+u32 ObjectGrid::getNumPointsY() const
+{
+    return NumPointsY;
+}
+
+f32 ObjectGrid::getBaseHeight(u32 y) const
+{
+    return BaseHeight[BaseHeight.getIndex() + y + 1];
 }
 
 f32 ObjectGrid::getHillHeight(u32 x, u32 y) const
@@ -331,7 +342,7 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     u32 posXOffset = diffV.X < 0 ? 1 : 0;
     u32 posZOffset = diffV.Z > 0.5 ? 1 : 0;
     f32 posX = Position.X - posXOffset;
-    f32 posZ = Position.Z + posZOffset - 0.5;
+    f32 posZ = Position.Z + posZOffset - 1;
 
     core::vector3df ld(posX, 0, posZ);
     ld.Y = Points[halfPtsX - posXOffset][posZOffset];

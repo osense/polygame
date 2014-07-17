@@ -13,6 +13,7 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
     DistTravelledText->setOverrideColor(video::SColor(255, 255, 255, 255));
 
     new ObjectGrid(Context);
+    new ObjectItemSpawner(Context);
     new ObjectSky(Context);
     (new ObjectPlayer(Context))->registerObserver(this);
 }

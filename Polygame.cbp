@@ -57,6 +57,8 @@
 		<Unit filename="jni/ObjectEventReceiver.h" />
 		<Unit filename="jni/ObjectGrid.cpp" />
 		<Unit filename="jni/ObjectGrid.h" />
+		<Unit filename="jni/ObjectItemSpawner.cpp" />
+		<Unit filename="jni/ObjectItemSpawner.h" />
 		<Unit filename="jni/ObjectManager.cpp" />
 		<Unit filename="jni/ObjectManager.h" />
 		<Unit filename="jni/ObjectPlayer.cpp" />

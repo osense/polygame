@@ -8,6 +8,7 @@
 #include "functions.h"
 #include "ObjectStateInit.h"
 #include "ObjectGrid.h"
+#include "ObjectItemSpawner.h"
 #include "ObjectSky.h"
 #include "ObjectPlayer.h"
 

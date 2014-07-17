@@ -21,6 +21,9 @@ public:
     virtual void onMessage(SMessage msg);
 
     core::vector3df getPosition() const;
+    u32 getNumPointsX() const;
+    u32 getNumPointsY() const;
+
     f32 getBaseHeight(u32 y) const;
     f32 getHillHeight(u32 x, u32 y) const;
 
