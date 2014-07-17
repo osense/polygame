@@ -20,6 +20,7 @@ public:
     ~ObjectGrid();
     virtual void onMessage(SMessage msg);
 
+    core::vector3df getPosition() const;
     f32 getBaseHeight(u32 y) const;
     f32 getHillHeight(u32 x, u32 y) const;
 

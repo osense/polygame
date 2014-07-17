@@ -14,7 +14,8 @@
 
 enum E_INIT_LOADING_STATE
 {
-    EILS_RENDERER = 0,
+    EILS_WAIT = 0,
+    EILS_RENDERER,
     EILS_SHADERS,
     EILS_TEXTURES,
     EILS_FONTS,
@@ -34,6 +35,7 @@ class ObjectStateInit : public Object
 
     private:
         E_INIT_LOADING_STATE LoadingState;
+        u32 WaitCounter;
 
         u32 TexturesLoaded;
         core::array<core::stringc> TextureNames;

@@ -17,7 +17,8 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
 
     Image = Context->Device->getGUIEnvironment()->addImage(imgTex, imgPos);
 
-    LoadingState = EILS_RENDERER;
+    LoadingState = EILS_WAIT;
+    WaitCounter = 10;
 
     TextureNames.push_back("gui/continue.png");
     TextureNames.push_back("gui/new_game.png");
@@ -25,6 +26,8 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
     TextureNames.push_back("gui/options.png");
     TextureNames.push_back("gui/game_over.png");
     TextureNames.push_back("gui/ok.png");
+
+    TextureNames.push_back("noise.png");
 }
 
 ObjectStateInit::~ObjectStateInit()
@@ -37,13 +40,18 @@ void ObjectStateInit::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
+        if (LoadingState == EILS_WAIT)
+        {
+            if (--WaitCounter <= 0)
+                LoadingState = EILS_RENDERER;
+        }
         if (LoadingState == EILS_RENDERER)
         {
             debugLog("precaching resources...");
             //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_GLOW);
 
-            debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
+            //debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
 
             LoadingState = EILS_SHADERS;
             return;

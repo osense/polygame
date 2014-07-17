@@ -114,6 +114,10 @@ f32 ObjectGrid::getBaseHeight(u32 y) const
     return BaseHeight[BaseHeight.getIndex() + y + 1];
 }
 
+core::vector3df ObjectGrid::getPosition() const
+{
+    return Position;
+}
 
 f32 ObjectGrid::getHillHeight(u32 x, u32 y) const
 {
@@ -138,7 +142,7 @@ void ObjectGrid::regenerate()
     core::vector2df null2d(0);
     core::vector3df null3d(0);
 
-    core::vector3df center(NumPointsX/2.0, 0, 0.5);
+    core::vector3df center(NumPointsX/2.0, 0, 1);
     center -= Position;
     center.Y = 0;
 
@@ -267,6 +271,7 @@ void ObjectGrid::addMinusY()
 void ObjectGrid::handleGenUpdate()
 {
     BaseHeight.push_back(Generator.getHeight());
+    //Context->Device->getSceneManager()->addCubeSceneNode(0.1, 0, -1, core::vector3df(Position.X, getBaseHeight(NumPointsY - 1), Position.Z+NumPointsY-1));
 
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
@@ -413,8 +418,8 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 
     }
 
-    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(1) - getBaseHeight(0)));
-    msg.PlayerFeedback.Height = getBaseHeight(0) + (getBaseHeight(1) - getBaseHeight(0)) * (pPos.Z - Position.Z);
+    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(2) - getBaseHeight(1)));
+    msg.PlayerFeedback.Height = getBaseHeight(1) + (getBaseHeight(2) - getBaseHeight(1)) * (pPos.Z - Position.Z);
 
     // "hack"
     Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);
