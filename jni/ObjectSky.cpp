@@ -5,8 +5,15 @@ ObjectSky::ObjectSky(SContext* cont) : Object(cont)
     Name = "ObjectSky";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
-    SkyNode = Context->Device->getSceneManager()->addSkyDomeSceneNode(0, 16, 18, 0.9, 2.0, 19);
+    scene::ISceneManager* smgr = Context->Device->getSceneManager();
+
+    SkyNode = smgr->addSkyDomeSceneNode(0, 16, 18, 0.9, 2.0, 19);
     SkyNode->setMaterialType(Context->Mtls->Sky);
+    //SkyNode->setMaterialFlag(video::EMF_BILINEAR_FILTER, false);
+    SkyNode->setMaterialTexture(0, Context->Device->getVideoDriver()->getTexture("noise.png"));
+
+    SkyNode->setRotation(core::vector3df(0, 0, 90));
+    SkyNode->addAnimator(smgr->createRotationAnimator(core::vector3df(0, -0.005, 0)));
 }
 
 ObjectSky::~ObjectSky()

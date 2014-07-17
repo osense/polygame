@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
     new ObjectEventReceiver(cont);
     cont->Renderer = new EffectRenderer(cont);
 
+    dev->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
     new ObjectStateInit(cont);
 
 
