@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     param.DriverType = video::EDT_OGLES2;
     param.WindowSize = core::dimension2d<u32>(0, 0);
     param.PrivateData = app;
-    param.OGLES2ShaderPath = "shaders/";
+    param.OGLES2ShaderPath = "shaders/Irrlicht/";
     param.ZBufferBits = 16;
     param.AntiAlias = 0;
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     SIrrlichtCreationParameters param;
     param.DriverType = video::EDT_OGLES2;
     param.WindowSize = core::dimension2d<u32>(DESKTOP_WND_X, DESKTOP_WND_Y);
-    param.OGLES2ShaderPath = "assets/shaders/";
+    param.OGLES2ShaderPath = "assets/shaders/Irrlicht/";
     param.Bits = 32;
     dev = createDeviceEx(param);
 
