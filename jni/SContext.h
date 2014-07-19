@@ -37,6 +37,7 @@ struct SContext
     EffectRenderer* Renderer;
     SMaterials* Mtls;
 
+    irr::f32 TimeScale;
     irr::f32 GUIScale;
 };
 

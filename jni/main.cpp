@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
     new ObjectEventReceiver(cont);
     cont->Renderer = new EffectRenderer(cont);
 
+    cont->TimeScale = 1;
+
     dev->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
     new ObjectStateInit(cont);
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
         cont->Renderer->drawAll();
         dev->getGUIEnvironment()->drawAll();
 
-        updater->broadcastUpdate(timeDelta);
+        updater->broadcastUpdate(timeDelta * cont->TimeScale);
 
         dev->getVideoDriver()->endScene();
     }
