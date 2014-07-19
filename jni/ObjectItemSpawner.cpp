@@ -45,8 +45,6 @@ void ObjectItemSpawner::onMessage(SMessage msg)
             if (pVal > SpawnChance)
                 continue;
 
-            debugLog(core::stringc(pVal));
-
             // perlin checks out, but what about the terrain?
             if (Grid->getHillHeight(x, coordY) > SpawnHillLimit ||
                 Grid->getHillHeight(x + 1, coordY) > SpawnHillLimit ||
@@ -59,7 +57,7 @@ void ObjectItemSpawner::onMessage(SMessage msg)
             itemPos.X -= Grid->getNumPointsX() / 2.0;
             itemPos.Y = (Grid->getBaseHeight(coordY) + Grid->getBaseHeight(coordY - 1)) / 2.0 + SpawnItemHeight;
 
-            Context->Device->getSceneManager()->addCubeSceneNode(0.3, 0, -1, itemPos);
+            new ObjectItemCube(Context, itemPos);
         }
     }
 }

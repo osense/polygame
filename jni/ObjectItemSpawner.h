@@ -3,8 +3,9 @@
 
 #include "Object.h"
 #include "ObjectGrid.h"
-
 #include "libnoise/perlin.h"
+
+#include "ObjectItemCube.h"
 
 
 class ObjectItemSpawner : public Object

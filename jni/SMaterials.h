@@ -10,9 +10,14 @@ class ShaderCBGrid;
 struct SMaterials
 {
     video::E_MATERIAL_TYPE Depth;
+
     video::E_MATERIAL_TYPE Grid;
     ShaderCBGrid* GridCB;
+
     video::E_MATERIAL_TYPE GridBack;
+
+    video::E_MATERIAL_TYPE ItemCube;
+
     video::E_MATERIAL_TYPE Sky;
 };
 

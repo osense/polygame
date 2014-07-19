@@ -9,6 +9,7 @@
 #include "ShaderCBDepth.h"
 #include "ShaderCBGrid.h"
 #include "ShaderCBGridBack.h"
+#include "ShaderCBCube.h"
 #include "ShaderCBSky.h"
 
 

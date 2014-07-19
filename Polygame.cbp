@@ -36,6 +36,8 @@
 			<Add option="-g" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="assets/shaders/cube.frag" />
+		<Unit filename="assets/shaders/cube.vert" />
 		<Unit filename="assets/shaders/depth.frag" />
 		<Unit filename="assets/shaders/depth.vert" />
 		<Unit filename="assets/shaders/grid.frag" />
@@ -57,6 +59,8 @@
 		<Unit filename="jni/ObjectEventReceiver.h" />
 		<Unit filename="jni/ObjectGrid.cpp" />
 		<Unit filename="jni/ObjectGrid.h" />
+		<Unit filename="jni/ObjectItemCube.cpp" />
+		<Unit filename="jni/ObjectItemCube.h" />
 		<Unit filename="jni/ObjectItemSpawner.cpp" />
 		<Unit filename="jni/ObjectItemSpawner.h" />
 		<Unit filename="jni/ObjectManager.cpp" />
@@ -76,6 +80,8 @@
 		<Unit filename="jni/SContext.h" />
 		<Unit filename="jni/SMaterials.h" />
 		<Unit filename="jni/SMessage.h" />
+		<Unit filename="jni/ShaderCBCube.cpp" />
+		<Unit filename="jni/ShaderCBCube.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
 		<Unit filename="jni/ShaderCBGrid.cpp" />

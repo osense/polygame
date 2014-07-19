@@ -61,17 +61,20 @@ void ObjectStateInit::onMessage(SMessage msg)
         {
             video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
             Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
-                                   new ShaderCBDepth(Context));
+                                                                                                     new ShaderCBDepth(Context));
 
             Context->Mtls->GridCB = new ShaderCBGrid(Context);
             Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
-                                  Context->Mtls->GridCB);//, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                                                                                                    Context->Mtls->GridCB);
+
+            Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
+                                                                                                        new ShaderCBCube(Context));
 
             Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                      new ShaderCBGridBack(Context));
+                                                                                                        new ShaderCBGridBack(Context));
 
             Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
-                                 new ShaderCBSky());
+                                                                                                   new ShaderCBSky());
 
             LoadingState = EILS_TEXTURES;
             TexturesLoaded = 0;
