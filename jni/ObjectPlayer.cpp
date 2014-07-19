@@ -136,7 +136,6 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
 }
 
-
 f32 ObjectPlayer::getSpeed() const
 {
     return Speed;
@@ -147,4 +146,9 @@ core::vector3df ObjectPlayer::getDirection() const
     core::vector3df rot = Camera->getRotation();
 
     return core::vector3df(sin(core::degToRad(rot.Y)), -sin(core::degToRad(rot.X)), cos(core::degToRad(rot.Y))).normalize();
+}
+
+scene::ICameraSceneNode* ObjectPlayer::getCamera() const
+{
+    return Camera;
 }

@@ -10,6 +10,7 @@ ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont)
 
     Accel = core::vector3d<f64>(0);
     Player = 0;
+    FPSCam = 0;
 }
 
 ObjectDebugInfo::~ObjectDebugInfo()
@@ -26,6 +27,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getFPS();
         dbg += "\nTris: ";
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
+        dbg += "\nMeshes: ";
+        dbg += Context->Device->getSceneManager()->getMeshCache()->getMeshCount();
 
         if (Player)
         {
@@ -63,6 +66,30 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         Accel.X = msg.Acc.X;
         Accel.Y = msg.Acc.Y;
         Accel.Z = msg.Acc.Z;
+    }
+    else if (msg.Type == EMT_KEY)
+    {
+        if (!Player)
+            return;
+
+        if (!msg.Key.Pressed && msg.Key.Code == KEY_KEY_V)
+        {
+            if (!FPSCam)
+            {
+                FPSCam = Context->Device->getSceneManager()->addCameraSceneNodeFPS(0, 100, 0.01);
+                FPSCam->setPosition(Player->getCamera()->getPosition());
+                FPSCam->setFarValue(Player->getCamera()->getFarValue());
+                FPSCam->setNearValue(Player->getCamera()->getNearValue());
+                Context->TimeScale = 0;
+            }
+            else
+            {
+                FPSCam->remove();
+                FPSCam = 0;
+                Context->Device->getSceneManager()->setActiveCamera(Player->getCamera());
+                Context->TimeScale = 1;
+            }
+        }
     }
     else if (msg.Type == EMT_OBJ_SPAWNED)
     {

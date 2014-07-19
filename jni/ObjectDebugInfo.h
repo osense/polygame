@@ -29,6 +29,7 @@ class ObjectDebugInfo : public Object
         core::vector3d<f64> Accel;
 
         ObjectPlayer* Player;
+        scene::ICameraSceneNode* FPSCam;
 };
 
 //#endif // DEBUG_INFO

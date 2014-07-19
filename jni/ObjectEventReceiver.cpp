@@ -105,6 +105,13 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return false;
     }
+    else if (event.EventType == EET_KEY_INPUT_EVENT)
+    {
+        SMessage msg(this, EMT_KEY);
+        msg.Key.Code = event.KeyInput.Key;
+        msg.Key.Pressed = event.KeyInput.PressedDown;
+        broadcastMessage(msg);
+    }
 #endif
     else if (event.EventType == EET_ACCELEROMETER_EVENT)
     {

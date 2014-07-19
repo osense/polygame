@@ -15,6 +15,7 @@ enum E_MESSAGE_TYPE
     EMT_GRID_REGENED,
     EMT_PLAYER_FEEDBACK,
     EMT_INPUT,
+    EMT_KEY,
     EMT_ACC,
     EMT_GUI,
     EMT_PLAYER_CRASHED
@@ -36,6 +37,12 @@ struct SMessage
         irr::ETOUCH_INPUT_EVENT Type;
         irr::s32 X, Y;
         irr::u32 ID;
+    };
+
+    struct KeyMessage
+    {
+        irr::EKEY_CODE Code;
+        bool Pressed;
     };
 
     struct AccMessage
@@ -64,6 +71,7 @@ struct SMessage
     {
         GUIMessage GUI;
         InputMessage Input;
+        KeyMessage Key;
         AccMessage Acc;
         UpdateMessage Update;
         ObjectPositionMessage Position;

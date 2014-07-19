@@ -18,6 +18,7 @@ public:
 
     f32 getSpeed() const;
     core::vector3df getDirection() const;
+    scene::ICameraSceneNode* getCamera() const;
 
 private:
     scene::ICameraSceneNode* Camera;
