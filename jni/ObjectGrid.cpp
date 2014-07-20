@@ -33,19 +33,23 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     scene::SMesh* mesh = new scene::SMesh();
     mesh->setHardwareMappingHint(scene::EHM_STATIC);
     mesh->addMeshBuffer(Buffer);
+    Buffer->drop();
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Grid);
     Node->setAutomaticCulling(scene::EAC_OFF);
+    mesh->drop();
 
     BufferAppx = new scene::SMeshBuffer();
     scene::SMesh* backMesh = new scene::SMesh();
     backMesh->setHardwareMappingHint(scene::EHM_STATIC);
     backMesh->addMeshBuffer(BufferAppx);
+    BufferAppx->drop();
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->GridBack);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     //BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+    backMesh->drop();
 
 
     regenerate();
