@@ -5,6 +5,7 @@ attribute vec3 inVertexColor;
 uniform mat4 WorldViewProjMat;
 uniform mat4 WorldViewMat;
 uniform float CamFar;
+uniform vec3 BaseColor;
 
 varying vec3 Color;
 
@@ -13,8 +14,9 @@ void main()
     vec3 Vertex = (WorldViewMat * vec4(inVertexPosition, 1.0)).xyz;
     float depth = length(Vertex) / CamFar;
 
-    Color = inVertexColor;
+    float alpha = min(1.0, 8.0 - 10.0*depth);
+    Color = inVertexColor * alpha;
 
-    gl_Position = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.04 + 0.04), 1.0);
+    gl_Position = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.07 + 0.01), 1.0);
 }
 

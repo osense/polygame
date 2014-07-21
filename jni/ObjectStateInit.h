@@ -12,12 +12,15 @@
 #include "ShaderCBCube.h"
 #include "ShaderCBSky.h"
 
+#include "ObjectItemCube.h"
+
 
 enum E_INIT_LOADING_STATE
 {
     EILS_WAIT = 0,
     EILS_RENDERER,
     EILS_SHADERS,
+    EILS_MESHES,
     EILS_TEXTURES,
     EILS_FONTS,
     EILS_DONE

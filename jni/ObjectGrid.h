@@ -5,6 +5,7 @@
 #include "GridGenerator.h"
 #include "SMaterials.h"
 #include "ShaderCBGrid.h"
+#include "ShaderCBCube.h"
 #include "functions.h"
 
 #include <stdlib.h>
@@ -19,6 +20,8 @@ public:
     ObjectGrid(SContext* cont);
     ~ObjectGrid();
     virtual void onMessage(SMessage msg);
+
+    void toggleBackMesh();
 
     core::vector3df getPosition() const;
     u32 getNumPointsX() const;

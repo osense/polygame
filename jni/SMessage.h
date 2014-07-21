@@ -18,7 +18,8 @@ enum E_MESSAGE_TYPE
     EMT_KEY,
     EMT_ACC,
     EMT_GUI,
-    EMT_PLAYER_CRASHED
+    EMT_PLAYER_CRASHED,
+    EMT_PLAYER_CUBED
 };
 
 struct SMessage

@@ -3,6 +3,7 @@
 ShaderCBCube::ShaderCBCube(SContext* cont)
 {
     Context = cont;
+    BaseColor = video::SColorf(1.0, 1.0, 1.0);
 }
 
 void ShaderCBCube::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
@@ -12,6 +13,7 @@ void ShaderCBCube::OnSetConstants(video::IMaterialRendererServices* services, s3
         CamFarID = services->getVertexShaderConstantID("CamFar");
         WorldViewProjMatID = services->getVertexShaderConstantID("WorldViewProjMat");
         WorldViewMatID = services->getVertexShaderConstantID("WorldViewMat");
+        BaseColorID = services->getVertexShaderConstantID("BaseColor");
 
         FirstUpdate = true;
     }
@@ -27,4 +29,11 @@ void ShaderCBCube::OnSetConstants(video::IMaterialRendererServices* services, s3
 
     f32 farDist = Context->Device->getSceneManager()->getActiveCamera()->getFarValue();
     services->setVertexShaderConstant(CamFarID, &farDist, 1);
+
+    services->setVertexShaderConstant(BaseColorID, reinterpret_cast<f32*>(&BaseColor), 3);
+}
+
+void ShaderCBCube::setBaseColor(video::SColorf col)
+{
+    BaseColor = col;
 }

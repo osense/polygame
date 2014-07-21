@@ -6,6 +6,7 @@
 using namespace irr;
 
 class ShaderCBGrid;
+class ShaderCBCube;
 
 struct SMaterials
 {
@@ -17,6 +18,7 @@ struct SMaterials
     video::E_MATERIAL_TYPE GridBack;
 
     video::E_MATERIAL_TYPE ItemCube;
+    ShaderCBCube* CubeCB;
 
     video::E_MATERIAL_TYPE Sky;
 };

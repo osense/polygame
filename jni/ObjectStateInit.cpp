@@ -28,10 +28,13 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
     TextureNames.push_back("gui/ok.png");
 
     TextureNames.push_back("noise.png");
+
+    debugLog("precaching resources...");
 }
 
 ObjectStateInit::~ObjectStateInit()
 {
+    debugLog("done precaching resources");
     Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -47,7 +50,6 @@ void ObjectStateInit::onMessage(SMessage msg)
         }
         if (LoadingState == EILS_RENDERER)
         {
-            debugLog("precaching resources...");
             //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_GLOW);
 
@@ -67,18 +69,24 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
                                                                                                     Context->Mtls->GridCB);
 
+            Context->Mtls->CubeCB = new ShaderCBCube(Context);
             Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
-                                                                                                        new ShaderCBCube(Context));
+                                                                                                        Context->Mtls->CubeCB);
 
             Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                                                                                        new ShaderCBGridBack(Context));
+                                                                                                        new ShaderCBGridBack(Context), video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
             Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
                                                                                                    new ShaderCBSky());
 
-            LoadingState = EILS_TEXTURES;
+            LoadingState = EILS_MESHES;
             TexturesLoaded = 0;
             return;
+        }
+
+        else if (LoadingState == EILS_MESHES)
+        {
+            LoadingState = EILS_TEXTURES;
         }
 
         else if (LoadingState == EILS_TEXTURES)
@@ -101,7 +109,6 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_DONE)
         {
-            debugLog("done precaching resources");
             new ObjectStateMenu(Context);
 
             Image->remove();

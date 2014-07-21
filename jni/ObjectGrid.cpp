@@ -24,6 +24,9 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator.setType(EGT_PLAINS);
     Generator.setSlope(EST_DOWN);
 
+    Context->Mtls->GridCB->setNearColor(video::SColorf(1, 1, 0));
+    Context->Mtls->GridCB->setFarColor(video::SColorf(1, 1, 0));
+
     Points[10][15] = 2;
     Points[11][15] = 1;
     Points[11][14] = 0.4;
@@ -112,6 +115,13 @@ void ObjectGrid::onMessage(SMessage msg)
 #endif // DEBUG_GRID
         }
     }
+    else if (msg.Type == EMT_PLAYER_CUBED)
+        toggleBackMesh();
+}
+
+void ObjectGrid::toggleBackMesh()
+{
+    BackNode->setVisible(!BackNode->isVisible());
 }
 
 core::vector3df ObjectGrid::getPosition() const
@@ -313,9 +323,9 @@ void ObjectGrid::handleColors()
     ColorChangeIn--;
     if (ColorChangeIn == 0)
     {
-        do
-            ColorNext = video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
-        while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
+        //do
+            ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 240);// video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
+        //while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
         ColorFar = Context->Mtls->GridCB->getFarColor();
         ChangingColor = NumPointsY;
         ColorChangeIn = ColorChangeEvery;
