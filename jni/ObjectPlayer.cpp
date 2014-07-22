@@ -2,10 +2,11 @@
 
 ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Speed(MinSpeed),
-    TargetRotY(0),
+    TargetRot(0),
+    RotSpeed(5),
     MaxAbsRotY(DefaultMaxAbsRotY),
     Accelerating(false),
-    AccLastSampleIdx(0)
+    AccSamples(AccSamplesSize)
 {
     Name = "ObjectPlayer";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -23,7 +24,7 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Camera->setPosition(core::vector3df(0, 0.4, 0));
 
     for (u32 i = 0 ; i < AccSamplesSize; i++)
-        AccSamples[i] = 0;
+        AccSamples.push_back(0);
 
 #ifdef DEBUG_PLAYER
     DebugCamera = Context->Device->getSceneManager()->addCameraSceneNode();
@@ -59,7 +60,9 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (Speed < MinSpeed)
             Speed = MinSpeed;
 
-        Camera->setRotation((Camera->getRotation() + core::vector3df(0, TargetRotY, 0)) / 2.0);
+        core::vector3df rotDiff = TargetRot - Camera->getRotation();
+        Camera->setRotation(Camera->getRotation() + rotDiff * RotSpeed * msg.Update.fDelta);
+        //Camera->setRotation((Camera->getRotation() + TargetRot) / 2.0);
 
         core::vector3df dir = getDirection();
         Camera->setPosition(Camera->getPosition() + dir * Speed * msg.Update.fDelta);
@@ -88,8 +91,8 @@ void ObjectPlayer::onMessage(SMessage msg)
     {
         core::vector3df pPos = Camera->getPosition();
         pPos.Y = msg.PlayerFeedback.Height + 0.4;
-        Camera->setPosition(pPos);
-        Camera->setRotation(Camera->getRotation() + core::vector3df(msg.PlayerFeedback.GridAngle, 0, 0));
+        Camera->setPosition((Camera->getPosition() + pPos) / 2.0);
+        TargetRot.X = msg.PlayerFeedback.GridAngle;
     }
     else if (msg.Type == EMT_INPUT)
     {
@@ -102,9 +105,9 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (msg.Input.Type == ETIE_MOVED)
         {
             const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
-            TargetRotY = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
-            clamp(TargetRotY, -1.0, 1.0);
-            TargetRotY *= MaxAbsRotY;
+            TargetRot.Y = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
+            clamp(TargetRot.Y, -1.0, 1.0);
+            TargetRot.Y *= MaxAbsRotY;
         }
 #endif
     }
@@ -113,17 +116,13 @@ void ObjectPlayer::onMessage(SMessage msg)
         f32 accY = msg.Acc.Y;
         clamp(accY, -1*(AccCutoff), AccCutoff);
 
-        AccLastSampleIdx++;
-        if (AccLastSampleIdx >= AccSamplesSize)
-            AccLastSampleIdx = 0;
-
-        AccSamples[AccLastSampleIdx] = accY;
+        AccSamples.push_back(accY);
 
         f32 total = 0;
         for (u32 i = 0; i < AccSamplesSize; i++)
             total += AccSamples[i];
 
-        TargetRotY = (total/AccSamplesSize) * (1.0 / AccCutoff) * MaxAbsRotY;
+        TargetRot.Y = (total/AccSamplesSize) * (1.0 / AccCutoff) * MaxAbsRotY;
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {
@@ -132,7 +131,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setTarget(Camera->getPosition() + core::vector3df(0, 0, 0.001));
         Camera->addAnimator(Context->Device->getSceneManager()->createFlyStraightAnimator(Camera->getPosition(),
                                                                                         Camera->getPosition() + core::vector3df(0, 0.5, -0.75),
-                                                                                        500));
+                                                                                        400));
     }
 }
 
@@ -144,6 +143,13 @@ f32 ObjectPlayer::getSpeed() const
 core::vector3df ObjectPlayer::getDirection() const
 {
     core::vector3df rot = Camera->getRotation();
+
+    return core::vector3df(sin(core::degToRad(rot.Y)), -sin(core::degToRad(rot.X)), cos(core::degToRad(rot.Y))).normalize();
+}
+
+core::vector3df ObjectPlayer::getTargetDirection() const
+{
+    core::vector3df rot = TargetRot;
 
     return core::vector3df(sin(core::degToRad(rot.Y)), -sin(core::degToRad(rot.X)), cos(core::degToRad(rot.Y))).normalize();
 }

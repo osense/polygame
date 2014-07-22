@@ -37,6 +37,11 @@ void ObjectItemCube::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_OBJ_POS)
     {
+        if (Node->getPosition().Z + DestroyDist <= msg.Position.Z)
+        {
+            delete this;
+            return;
+        }
         if ((Node->getPosition() - core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z)).getLength() <= CubeSize*1.5)
         {
             broadcastMessage(SMessage(this, EMT_PLAYER_CUBED));

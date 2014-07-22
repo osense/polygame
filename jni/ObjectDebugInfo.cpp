@@ -6,11 +6,12 @@ ObjectDebugInfo::ObjectDebugInfo(SContext* cont) : Object (cont)
     setPersistent(true);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
-    Font = Context->Device->getGUIEnvironment()->getBuiltInFont();// Context->Device->getGUIEnvironment()->getFont("gui/asap.xml");
+    Font = Context->Device->getGUIEnvironment()->getBuiltInFont();
 
     Accel = core::vector3d<f64>(0);
     Player = 0;
     FPSCam = 0;
+    ObjectCount = 0;
 }
 
 ObjectDebugInfo::~ObjectDebugInfo()
@@ -29,6 +30,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
         dbg += "\nMeshes: ";
         dbg += Context->Device->getSceneManager()->getMeshCache()->getMeshCount();
+        dbg += "\nItems: ";
+        dbg += ObjectCount;
 
         if (Player)
         {
@@ -93,18 +96,24 @@ void ObjectDebugInfo::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_OBJ_SPAWNED)
     {
-        if (msg.Dispatcher->getName() == "ObjectUpdater")
+        if (msg.Dispatcher->getName() == "ObjectItemCube")
+            ObjectCount++;
+
+        else if (msg.Dispatcher->getName() == "ObjectUpdater")
             msg.Dispatcher->registerObserver(this);
 
-        if (msg.Dispatcher->getName() == "ObjectPlayer")
+        else if (msg.Dispatcher->getName() == "ObjectPlayer")
             Player = static_cast<ObjectPlayer*>(msg.Dispatcher);
 
-        if (msg.Dispatcher->getName() == "ObjectEventReceiver")
+        else if (msg.Dispatcher->getName() == "ObjectEventReceiver")
             msg.Dispatcher->registerObserver(this);
     }
     else if (msg.Type == EMT_OBJ_DIED)
     {
-        if (msg.Dispatcher->getName() == "ObjectPlayer")
+        if (msg.Dispatcher->getName() == "ObjectItemCube")
+            ObjectCount--;
+
+        else if (msg.Dispatcher->getName() == "ObjectPlayer")
             Player = 0;
     }
 }

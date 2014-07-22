@@ -2,6 +2,7 @@
 #define OBJECTPLAYER_H
 
 #include "functions.h"
+#include "circular_buffer.h"
 #include "Object.h"
 #include "ObjectManager.h"
 #include "EffectRenderer.h"
@@ -18,6 +19,7 @@ public:
 
     f32 getSpeed() const;
     core::vector3df getDirection() const;
+    core::vector3df getTargetDirection() const;
     scene::ICameraSceneNode* getCamera() const;
 
 private:
@@ -28,7 +30,8 @@ private:
 
     //scene::IQuadSceneNode* Quad;
     f32 Speed;
-    f32 TargetRotY;
+    core::vector3df TargetRot;
+    core::vector3df RotSpeed;
     f32 MaxAbsRotY;
     bool Accelerating;
 
@@ -39,8 +42,7 @@ private:
     static const f32 AccCutoff = 3.0;
     static const u32 AccSamplesSize = 5;
 
-    f32 AccSamples[AccSamplesSize];
-    u32 AccLastSampleIdx;
+    circular_buffer<f32> AccSamples;
 };
 
 #endif // OBJECTPLAYER_H

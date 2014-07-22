@@ -53,7 +53,8 @@ void ObjectStateInit::onMessage(SMessage msg)
             //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_GLOW);
 
-            //debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
+            if(Context->Renderer->PP)
+                debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
 
             LoadingState = EILS_SHADERS;
             return;

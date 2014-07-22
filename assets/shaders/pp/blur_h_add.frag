@@ -1,6 +1,7 @@
 precision mediump float;
 
 uniform sampler2D Render;
+uniform sampler2D Tex0;
 
 uniform vec2 PixelSize;
 
@@ -20,5 +21,5 @@ void main()
     blur += texture2D(Render, tc + vec2(PixelSize.x * 4.0, 0.0)) * 0.09375;
     blur += texture2D(Render, tc + vec2(PixelSize.x * 6.0, 0.0)) * 0.015625;
 
-    gl_FragColor = blur;
+    gl_FragColor = blur + texture2D(Tex0, TexCoord);
 }

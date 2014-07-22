@@ -25,7 +25,7 @@ void EffectRenderer::drawAll()
         video->setRenderTarget(Scene);
         Smgr->drawAll();
 
-        video->setRenderTarget(video::ERT_FRAME_BUFFER);
+        video->setRenderTarget(video::ERT_FRAME_BUFFER, false, false);
 
         PP->render(Scene);
     }
@@ -91,14 +91,14 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
         Context->Device->getLogger()->log("EffectRenderer", "initializing glow effect");
         Glow = PP->createEffectChain();
-        Glow->createEffect(video::EPE_ALBEDO);//PP->getRootEffectChain()->readShader("blur_select.frag"));
-        Glow->createEffect(video::EPE_BLUR_H);
+        Glow->createEffect(video::EPE_ALBEDO);
         Glow->createEffect(video::EPE_BLUR_V);
-        video::CPostProcessingEffect* add2 = Glow->createEffect(video::EPE_ADD2);
+        video::CPostProcessingEffect* add = Glow->createEffect(video::EPE_BLUR_H_ADD);
+
         if (FXAA)
-            add2->addTextureToShader(FXAA->getCustomRTT());
+            add->addTextureToShader(FXAA->getCustomRTT());
         else
-            add2->addTextureToShader(Scene);
+            add->addTextureToShader(Scene);
 
         break;
     }

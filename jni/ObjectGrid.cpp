@@ -83,7 +83,10 @@ void ObjectGrid::onMessage(SMessage msg)
         core::vector3df diffVect = pPos - Position;
 
         if (handleCollision(core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z), diffVect))
+        {
+            Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
             return;
+        }
 
         // handle all kinds of update stuff
         if (diffVect.getLength() > 1.0)
@@ -394,38 +397,34 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 
     core::vector3df t1n = t1.getNormal().normalize();
     core::vector3df t2n = t2.getNormal().normalize();
-    core::line3df t1l(pPos, pPos - 999 * t1n);
-    core::line3df t2l(pPos, pPos - 999 * t2n);
+    core::line3df t1l(pPos + t1n, pPos - 999 * t1n);
+    core::line3df t2l(pPos + t2n, pPos - 999 * t2n);
 
     core::vector3df t1Int, t2Int;
     if (t1.getIntersectionWithLimitedLine(t1l, t1Int))
     {
-        t1l.end = t1Int;
-        if (t1l.getLength() < PlayerSize)
+        if ((pPos - t1Int).getLength() < PlayerSize)
         {
-            Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
             return true;
         }
 
 #ifdef DEBUG_PLAYER
         Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
         Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
-        Context->Device->getVideoDriver()->draw3DLine(t1l.start, t1l.end);
+        Context->Device->getVideoDriver()->draw3DLine(pPos, t1Int);
 #endif // DEBUG_PLAYER
     }
     if (t2.getIntersectionWithLimitedLine(t2l, t2Int))
     {
-        t2l.end = t2Int;
-        if (t2l.getLength() < PlayerSize)
+        if ((pPos - t2Int).getLength() < PlayerSize)
         {
-            Context->ObjManager->broadcastMessage(SMessage(this, EMT_PLAYER_CRASHED));
             return true;
         }
 
 #ifdef DEBUG_PLAYER
         Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
         Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
-        Context->Device->getVideoDriver()->draw3DLine(t2l.start, t2l.end);
+        Context->Device->getVideoDriver()->draw3DLine(pPos, t2Int);
 #endif // DEBUG_PLAYER
     }
 

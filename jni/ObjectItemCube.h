@@ -25,6 +25,7 @@ class ObjectItemCube : public Object
         static const bool Filled = false;
         static const f32 CubeSize = 0.25;
         static const f32 RotSpeed = 0.025;
+        static const f32 DestroyDist = 2;
 };
 
 #endif // OBJECTITEMCUBE_H

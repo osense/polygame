@@ -30,6 +30,8 @@ class ObjectDebugInfo : public Object
 
         ObjectPlayer* Player;
         scene::ICameraSceneNode* FPSCam;
+
+        u32 ObjectCount;
 };
 
 //#endif // DEBUG_INFO
