@@ -14,7 +14,7 @@ void main()
     vec3 Vertex = (WorldViewMat * vec4(inVertexPosition, 1.0)).xyz;
     float depth = length(Vertex) / CamFar;//Vertex.z / CamFar;
 
-    float alpha = min(1.0, 8.0 - 10.0*depth);
+    float alpha = max(min(1.0, 8.0 - 10.0*depth), 0.0);
     Color = mix(NearColor, FarColor, depth) * alpha;
 
     vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.08), 1.0);
