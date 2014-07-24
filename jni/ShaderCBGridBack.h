@@ -17,13 +17,21 @@ class ShaderCBGridBack : public video::IShaderConstantSetCallBack
 
         virtual void OnSetMaterial(const video::SMaterial &material);
 
+        void setTransform(f32 t);
+
+        f32 getTransform() const;
+
     private:
         SContext* Context;
         bool FirstUpdate;
 
+        video::SColorf NearColor, FarColor;
+        f32 Transform;
+
         s32 CamFarID;
         s32 WorldViewProjMatID, WorldViewMatID;
         s32 NearColorID, FarColorID;
+        s32 TransformID;
 };
 
 #endif // CSHADERDEFAULTCALLBACK_H

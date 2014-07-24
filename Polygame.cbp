@@ -59,6 +59,8 @@
 		<Unit filename="jni/ObjectEventReceiver.h" />
 		<Unit filename="jni/ObjectGrid.cpp" />
 		<Unit filename="jni/ObjectGrid.h" />
+		<Unit filename="jni/ObjectItem.cpp" />
+		<Unit filename="jni/ObjectItem.h" />
 		<Unit filename="jni/ObjectItemCube.cpp" />
 		<Unit filename="jni/ObjectItemCube.h" />
 		<Unit filename="jni/ObjectItemSpawner.cpp" />
@@ -93,7 +95,6 @@
 		<Unit filename="jni/circular_buffer.h" />
 		<Unit filename="jni/functions.h" />
 		<Unit filename="jni/libnoise/basictypes.h" />
-		<Unit filename="jni/libnoise/exception.h" />
 		<Unit filename="jni/libnoise/interp.h" />
 		<Unit filename="jni/libnoise/noisegen.cpp" />
 		<Unit filename="jni/libnoise/noisegen.h" />

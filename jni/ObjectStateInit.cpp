@@ -70,12 +70,13 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
                                                                                                     Context->Mtls->GridCB);
 
+            Context->Mtls->GridBackCB = new ShaderCBGridBack(Context);
+            Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
+                                                                                                        Context->Mtls->GridBackCB);
+
             Context->Mtls->CubeCB = new ShaderCBCube(Context);
             Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
                                                                                                         Context->Mtls->CubeCB);
-
-            Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                                                                                        new ShaderCBGridBack(Context), video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
             Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
                                                                                                    new ShaderCBSky());

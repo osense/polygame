@@ -23,15 +23,21 @@ class ShaderCBGrid : public video::IShaderConstantSetCallBack
 
         video::SColorf getFarColor() const;
 
+        void setTransform(f32 t);
+
+        f32 getTransform() const;
+
     private:
         SContext* Context;
         bool FirstUpdate;
 
+        video::SColorf NearColor, FarColor;
+        f32 Transform;
+
         s32 CamFarID;
         s32 WorldViewProjMatID, WorldViewMatID;
         s32 NearColorID, FarColorID;
-
-        video::SColorf NearColor, FarColor;
+        s32 TransformID;
 };
 
 #endif // SHADERCBDOF_H

@@ -6,6 +6,7 @@ ShaderCBGrid::ShaderCBGrid(SContext* cont)
 
     NearColor = video::SColorf(1, 1, 1);
     FarColor = video::SColorf(1, 1, 1);
+    Transform = 0;
 }
 
 void ShaderCBGrid::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
@@ -17,6 +18,7 @@ void ShaderCBGrid::OnSetConstants(video::IMaterialRendererServices* services, s3
         WorldViewMatID = services->getVertexShaderConstantID("WorldViewMat");
         NearColorID = services->getVertexShaderConstantID("NearColor");
         FarColorID = services->getVertexShaderConstantID("FarColor");
+        TransformID = services->getVertexShaderConstantID("Transform");
 
         FirstUpdate = true;
     }
@@ -35,6 +37,8 @@ void ShaderCBGrid::OnSetConstants(video::IMaterialRendererServices* services, s3
 
     services->setVertexShaderConstant(NearColorID, reinterpret_cast<f32*>(&NearColor), 3);
     services->setVertexShaderConstant(FarColorID, reinterpret_cast<f32*>(&FarColor), 3);
+
+    services->setVertexShaderConstant(TransformID, &Transform, 1);
 }
 
 void ShaderCBGrid::setNearColor(video::SColorf n)
@@ -55,4 +59,14 @@ video::SColorf ShaderCBGrid::getNearColor() const
 video::SColorf ShaderCBGrid::getFarColor() const
 {
     return FarColor;
+}
+
+void ShaderCBGrid::setTransform(f32 t)
+{
+    Transform = t;
+}
+
+f32 ShaderCBGrid::getTransform() const
+{
+    return Transform;
 }

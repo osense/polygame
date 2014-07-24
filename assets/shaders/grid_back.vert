@@ -5,6 +5,7 @@ attribute vec3 inVertexColor;
 uniform mat4 WorldViewProjMat;
 uniform mat4 WorldViewMat;
 uniform float CamFar;
+uniform float Transform;
 
 varying vec3 Color;
 
@@ -15,6 +16,8 @@ void main()
 
     Color = inVertexColor;
 
-    gl_Position = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.08), 1.0);
+    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.08), 1.0);
+    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform;
+    gl_Position = clipPos;
 }
 

@@ -6,6 +6,7 @@ uniform mat4 WorldViewProjMat;
 uniform mat4 WorldViewMat;
 uniform float CamFar;
 uniform vec3 BaseColor;
+uniform float Transform;
 
 varying vec3 Color;
 
@@ -17,6 +18,8 @@ void main()
     float alpha = min(1.0, 8.0 - 10.0*depth);
     Color = inVertexColor * alpha;
 
-    gl_Position = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.07 + 0.01), 1.0);
+    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.07 + 0.01), 1.0);
+    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform;
+    gl_Position = clipPos;
 }
 

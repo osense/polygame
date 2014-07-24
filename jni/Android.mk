@@ -29,7 +29,7 @@ endif
 
 LOCAL_C_INCLUDES:=../irrlicht-ogl-es/include ../irrpp/include
 
-LOCAL_SRC_FILES:=jni/libnoise/noisegen.cpp jni/libnoise/perlin.cpp jni/main.cpp jni/EffectRenderer.cpp jni/ShaderCBDepth.cpp jni/ShaderCBGrid.cpp jni/ShaderCBGridBack.cpp jni/ShaderCBCube.cpp jni/ShaderCBSky.cpp jni/Object.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateInit.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/GridGenerator.cpp jni/ObjectPlayer.cpp jni/ObjectItemSpawner.cpp jni/ObjectItemCube.cpp jni/ObjectSky.cpp
+LOCAL_SRC_FILES:=jni/libnoise/noisegen.cpp jni/libnoise/perlin.cpp jni/main.cpp jni/EffectRenderer.cpp jni/ShaderCBDepth.cpp jni/ShaderCBGrid.cpp jni/ShaderCBGridBack.cpp jni/ShaderCBCube.cpp jni/ShaderCBSky.cpp jni/Object.cpp jni/ObjectDebugInfo.cpp jni/ObjectEventReceiver.cpp jni/ObjectManager.cpp jni/ObjectStateInit.cpp jni/ObjectStateGame.cpp jni/ObjectStateMenu.cpp jni/ObjectUpdater.cpp jni/ObjectGrid.cpp jni/GridGenerator.cpp jni/ObjectPlayer.cpp jni/ObjectItemSpawner.cpp jni/ObjectItem.cpp jni/ObjectItemCube.cpp jni/ObjectSky.cpp
 LOCAL_LDLIBS:=-lEGL -llog -lGLESv1_CM -lGLESv2 -lz -landroid
 
 LOCAL_STATIC_LIBRARIES:=android_native_app_glue Irrlicht irrPP
