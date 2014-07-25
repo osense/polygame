@@ -37,7 +37,7 @@ private:
     static const u32 NumPointsY = 18;
     static const u32 NumPointsX = NumPointsY * (16.0 / 9.0);
     static const f32 LineThickness = 0.005;
-    static const u32 GenChangeEvery = 150;
+    static const u32 GenChangeEvery = 50;
     static const u32 ColorChangeEvery = 35;
     static const f32 PlayerSize = 0.05;
 

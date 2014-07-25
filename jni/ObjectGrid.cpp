@@ -51,7 +51,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->GridBack);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
-    //BackNode->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
     backMesh->drop();
 
 
@@ -307,14 +306,15 @@ void ObjectGrid::handleGenUpdate()
 
     if (GenChangeIn <= 0)
     {
-        Generator.setType(EGT_NONE);
-        //Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
+        Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
+        Generator.setDifficulty(Generator.getDifficulty() - 0.45);
+        GenChangeIn = GenChangeEvery;
     }
 
-    if (GenChangeIn == int(0.8 * GenChangeEvery))
+    /*if (GenChangeIn == int(0.8 * GenChangeEvery))
     {
-        Generator.setSlope(EST_UP);
-    }
+        Generator.setSlope(EST_DOWN);
+    }*/
     if (GenChangeIn == int(0.6 * GenChangeEvery))
     {
         Generator.setSlope(EST_NONE);
@@ -357,9 +357,9 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 {
     u32 halfPtsX = NumPointsX / 2;
     u32 posXOffset = diffV.X < 0 ? 1 : 0;
-    u32 posZOffset = diffV.Z > 0.5 ? 1 : 0;
+    u32 posZOffset = 1;//diffV.Z > 0.5 ? 1 : 0;
     f32 posX = Position.X - posXOffset;
-    f32 posZ = Position.Z + posZOffset - 1;
+    f32 posZ = Position.Z;
 
     core::vector3df ld(posX, 0, posZ);
     ld.Y = Points[halfPtsX - posXOffset][posZOffset];
@@ -400,6 +400,13 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     core::line3df t1l(pPos + t1n, pPos - 999 * t1n);
     core::line3df t2l(pPos + t2n, pPos - 999 * t2n);
 
+#ifdef DEBUG_PLAYER
+        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+        Context->Device->getVideoDriver()->draw3DTriangle(t1);
+        Context->Device->getVideoDriver()->draw3DTriangle(t2);
+#endif // DEBUG_PLAYER
+
     core::vector3df t1Int, t2Int;
     if (t1.getIntersectionWithLimitedLine(t1l, t1Int))
     {
@@ -409,8 +416,6 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         }
 
 #ifdef DEBUG_PLAYER
-        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
-        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
         Context->Device->getVideoDriver()->draw3DLine(pPos, t1Int);
 #endif // DEBUG_PLAYER
     }
@@ -422,8 +427,6 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         }
 
 #ifdef DEBUG_PLAYER
-        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
-        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
         Context->Device->getVideoDriver()->draw3DLine(pPos, t2Int);
 #endif // DEBUG_PLAYER
     }

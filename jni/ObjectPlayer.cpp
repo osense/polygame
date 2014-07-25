@@ -69,7 +69,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setTarget(Camera->getPosition() + dir);
 
         #ifdef DEBUG_PLAYER
-        DebugCamera->setPosition(Camera->getPosition() + core::vector3df(0, 0.5, -1));
+        DebugCamera->setPosition(Camera->getPosition() + core::vector3df(1.5, 1, 0));
         DebugCamera->setTarget(Camera->getPosition());
         #endif // DEBUG_PLAYER
 
@@ -91,7 +91,7 @@ void ObjectPlayer::onMessage(SMessage msg)
     {
         core::vector3df pPos = Camera->getPosition();
         pPos.Y = msg.PlayerFeedback.Height + 0.4;
-        Camera->setPosition((Camera->getPosition() + pPos) / 2.0);
+        Camera->setPosition((Camera->getPosition()*2 + pPos) / 3.0);
         TargetRot.X = msg.PlayerFeedback.GridAngle;
     }
     else if (msg.Type == EMT_INPUT)
