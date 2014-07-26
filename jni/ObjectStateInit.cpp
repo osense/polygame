@@ -1,6 +1,7 @@
 #include "ObjectStateInit.h"
 
-ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
+ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont),
+    Loading(0)
 {
     Name = "ObjectStateInit";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -10,24 +11,33 @@ ObjectStateInit::ObjectStateInit(SContext* cont) : Object(cont)
     // we'll need to parse saved settings here
     //Context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-    core::vector2d<s32> imgPos;
-    video::ITexture* imgTex = Context->Device->getVideoDriver()->getTexture("gui/loading.png");
-    imgPos.X = (Context->Device->getVideoDriver()->getScreenSize().Width / 2) - (imgTex->getSize().Width / 2);
-    imgPos.Y = (Context->Device->getVideoDriver()->getScreenSize().Height / 2) - (imgTex->getSize().Height / 2);
+    core::dimension2du screenSize = Context->Renderer->getScreenSize();
+    f32 gScaleX = screenSize.Width / float(GUI_TARGET_X);
+    f32 gScaleY = screenSize.Height / float(GUI_TARGET_Y);
+    Context->GUIScale = core::vector2df(gScaleX, gScaleY);
+    debugLog((core::stringc("GUI Scale is ") + core::stringc(Context->GUIScale.X) + "x" + core::stringc(Context->GUIScale.Y)).c_str());
 
-    Image = Context->Device->getGUIEnvironment()->addImage(imgTex, imgPos);
+    Context->ScreenSize = ESS_SMALL;
+    if (screenSize.Width >= 960 && screenSize.Height >= 720)
+        Context->ScreenSize = ESS_XLARGE;
+    else if (screenSize.Width >= 640 && screenSize.Height >= 480)
+        Context->ScreenSize = ESS_LARGE;
+    else if (screenSize.Width >= 470 && screenSize.Height >= 320)
+        Context->ScreenSize = ESS_NORMAL;
+
+    debugLog(core::stringc("Screen size is ") + core::stringc(Context->ScreenSize));
+
+    if (showLoading)
+    {
+        Loading = Context->Device->getGUIEnvironment()->addStaticText(L"LOADING", core::rect<s32>(0, 0, 1, 1));
+        Loading->setRelativePositionProportional(core::rect<f32>(0, 0, 1, 1));
+        Loading->setTextAlignment(gui::EGUIA_CENTER, gui::EGUIA_CENTER);
+    }
 
     LoadingState = EILS_WAIT;
     WaitCounter = 10;
 
-    TextureNames.push_back("gui/continue.png");
-    TextureNames.push_back("gui/new_game.png");
-    TextureNames.push_back("gui/exit.png");
-    TextureNames.push_back("gui/options.png");
-    TextureNames.push_back("gui/game_over.png");
-    TextureNames.push_back("gui/ok.png");
-
-    TextureNames.push_back("noise.png");
+    TextureNames.push_back("textures/noise.png");
 
     debugLog("precaching resources...");
 }
@@ -46,15 +56,44 @@ void ObjectStateInit::onMessage(SMessage msg)
         if (LoadingState == EILS_WAIT)
         {
             if (--WaitCounter <= 0)
-                LoadingState = EILS_RENDERER;
+                LoadingState = EILS_FONTS;
         }
-        if (LoadingState == EILS_RENDERER)
+
+        else if (LoadingState == EILS_FONTS)
+        {
+            gui::IGUIFont* font = 0;
+
+            switch(Context->ScreenSize)
+            {
+            case ESS_SMALL:
+                font = Context->Device->getGUIEnvironment()->getFont("getvoip_18.xml");
+                break;
+            case ESS_NORMAL:
+                font = Context->Device->getGUIEnvironment()->getFont("getvoip_20.xml");
+                break;
+            case ESS_LARGE:
+                font = Context->Device->getGUIEnvironment()->getFont("getvoip_28.xml");
+                break;
+            case ESS_XLARGE:
+                font = Context->Device->getGUIEnvironment()->getFont("getvoip_36.xml");
+                break;
+            }
+
+            Context->Device->getGUIEnvironment()->getSkin()->setFont(font);
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_BUTTON_TEXT, video::SColor(255, 255, 255, 255));
+
+            LoadingState = EILS_RENDERER;
+            return;
+        }
+
+        else if (LoadingState == EILS_RENDERER)
         {
             //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_GLOW);
 
             if(Context->Renderer->PP)
                 debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
+
 
             LoadingState = EILS_SHADERS;
             return;
@@ -96,16 +135,8 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->Device->getVideoDriver()->getTexture(TextureNames[TexturesLoaded++]);
 
             if (TexturesLoaded >= TextureNames.size())
-                LoadingState = EILS_FONTS;
+                LoadingState = EILS_DONE;
 
-            return;
-        }
-
-        else if (LoadingState == EILS_FONTS)
-        {
-            Context->Device->getGUIEnvironment()->getFont("gui/asap.xml");
-
-            LoadingState = EILS_DONE;
             return;
         }
 
@@ -113,7 +144,9 @@ void ObjectStateInit::onMessage(SMessage msg)
         {
             new ObjectStateMenu(Context);
 
-            Image->remove();
+            if (Loading)
+                Loading->remove();
+
             delete this;
         }
     }

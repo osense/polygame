@@ -10,7 +10,7 @@ ObjectSky::ObjectSky(SContext* cont) : Object(cont),
 
     SkyNode = Context->Device->getSceneManager()->addSkyDomeSceneNode(0, 16, 18, 0.9, 2.0, 19);
     SkyNode->setMaterialType(Context->Mtls->Sky);
-    SkyNode->setMaterialTexture(0, Context->Device->getVideoDriver()->getTexture("noise.png"));
+    SkyNode->setMaterialTexture(0, Context->Device->getVideoDriver()->getTexture("textures/noise.png"));
 
     SkyNode->setRotation(core::vector3df(0, 0, 90));
 }

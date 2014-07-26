@@ -58,9 +58,6 @@ int main(int argc, char *argv[])
     cont->App = app;
 #endif
     cont->Device = dev;
-    f32 gScaleX = dev->getVideoDriver()->getScreenSize().Width / float(DESKTOP_WND_X);
-    f32 gScaleY = dev->getVideoDriver()->getScreenSize().Height / float(DESKTOP_WND_Y);
-    cont->GUIScale = gScaleX < gScaleY ? gScaleX : gScaleY;
 
     cont->ObjManager = new ObjectManager(cont);
 
@@ -92,7 +89,7 @@ int main(int argc, char *argv[])
 
         dev->getVideoDriver()->beginScene();
         cont->Renderer->drawAll();
-        dev->getGUIEnvironment()->drawAll();
+        //dev->getGUIEnvironment()->drawAll();
 
         updater->broadcastUpdate(timeDelta * cont->TimeScale);
 

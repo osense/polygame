@@ -34,14 +34,17 @@ public:
 
     void init(E_EFFECT_TYPE type);
 
+    core::dimension2du getScreenSize() const;
+
     video::irrPP* PP;
 
 private:
-    static const f32 SceneQuality = 1.0;
     static const video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality = video::EPQ_QUARTER;
 
     SContext* Context;
     bool Active;
+    core::dimension2du ScreenSize;
+    bool GUIHasEffects;
 
     scene::ISceneManager* Smgr;
     scene::ICameraSceneNode* Camera;

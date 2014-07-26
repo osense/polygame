@@ -51,11 +51,11 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 
         core::dimension2d<u32> screenSize = Context->Device->getVideoDriver()->getScreenSize();
-        f32 lineL = 50 * Context->GUIScale;
+        f32 lineL = 50 * Context->GUIScale.Y;
 
         core::position2d<s32> lineStart, lineEnd;
-        lineStart.X = screenSize.Width - (75*Context->GUIScale);
-        lineStart.Y = 25*Context->GUIScale;
+        lineStart.X = screenSize.Width - (75*Context->GUIScale.X);
+        lineStart.Y = 25*Context->GUIScale.Y;
         lineEnd.X = lineL * cos(-Accel.Y*0.1+1.57) + lineStart.X;
         lineEnd.Y = lineL * sin(-Accel.Y*0.1+1.57) + lineStart.Y;
         Context->Device->getVideoDriver()->draw2DLine(lineStart, lineEnd);

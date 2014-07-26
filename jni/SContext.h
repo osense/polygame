@@ -8,22 +8,40 @@
 //#define DEBUG_GRID
 //#define DEBUG_EFFECTS
 
+#define GUI_TARGET_X 854
+#define GUI_TARGET_Y 480
+
+#ifndef _IRR_ANDROID_PLATFORM_
 #define DESKTOP_WND_X 854
 #define DESKTOP_WND_Y 480
+#endif // _IRR_ANDROID_PLATFORM_
 
-#include <irrTypes.h>
+#include <irrlicht.h>
 
 class android_app;
 
 namespace irr
 {
     class IrrlichtDevice;
+
+    namespace core
+    {
+        class vector2d<class T>;
+    }
 }
 
 class Object;
 class ObjectManager;
 class EffectRenderer;
 struct SMaterials;
+
+enum E_SCREEN_SIZE
+{
+    ESS_SMALL = 0,
+    ESS_NORMAL,
+    ESS_LARGE,
+    ESS_XLARGE
+};
 
 
 struct SContext
@@ -38,7 +56,9 @@ struct SContext
     SMaterials* Mtls;
 
     irr::f32 TimeScale;
-    irr::f32 GUIScale;
+    irr::core::vector2df GUIScale;
+    E_SCREEN_SIZE ScreenSize;
 };
+
 
 #endif // SContext_H_INCLUDED

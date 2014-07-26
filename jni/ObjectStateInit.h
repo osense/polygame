@@ -31,7 +31,7 @@ using namespace irr;
 class ObjectStateInit : public Object
 {
     public:
-        ObjectStateInit(SContext* cont);
+        ObjectStateInit(SContext* cont, bool showLoading = true);
 
         ~ObjectStateInit();
 
@@ -44,7 +44,7 @@ class ObjectStateInit : public Object
         u32 TexturesLoaded;
         core::array<core::stringc> TextureNames;
 
-        gui::IGUIImage* Image;
+        gui::IGUIStaticText* Loading;
 };
 
 #endif // OBJECTSTATEINIT_H

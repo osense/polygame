@@ -9,6 +9,16 @@ EffectRenderer::EffectRenderer(SContext* cont) :
 {
     Context = cont;
     Smgr = Context->Device->getSceneManager();
+
+#ifdef _IRR_ANDROID_PLATFORM_
+    ANativeWindow* nativeWindow = static_cast<ANativeWindow*>(Context->Device->getVideoDriver()->getExposedVideoData().OGLESAndroid.Window);
+    ScreenSize.Width = ANativeWindow_getWidth(Context->App->window);
+    ScreenSize.Height = ANativeWindow_getHeight(Context->App->window);
+#else
+    ScreenSize = Context->Device->getVideoDriver()->getScreenSize();
+#endif
+
+    GUIHasEffects = false;
 }
 
 EffectRenderer::~EffectRenderer()
@@ -24,10 +34,15 @@ void EffectRenderer::drawAll()
 
         video->setRenderTarget(Scene);
         Smgr->drawAll();
+        if (GUIHasEffects)
+            Context->Device->getGUIEnvironment()->drawAll();
 
         video->setRenderTarget(video::ERT_FRAME_BUFFER, false, false);
 
         PP->render(Scene);
+
+        if (!GUIHasEffects)
+            Context->Device->getGUIEnvironment()->drawAll();
     }
     else
     {
@@ -50,15 +65,8 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
-#ifdef DEBUG_GLES
-        core::dimension2d<u32> screenSize = video->getScreenSize();
-        res.Width = core::round32(screenSize.Width * SceneQuality);
-        res.Height = core::round32(screenSize.Height * SceneQuality);
-#elif _IRR_ANDROID_PLATFORM_
-        ANativeWindow* nativeWindow = static_cast<ANativeWindow*>(video->getExposedVideoData().OGLESAndroid.Window);
-        //res.Width = ANativeWindow_getWidth(Context->App->window);
-        //res.Height = ANativeWindow_getHeight(Context->App->window);
-#endif
+        res = ScreenSize;
+
         core::stringc resText;
         resText += res.Width;
         resText += "x";
@@ -71,6 +79,10 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
 
         Scene = video->addRenderTargetTexture(res, "scene-RT");
+        if (ScreenSize == res)
+            GUIHasEffects = true;
+        else
+            GUIHasEffects = false;
         PP->setQuality(res / (u32)EffectQuality);
     }
 
@@ -104,4 +116,13 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     }
 
     Active = true;
+}
+
+core::dimension2du EffectRenderer::getScreenSize() const
+{
+    if (isActive() && GUIHasEffects)
+        return Scene->getSize();
+    else
+        return ScreenSize;
+
 }

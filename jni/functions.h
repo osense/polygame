@@ -7,19 +7,19 @@
 using namespace irr;
 using namespace core;
 
-inline void scaleGUIPos(position2d<s32> &p, f32 gscale)
+inline void scaleGUIPos(position2d<s32> &p, vector2df gscale)
 {
-    p.X *= gscale;
-    p.Y *= gscale;
+    p.X *= gscale.X;
+    p.Y *= gscale.Y;
 }
 
-inline void scaleGUIDim(dimension2d<s32> &p, f32 gscale)
+inline void scaleGUIDim(dimension2d<s32> &p, vector2df gscale)
 {
-    p.Width *= gscale;
-    p.Height *= gscale;
+    p.Width *= gscale.X;
+    p.Height *= gscale.Y;
 }
 
-inline void scaleGUIRect(rect<s32> &r, f32 gscale)
+inline void scaleGUIRect(rect<s32> &r, vector2df gscale)
 {
     scaleGUIPos(r.LowerRightCorner, gscale);
     scaleGUIPos(r.UpperLeftCorner, gscale);
@@ -34,6 +34,17 @@ inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, vi
     btn->setImage(tex);
     btn->setScaleImage(true);
     btn->setUseAlphaChannel(true);
+
+    return btn;
+}
+
+inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, core::stringw text, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
+{
+    scaleGUIPos(pos, cont->GUIScale);
+    scaleGUIDim(size, cont->GUIScale);
+    gui::IGUIButton* btn = cont->Device->getGUIEnvironment()->addButton(rect<s32>(pos, size), parent, id);
+    btn->setDrawBorder(false);
+    btn->setText(text.c_str());
 
     return btn;
 }
