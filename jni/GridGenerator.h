@@ -38,8 +38,11 @@ class GridGenerator
         f32 getGenerated(u32 idx) const;
 
         void setType(E_GEN_TYPE type);
+        E_GEN_TYPE getType() const;
+
         void setSlope(E_SLOPE_TYPE type);
         f32 getHeight() const;
+
         void setDifficulty(f32 diff);
         f32 getDifficulty() const;
 
@@ -61,6 +64,7 @@ class GridGenerator
         void genPlains(core::vector3df pos);
         void genHills(core::vector3df pos);
         void genCanyons(core::vector3df pos);
+        void genWalls(core::vector3df pos);
 
         void slopeTransform();
 

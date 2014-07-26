@@ -39,14 +39,29 @@ void ObjectDebugInfo::onMessage(SMessage msg)
             dbg += Player->getSpeed();
         }
 
-#ifdef DEBUG_GRID
         ObjectGrid* grid = static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"));
         if (grid)
         {
+            dbg += "\nTerrain type: ";
+            switch (grid->getGenerator().getType())
+            {
+            case EGT_PLAINS:
+                dbg += "PLAINS";
+                break;
+            case EGT_HILLS:
+                dbg += "HILLS";
+                break;
+            case EGT_CANYONS:
+                dbg += "CANYONS";
+                break;
+            case EGT_WALLS:
+                dbg += "WALLS";
+                break;
+            }
+
             dbg += "\nDifficulty: ";
             dbg += grid->getGenerator().getDifficulty();
         }
-#endif // DEBUG_GRID
 
         Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 

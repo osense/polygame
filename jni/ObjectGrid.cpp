@@ -277,7 +277,7 @@ void ObjectGrid::addPlusY()
 
     for (u32 y = 0; y < NumPointsY; y++)
     {
-        Points[NumPointsX - 1][y] = Points[NumPointsX - 2][y];
+        Points[NumPointsX - 1][y] = getBaseHeight(y);
     }
 
     Position += core::vector3df(1, 0, 0);
@@ -289,7 +289,7 @@ void ObjectGrid::addMinusY()
 
     for (u32 y = 0; y < NumPointsY; y++)
     {
-        Points[0][y] = Points[1][y];
+        Points[0][y] = getBaseHeight(y);
     }
 
     Position += core::vector3df(-1, 0, 0);

@@ -12,6 +12,7 @@ GridGenerator::GridGenerator(u32 numPoints)
     Height = 0;
     Difficulty = 0;
 
+    PerlinN.SetNoiseQuality(noise::QUALITY_BEST);
     PerlinN.SetSeed(0);
     PerlinN.SetOctaveCount(1);
 }
@@ -48,8 +49,14 @@ f32* GridGenerator::generate(core::vector3df position)
     case EGT_PLAINS:
         genPlains(position);
         break;
+    case EGT_HILLS:
+        genHills(position);
+        break;
     case EGT_CANYONS:
         genCanyons(position);
+        break;
+    case EGT_WALLS:
+        genWalls(position);
         break;
     }
 
@@ -66,6 +73,25 @@ f32 GridGenerator::getGenerated(u32 idx) const
 void GridGenerator::setType(E_GEN_TYPE type)
 {
     Type = type;
+
+    switch (Type)
+    {
+    case EGT_PLAINS:
+        PerlinN.SetFrequency(0.4);
+        break;
+    case EGT_HILLS:
+        PerlinN.SetFrequency(0.25);
+        break;
+    case EGT_CANYONS:
+    case EGT_WALLS:
+        PerlinN.SetFrequency(0.4);
+        break;
+    }
+}
+
+E_GEN_TYPE GridGenerator::getType() const
+{
+    return Type;
 }
 
 void GridGenerator::setSlope(E_SLOPE_TYPE type)
@@ -119,19 +145,53 @@ void GridGenerator::genPlains(core::vector3df pos)
     NewPts[0] = 0;
     NewPts[NumPoints-1] = 0;
 
-    PerlinN.SetFrequency(0.4);
-
     for (u32 i = 1; i < NumPoints-1; i++)
     {
-        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, int(pos.Z)%150);
-        if (NewPts[i] < 0)
+        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z);
+        if (NewPts[i] < 0.5 - Difficulty/2)
             NewPts[i] = 0;
     }
 }
 
+void GridGenerator::genHills(core::vector3df pos)
+{
+    NewPts[0] = 0;
+    NewPts[NumPoints-1] = 0;
+
+    for (u32 i = 1; i < NumPoints-1; i++)
+    {
+        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z) * 2;
+        if (NewPts[i] < 1 - Difficulty)
+            NewPts[i] = 0;
+    }
+}
+
+
 void GridGenerator::genCanyons(core::vector3df pos)
 {
+    NewPts[0] = 0;
+    NewPts[NumPoints-1] = 0;
 
+    for (u32 i = 1; i < NumPoints-1; i++)
+    {
+        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z * 0.25);
+        if (NewPts[i] < 0.5 - Difficulty/2)
+            NewPts[i] = 0;
+    }
+}
+
+
+void GridGenerator::genWalls(core::vector3df pos)
+{
+    NewPts[0] = 0;
+    NewPts[NumPoints-1] = 0;
+
+    for (u32 i = 1; i < NumPoints-1; i++)
+    {
+        NewPts[i] = PerlinN.GetValue((pos.X + i) * 0.45, 0.5, pos.Z);
+        if (NewPts[i] < 0.5 - Difficulty/2)
+            NewPts[i] = 0;
+    }
 }
 
 void GridGenerator::slopeTransform()
