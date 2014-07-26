@@ -18,8 +18,8 @@ void main()
     float alpha = min(1.0, 8.0 - 10.0*depth);
     Color = inVertexColor * alpha;
 
-    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.07 + 0.01), 1.0);
-    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform;
+    vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.1 + 0.005), 1.0);
+    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform * 2.0;
     gl_Position = clipPos;
 }
 

@@ -49,6 +49,8 @@
 		<Unit filename="assets/shaders/sky.vert" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
+		<Unit filename="jni/GeometryGenerator.cpp" />
+		<Unit filename="jni/GeometryGenerator.h" />
 		<Unit filename="jni/GridGenerator.cpp" />
 		<Unit filename="jni/GridGenerator.h" />
 		<Unit filename="jni/Object.cpp" />
@@ -63,6 +65,8 @@
 		<Unit filename="jni/ObjectItem.h" />
 		<Unit filename="jni/ObjectItemCube.cpp" />
 		<Unit filename="jni/ObjectItemCube.h" />
+		<Unit filename="jni/ObjectItemPyramid.cpp" />
+		<Unit filename="jni/ObjectItemPyramid.h" />
 		<Unit filename="jni/ObjectItemSpawner.cpp" />
 		<Unit filename="jni/ObjectItemSpawner.h" />
 		<Unit filename="jni/ObjectManager.cpp" />

@@ -6,6 +6,7 @@
 #include "libnoise/perlin.h"
 
 #include "ObjectItemCube.h"
+#include "ObjectItemPyramid.h"
 
 
 class ObjectItemSpawner : public Object
@@ -23,7 +24,7 @@ class ObjectItemSpawner : public Object
         u32 SpawnMinX;
         u32 SpawnMaxX;
 
-        static const f32 SpawnChance = 0.05;
+        static const f32 SpawnChance = 0.02;
         static const f32 SpawnHillLimit = 0.2;
         static const f32 SpawnItemHeight = 0.5;
 };

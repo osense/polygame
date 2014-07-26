@@ -18,7 +18,7 @@ void main()
     Color = mix(NearColor, FarColor, depth) * alpha;
 
     vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * 0.08), 1.0);
-    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform;
+    clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform * 2.0;
     gl_Position = clipPos;
 }
 

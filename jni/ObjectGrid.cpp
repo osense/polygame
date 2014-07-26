@@ -2,6 +2,7 @@
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BaseHeight(NumPointsY),
+    CollisionActive(true),
     Generator(NumPointsX),
     GenChangeIn(GenChangeEvery),
     ColorChangeIn(5),
@@ -117,13 +118,11 @@ void ObjectGrid::onMessage(SMessage msg)
 #endif // DEBUG_GRID
         }
     }
-    else if (msg.Type == EMT_PLAYER_CUBED)
-        toggleBackMesh();
 }
 
-void ObjectGrid::toggleBackMesh()
+void ObjectGrid::setCollision(bool active)
 {
-    BackNode->setVisible(!BackNode->isVisible());
+    CollisionActive = active;
 }
 
 core::vector3df ObjectGrid::getPosition() const
@@ -355,6 +354,19 @@ void ObjectGrid::handleColors()
 
 bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 {
+    SMessage msg(this, EMT_PLAYER_FEEDBACK);
+
+    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(2) - getBaseHeight(1)));
+    msg.PlayerFeedback.Height = getBaseHeight(1) + (getBaseHeight(2) - getBaseHeight(1)) * (pPos.Z - Position.Z);
+
+    // "hack"
+    Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);
+
+
+    if (!CollisionActive)
+        return false;
+
+
     u32 halfPtsX = NumPointsX / 2;
     u32 posXOffset = diffV.X < 0 ? 1 : 0;
     u32 posZOffset = 1;//diffV.Z > 0.5 ? 1 : 0;
@@ -430,26 +442,6 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
         Context->Device->getVideoDriver()->draw3DLine(pPos, t2Int);
 #endif // DEBUG_PLAYER
     }
-
-    // broadcast triangle underneath player's rot.X and player's distance from it
-    core::line3df pl(pPos, pPos + core::vector3df(0, -100, 0));
-    core::vector3df plInt;
-    SMessage msg(this, EMT_PLAYER_FEEDBACK);
-
-    if (t1.getIntersectionWithLimitedLine(pl, plInt))
-    {
-
-    }
-    else if (t2.getIntersectionWithLimitedLine(pl, plInt))
-    {
-
-    }
-
-    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(2) - getBaseHeight(1)));
-    msg.PlayerFeedback.Height = getBaseHeight(1) + (getBaseHeight(2) - getBaseHeight(1)) * (pPos.Z - Position.Z);
-
-    // "hack"
-    Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);
 
     return false;
 }

@@ -3,6 +3,7 @@
 
 #include <irrlicht.h>
 #include "SContext.h"
+#include "functions.h"
 
 using namespace irr;
 
@@ -21,17 +22,23 @@ class ShaderCBGridBack : public video::IShaderConstantSetCallBack
 
         f32 getTransform() const;
 
+        void setAlpha(f32 a);
+
+        f32 getAlpha() const;
+
     private:
         SContext* Context;
         bool FirstUpdate;
 
         video::SColorf NearColor, FarColor;
         f32 Transform;
+        f32 Alpha;
 
         s32 CamFarID;
         s32 WorldViewProjMatID, WorldViewMatID;
         s32 NearColorID, FarColorID;
         s32 TransformID;
+        s32 AlphaID;
 };
 
 #endif // CSHADERDEFAULTCALLBACK_H

@@ -21,7 +21,7 @@ public:
     ~ObjectGrid();
     virtual void onMessage(SMessage msg);
 
-    void toggleBackMesh();
+    void setCollision(bool active);
 
     core::vector3df getPosition() const;
     u32 getNumPointsX() const;
@@ -44,6 +44,8 @@ private:
     core::vector3df Position;
     f32 Points[NumPointsX][NumPointsY];
     circular_buffer<f32> BaseHeight;
+
+    bool CollisionActive;
 
     GridGenerator Generator;
     u32 GenChangeIn;

@@ -4,6 +4,7 @@ ShaderCBGridBack::ShaderCBGridBack(SContext* cont)
 {
     Context = cont;
     Transform = 0;
+    Alpha = 1;
 }
 
 void ShaderCBGridBack::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
@@ -14,6 +15,7 @@ void ShaderCBGridBack::OnSetConstants(video::IMaterialRendererServices* services
         WorldViewProjMatID = services->getVertexShaderConstantID("WorldViewProjMat");
         WorldViewMatID = services->getVertexShaderConstantID("WorldViewMat");
         TransformID = services->getVertexShaderConstantID("Transform");
+        AlphaID = services->getVertexShaderConstantID("Alpha");
 
         FirstUpdate = true;
     }
@@ -31,6 +33,10 @@ void ShaderCBGridBack::OnSetConstants(video::IMaterialRendererServices* services
     services->setVertexShaderConstant(CamFarID, &farDist, 1);
 
     services->setVertexShaderConstant(TransformID, &Transform, 1);
+
+    float clAlpha = Alpha;
+    clamp(clAlpha, 0, 1);
+    services->setVertexShaderConstant(AlphaID, &clAlpha, 1);
 }
 
 void ShaderCBGridBack::OnSetMaterial (const video::SMaterial &material)
@@ -46,4 +52,14 @@ void ShaderCBGridBack::setTransform(f32 t)
 f32 ShaderCBGridBack::getTransform() const
 {
     return Transform;
+}
+
+void ShaderCBGridBack::setAlpha(f32 a)
+{
+    Alpha = a;
+}
+
+f32 ShaderCBGridBack::getAlpha() const
+{
+    return Alpha;
 }
