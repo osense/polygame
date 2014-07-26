@@ -57,6 +57,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
             case EGT_WALLS:
                 dbg += "WALLS";
                 break;
+            default:
+                dbg += "ERROR";
             }
 
             dbg += "\nDifficulty: ";

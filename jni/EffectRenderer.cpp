@@ -98,6 +98,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         break;
 
     case EET_GLOW:
+    {
         if (Glow)
             break;
 
@@ -112,6 +113,10 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         else
             add->addTextureToShader(Scene);
 
+        break;
+    }
+
+    default:
         break;
     }
 

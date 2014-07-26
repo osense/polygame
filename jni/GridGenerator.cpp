@@ -58,6 +58,8 @@ f32* GridGenerator::generate(core::vector3df position)
     case EGT_WALLS:
         genWalls(position);
         break;
+    default:
+        break;
     }
 
     slopeTransform();
@@ -85,6 +87,8 @@ void GridGenerator::setType(E_GEN_TYPE type)
     case EGT_CANYONS:
     case EGT_WALLS:
         PerlinN.SetFrequency(0.4);
+        break;
+    default:
         break;
     }
 }

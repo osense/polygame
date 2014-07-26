@@ -51,8 +51,6 @@ void ObjectStateMenu::onMessage(SMessage msg)
 
 void ObjectStateMenu::create_menu()
 {
-    video::IVideoDriver* video = Context->Device->getVideoDriver();
-
     Window = addOverlayWindow(Context);
 
     // we'll assume a gui for 854x480, our functions will take care of the scaling

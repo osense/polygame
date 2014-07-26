@@ -65,7 +65,6 @@ void ObjectStateGame::createGameoverWindow()
     GameoverWnd = addOverlayWindow(Context);
 
     gui::IGUIEnvironment* gui = Context->Device->getGUIEnvironment();
-    video::IVideoDriver* video = Context->Device->getVideoDriver();
 
     addButton(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 128),
               L"GAME OVER", Context, -1, GameoverWnd);
