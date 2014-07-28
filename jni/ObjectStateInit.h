@@ -10,6 +10,7 @@
 #include "ShaderCBGrid.h"
 #include "ShaderCBGridBack.h"
 #include "ShaderCBCube.h"
+#include "ShaderCBFader.h"
 #include "ShaderCBSky.h"
 
 #include "ObjectItemCube.h"

@@ -62,7 +62,18 @@ void ObjectStateGame::onMessage(SMessage msg)
         if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
         {
             if (!GameoverWnd)
-                setPaused(!isPaused());
+            {
+                if (!isPaused())
+                {
+                    Context->Renderer->getFader()->startFadeOut(0.5);
+                    setPaused(true);
+                }
+                else
+                {
+                    Context->Renderer->getFader()->startFadeInContinuous();
+                    setPaused(false);
+                }
+            }
         }
 
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)

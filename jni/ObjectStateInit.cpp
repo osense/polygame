@@ -81,6 +81,8 @@ void ObjectStateInit::onMessage(SMessage msg)
 
             Context->Device->getGUIEnvironment()->getSkin()->setFont(font);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_BUTTON_TEXT, video::SColor(255, 255, 255, 255));
+            Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_X, 0);
+            Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_Y, 0);
 
             LoadingState = EILS_RENDERER;
             return;
@@ -111,11 +113,15 @@ void ObjectStateInit::onMessage(SMessage msg)
 
             Context->Mtls->GridBackCB = new ShaderCBGridBack(Context);
             Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                                                                                        Context->Mtls->GridBackCB);
+                                                                                                        Context->Mtls->GridBackCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
             Context->Mtls->CubeCB = new ShaderCBCube(Context);
             Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
                                                                                                         Context->Mtls->CubeCB);
+
+            Context->Mtls->FaderCB = new ShaderCBFader();
+            Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
+                                                                                                        Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
             Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
                                                                                                    new ShaderCBSky());

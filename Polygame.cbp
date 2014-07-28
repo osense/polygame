@@ -47,6 +47,8 @@
 		<Unit filename="assets/shaders/pp/blur_select.frag" />
 		<Unit filename="assets/shaders/sky.frag" />
 		<Unit filename="assets/shaders/sky.vert" />
+		<Unit filename="jni/EffectFader.cpp" />
+		<Unit filename="jni/EffectFader.h" />
 		<Unit filename="jni/EffectRenderer.cpp" />
 		<Unit filename="jni/EffectRenderer.h" />
 		<Unit filename="jni/GeometryGenerator.cpp" />
@@ -90,6 +92,8 @@
 		<Unit filename="jni/ShaderCBCube.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
+		<Unit filename="jni/ShaderCBFader.cpp" />
+		<Unit filename="jni/ShaderCBFader.h" />
 		<Unit filename="jni/ShaderCBGrid.cpp" />
 		<Unit filename="jni/ShaderCBGrid.h" />
 		<Unit filename="jni/ShaderCBGridBack.cpp" />

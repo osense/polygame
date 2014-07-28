@@ -7,6 +7,7 @@
 #include "ObjectManager.h"
 
 #include "ObjectStateGame.h"
+#include "EffectRenderer.h"
 #include "functions.h"
 
 enum E_GUI_ID

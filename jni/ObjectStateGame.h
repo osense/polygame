@@ -11,6 +11,7 @@
 #include "ObjectItemSpawner.h"
 #include "ObjectSky.h"
 #include "ObjectPlayer.h"
+#include "EffectFader.h"
 
 enum E_GAME_GUI_ID
 {

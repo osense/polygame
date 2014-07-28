@@ -4,7 +4,7 @@
 #include "SContext.h"
 #include <irrlicht.h>
 #include <irrPP.h>
-#include "IQuadSceneNode.h"
+#include "EffectFader.h"
 #include "SMaterials.h"
 
 #ifdef _IRR_ANDROID_PLATFORM_
@@ -27,7 +27,7 @@ class EffectRenderer
 public:
     EffectRenderer(SContext* cont);
     ~EffectRenderer();
-    void drawAll();
+    void drawAll(u32 timeDelta);
 
     // is at least one effect active?
     bool isActive() const;
@@ -35,6 +35,8 @@ public:
     void init(E_EFFECT_TYPE type);
 
     core::dimension2du getScreenSize() const;
+
+    EffectFader* getFader() const;
 
     video::irrPP* PP;
 
@@ -52,6 +54,8 @@ private:
 
     video::CPostProcessingEffect* FXAA;
     video::CPostProcessingEffectChain* Glow;
+
+    EffectFader* Fader;
 };
 
 #endif // OBJECTEFFECTRENDERER_H

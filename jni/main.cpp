@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         timeLast = timeNow;
 
         dev->getVideoDriver()->beginScene();
-        cont->Renderer->drawAll();
+        cont->Renderer->drawAll(timeDelta);
         //dev->getGUIEnvironment()->drawAll();
 
         updater->broadcastUpdate(timeDelta * cont->TimeScale);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         dev->getVideoDriver()->endScene();
     }
 
-
+    cont->ObjManager->clear(true);
 #ifndef _IRR_ANDROID_PLATFORM_
 	return 0;
 #endif

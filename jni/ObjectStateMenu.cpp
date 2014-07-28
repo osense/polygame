@@ -13,6 +13,8 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
         eventRec->registerObserver(this);
     else
         debugLog("FATAL ERROR: no ObjectEventReceiver found");
+
+    Context->Renderer->getFader()->startFadeIn();
 }
 
 ObjectStateMenu::~ObjectStateMenu()

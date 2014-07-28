@@ -19,14 +19,16 @@ EffectRenderer::EffectRenderer(SContext* cont) :
 #endif
 
     GUIHasEffects = false;
+
+    Fader = new EffectFader(Context);
 }
 
 EffectRenderer::~EffectRenderer()
 {
-
+    delete Fader;
 }
 
-void EffectRenderer::drawAll()
+void EffectRenderer::drawAll(u32 timeDelta)
 {
     if (isActive())
     {
@@ -34,6 +36,9 @@ void EffectRenderer::drawAll()
 
         video->setRenderTarget(Scene);
         Smgr->drawAll();
+        if (Fader->isActive() && !Fader->getIncludeGUI())
+            Fader->draw(timeDelta / 1000.0);
+
         if (GUIHasEffects)
             Context->Device->getGUIEnvironment()->drawAll();
 
@@ -43,6 +48,9 @@ void EffectRenderer::drawAll()
 
         if (!GUIHasEffects)
             Context->Device->getGUIEnvironment()->drawAll();
+
+        if (Fader->isActive() && Fader->getIncludeGUI())
+            Fader->draw(timeDelta / 1000.0);
     }
     else
     {
@@ -130,4 +138,9 @@ core::dimension2du EffectRenderer::getScreenSize() const
     else
         return ScreenSize;
 
+}
+
+EffectFader* EffectRenderer::getFader() const
+{
+    return Fader;
 }
