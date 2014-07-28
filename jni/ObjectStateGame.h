@@ -28,12 +28,15 @@ class ObjectStateGame : public Object
         virtual void onMessage(SMessage msg);
 
     private:
-
-        gui::IGUIStaticText* DistTravelledText;
-        f32 DT;
+        gui::IGUIWindow* PauseWnd;
+        void setPaused(bool paused);
+        bool isPaused() const;
 
         gui::IGUIWindow* GameoverWnd;
         void createGameoverWindow();
+
+        gui::IGUIStaticText* DistTravelledText;
+        f32 DT;
 };
 
 #endif // OBJECTSTATEGAME_H

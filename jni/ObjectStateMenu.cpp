@@ -28,6 +28,12 @@ void ObjectStateMenu::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_GUI)
     {
+        if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
+        {
+            Context->Device->closeDevice();
+            return;
+        }
+
         s32 callerID = msg.GUI.Caller->getID();
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
             return;
@@ -65,7 +71,7 @@ void ObjectStateMenu::create_menu()
     addButton(position2d<s32>(660, 380), dimension2d<s32>(64, 64),
               video->getTexture("gui/options.png"), Context, EGI_OPTIONS, Window);*/
 
-    addButton(position2d<s32>(299, 100), dimension2d<s32>(256, 64),
+    gui::IGUIButton* continueBtn = addButton(position2d<s32>(299, 100), dimension2d<s32>(256, 64),
               L"CONTINUE", Context, EGI_CONTINUE, Window);
     addButton(position2d<s32>(299, 200), dimension2d<s32>(256, 64),
               L"NEW GAME", Context, EGI_NEWGAME, Window);
@@ -74,4 +80,6 @@ void ObjectStateMenu::create_menu()
               L"OPTIONS", Context, EGI_OPTIONS, Window);
     addButton(position2d<s32>(700, 380), dimension2d<s32>(128, 64),
               L"EXIT", Context, EGI_EXIT, Window);
+
+    continueBtn->setEnabled(false);
 }
