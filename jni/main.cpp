@@ -67,13 +67,18 @@ int main(int argc, char *argv[])
 #endif // DEBUG_FPS
 
     cont->Mtls = new SMaterials;
+    cont->Mtls->Loaded = false;
+
     ObjectUpdater* updater = new ObjectUpdater(cont);
+
     new ObjectEventReceiver(cont);
+
     cont->Renderer = new EffectRenderer(cont);
 
     cont->TimeScale = 1;
 
     dev->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
 
     new ObjectStateInit(cont);
 
@@ -96,6 +101,7 @@ int main(int argc, char *argv[])
         dev->getVideoDriver()->endScene();
     }
 
+    //cont->ObjManager->clear();
     cont->ObjManager->clear(true);
 #ifndef _IRR_ANDROID_PLATFORM_
 	return 0;

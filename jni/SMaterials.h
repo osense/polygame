@@ -27,6 +27,8 @@ struct SMaterials
     ShaderCBFader* FaderCB;
 
     video::E_MATERIAL_TYPE Sky;
+
+    bool Loaded;
 };
 
 

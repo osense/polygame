@@ -35,7 +35,7 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
     }
 
     LoadingState = EILS_WAIT;
-    WaitCounter = 10;
+    WaitCounter = 3;
 
     TextureNames.push_back("textures/noise.png");
 
@@ -103,28 +103,33 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_SHADERS)
         {
-            video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
-            Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
-                                                                                                     new ShaderCBDepth(Context));
+            if (!Context->Mtls->Loaded)
+            {
+                video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
+                Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
+                                                                                                        new ShaderCBDepth(Context));
 
-            Context->Mtls->GridCB = new ShaderCBGrid(Context);
-            Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
-                                                                                                    Context->Mtls->GridCB);
+                Context->Mtls->GridCB = new ShaderCBGrid(Context);
+                Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
+                                                                                                        Context->Mtls->GridCB);
 
-            Context->Mtls->GridBackCB = new ShaderCBGridBack(Context);
-            Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                                                                                        Context->Mtls->GridBackCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                Context->Mtls->GridBackCB = new ShaderCBGridBack(Context);
+                Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
+                                                                                                            Context->Mtls->GridBackCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
-            Context->Mtls->CubeCB = new ShaderCBCube(Context);
-            Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
-                                                                                                        Context->Mtls->CubeCB);
+                Context->Mtls->CubeCB = new ShaderCBCube(Context);
+                Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
+                                                                                                            Context->Mtls->CubeCB);
 
-            Context->Mtls->FaderCB = new ShaderCBFader();
-            Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
-                                                                                                        Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                Context->Mtls->FaderCB = new ShaderCBFader();
+                Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
+                                                                                                            Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
-            Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
-                                                                                                   new ShaderCBSky());
+                Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
+                                                                                                    new ShaderCBSky());
+
+                Context->Mtls->Loaded = true;
+            }
 
             LoadingState = EILS_MESHES;
             TexturesLoaded = 0;

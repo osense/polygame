@@ -24,7 +24,9 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
 
 ObjectStateGame::~ObjectStateGame()
 {
-    Context->ObjManager->getObjectFromName("ObjectEventReceiver")->unregisterObserver(this);
+    Object *eventRec = Context->ObjManager->getObjectFromName("ObjectEventReceiver");
+    if (eventRec)
+        eventRec->unregisterObserver(this);
 
     if (GameoverWnd)
         GameoverWnd->remove();
