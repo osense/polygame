@@ -28,8 +28,6 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getFPS();
         dbg += "\nTris: ";
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
-        dbg += "\nMeshes: ";
-        dbg += Context->Device->getSceneManager()->getMeshCache()->getMeshCount();
         dbg += "\nItems: ";
         dbg += ObjectCount;
 

@@ -29,7 +29,7 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
     if (showLoading)
     {
-        Loading = Context->Device->getGUIEnvironment()->addStaticText(L"LOADING", core::rect<s32>(0, 0, 1, 1));
+        Loading = Context->Device->getGUIEnvironment()->addStaticText(L"", core::rect<s32>(0, 0, 1, 1));
         Loading->setRelativePositionProportional(core::rect<f32>(0, 0, 1, 1));
         Loading->setTextAlignment(gui::EGUIA_CENTER, gui::EGUIA_CENTER);
     }
@@ -90,7 +90,6 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_RENDERER)
         {
-            //Context->Renderer->init(EET_FXAA);
             Context->Renderer->init(EET_GLOW);
 
             if(Context->Renderer->PP)
@@ -106,8 +105,8 @@ void ObjectStateInit::onMessage(SMessage msg)
             if (!Context->Mtls->Loaded)
             {
                 video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
-                Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
-                                                                                                        new ShaderCBDepth(Context));
+                /*Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
+                                                                                                        new ShaderCBDepth(Context));*/
 
                 Context->Mtls->GridCB = new ShaderCBGrid(Context);
                 Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
@@ -122,11 +121,13 @@ void ObjectStateInit::onMessage(SMessage msg)
                                                                                                             Context->Mtls->CubeCB);
 
                 Context->Mtls->FaderCB = new ShaderCBFader();
-                Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
+                Context->Mtls->Fader = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
                                                                                                             Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
                 Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
                                                                                                     new ShaderCBSky());
+
+                Context->Renderer->init(EET_FADER);
 
                 Context->Mtls->Loaded = true;
             }

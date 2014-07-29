@@ -1,7 +1,18 @@
 #include "EffectFader.h"
 
 EffectFader::EffectFader(SContext* cont) : Context(cont),
+    State(EFS_NONE),
     IncludeGUI(false)
+{
+
+}
+
+EffectFader::~EffectFader()
+{
+    delete MeshBuffer;
+}
+
+void EffectFader::init()
 {
     MeshBuffer = new scene::SMeshBuffer();
 
@@ -16,14 +27,6 @@ EffectFader::EffectFader(SContext* cont) : Context(cont),
     MeshBuffer->getMaterial().MaterialType = Context->Mtls->Fader;
     MeshBuffer->getMaterial().setFlag(video::EMF_ZBUFFER, false);
     MeshBuffer->getMaterial().setFlag(video::EMF_ZWRITE_ENABLE, false);
-
-    State = EFS_NONE;
-}
-
-EffectFader::~EffectFader()
-{
-    delete Node->getMesh();
-    Node->remove();
 }
 
 void EffectFader::startFadeOut(f32 strength, f32 fadeTime, f32 strengthStart)
@@ -71,6 +74,7 @@ void EffectFader::draw(f32 delta)
                 State = EFS_NONE;
         }
 
+        Context->Device->getVideoDriver()->setMaterial(MeshBuffer->getMaterial());
         Context->Device->getVideoDriver()->drawMeshBuffer(MeshBuffer);
     }
 }

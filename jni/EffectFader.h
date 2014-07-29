@@ -14,6 +14,8 @@ class EffectFader
         EffectFader(SContext* cont);
         ~EffectFader();
 
+        void init();
+
         void startFadeOut(f32 strength, f32 fadeTime = 1, f32 strengthStart = 0);
         void startFadeInContinuous();
         void startFadeIn(f32 strengthStart = 1, f32 fadeTime = 1);
@@ -39,7 +41,7 @@ class EffectFader
         bool IncludeGUI;
         f32 Strength, TargetStrength, StartStrength;
         f32 FadeTime;
-        scene::IMeshSceneNode* Node;
+
         scene::SMeshBuffer* MeshBuffer;
 };
 

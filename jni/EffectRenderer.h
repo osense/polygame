@@ -18,7 +18,7 @@ enum E_EFFECT_TYPE
 {
     EET_FXAA = 0,
     EET_GLOW,
-    EET_MOTION_BLUR
+    EET_FADER
 };
 
 

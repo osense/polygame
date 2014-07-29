@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         dev->getVideoDriver()->endScene();
     }
 
-    //cont->ObjManager->clear();
+    cont->ObjManager->clear();
     cont->ObjManager->clear(true);
 #ifndef _IRR_ANDROID_PLATFORM_
 	return 0;

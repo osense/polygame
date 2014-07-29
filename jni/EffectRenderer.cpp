@@ -42,7 +42,7 @@ void EffectRenderer::drawAll(u32 timeDelta)
         if (GUIHasEffects)
             Context->Device->getGUIEnvironment()->drawAll();
 
-        video->setRenderTarget(video::ERT_FRAME_BUFFER, false, false);
+        video->setRenderTarget(video::ERT_FRAME_BUFFER);//, false, false);
 
         PP->render(Scene);
 
@@ -68,12 +68,18 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 {
     video::IVideoDriver* video = Context->Device->getVideoDriver();
 
+    if (type == EET_FADER)
+    {
+        Fader->init();
+        return;
+    }
+
     if (!Scene)
     {
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
-        res = ScreenSize;
+        //res = ScreenSize;
 
         core::stringc resText;
         resText += res.Width;

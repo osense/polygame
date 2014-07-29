@@ -14,11 +14,14 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     else
         debugLog("FATAL ERROR: no ObjectEventReceiver found");
 
+    Context->Renderer->getFader()->setIncludeGUI(true);
     Context->Renderer->getFader()->startFadeIn();
 }
 
 ObjectStateMenu::~ObjectStateMenu()
 {
+    Context->Renderer->getFader()->setIncludeGUI(false);
+
     Object* eventRec = Context->ObjManager->getObjectFromName("ObjectEventReceiver");
     if (eventRec)
         eventRec->unregisterObserver(this);
