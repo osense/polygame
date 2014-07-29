@@ -104,6 +104,8 @@ void ObjectStateInit::onMessage(SMessage msg)
         {
             if (!Context->Mtls->Loaded)
             {
+                debugLog("loading shaders...");
+
                 video::IGPUProgrammingServices* gpu = Context->Device->getVideoDriver()->getGPUProgrammingServices();
                 /*Context->Mtls->Depth = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/depth.vert", "shaders/depth.frag",
                                                                                                         new ShaderCBDepth(Context));*/

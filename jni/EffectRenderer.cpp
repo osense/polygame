@@ -70,6 +70,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     if (type == EET_FADER)
     {
+        Context->Device->getLogger()->log("EffectRenderer", "initializing fader effect");
         Fader->init();
         return;
     }
