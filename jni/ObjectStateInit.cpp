@@ -9,23 +9,8 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
 
     // we'll need to parse saved settings here
-    //Context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    Context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-    core::dimension2du screenSize = Context->Renderer->getScreenSize();
-    f32 gScaleX = screenSize.Width / float(GUI_TARGET_X);
-    f32 gScaleY = screenSize.Height / float(GUI_TARGET_Y);
-    Context->GUIScale = core::vector2df(gScaleX, gScaleY);
-    debugLog((core::stringc("GUI Scale is ") + core::stringc(Context->GUIScale.X) + "x" + core::stringc(Context->GUIScale.Y)).c_str());
-
-    Context->ScreenSize = ESS_SMALL;
-    if (screenSize.Width >= 960 && screenSize.Height >= 720)
-        Context->ScreenSize = ESS_XLARGE;
-    else if (screenSize.Width >= 640 && screenSize.Height >= 480)
-        Context->ScreenSize = ESS_LARGE;
-    else if (screenSize.Width >= 470 && screenSize.Height >= 320)
-        Context->ScreenSize = ESS_NORMAL;
-
-    debugLog(core::stringc("Screen size is ") + core::stringc(Context->ScreenSize));
 
     if (showLoading)
     {
@@ -39,12 +24,12 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
     TextureNames.push_back("textures/noise.png");
 
-    debugLog("precaching resources...");
+    debugLog("LOADING...");
 }
 
 ObjectStateInit::~ObjectStateInit()
 {
-    debugLog("done precaching resources");
+    debugLog("DONE");
     Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -56,7 +41,40 @@ void ObjectStateInit::onMessage(SMessage msg)
         if (LoadingState == EILS_WAIT)
         {
             if (--WaitCounter <= 0)
-                LoadingState = EILS_FONTS;
+                LoadingState = EILS_SETTINGS;
+        }
+
+        else if (LoadingState == EILS_SETTINGS)
+        {
+            // setting determined on the fly
+            core::dimension2du screenSize = Context->Renderer->getScreenSize();
+            f32 gScaleX = screenSize.Width / float(GUI_TARGET_X);
+            f32 gScaleY = screenSize.Height / float(GUI_TARGET_Y);
+            Context->GUIScale = core::vector2df(gScaleX, gScaleY);
+            debugLog((core::stringc("GUI Scale is ") + core::stringc(Context->GUIScale.X) + "x" + core::stringc(Context->GUIScale.Y)).c_str());
+
+            Context->ScreenSize = ESS_SMALL;
+            if (screenSize.Width >= 960 && screenSize.Height >= 720)
+                Context->ScreenSize = ESS_XLARGE;
+            else if (screenSize.Width >= 640 && screenSize.Height >= 480)
+                Context->ScreenSize = ESS_LARGE;
+            else if (screenSize.Width >= 470 && screenSize.Height >= 320)
+                Context->ScreenSize = ESS_NORMAL;
+
+            debugLog(core::stringc("Screen size is ") + core::stringc(Context->ScreenSize));
+
+            // saved settings
+            Context->Settings = new SSettings;
+            if (!loadSettings(Context))
+            {
+                debugLog("could not load saved settings, using default");
+                initDefaultSettings(Context->Settings);
+                writeSettings(Context);
+            }
+            else
+                debugLog("loaded saved settings");
+
+            LoadingState = EILS_FONTS;
         }
 
         else if (LoadingState == EILS_FONTS)
@@ -90,7 +108,10 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_RENDERER)
         {
-            Context->Renderer->init(EET_GLOW);
+            if (Context->Settings->Antialiasing)
+                Context->Renderer->init(EET_FXAA);
+            if (Context->Settings->Glow != SSettings::EGS_OFF)
+                Context->Renderer->init(EET_GLOW);
 
             if(Context->Renderer->PP)
                 debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());

@@ -3,6 +3,8 @@
 
 #include <irrlicht.h>
 #include "SContext.h"
+#include "SSettings.h"
+#include "json/json.h"
 
 using namespace irr;
 using namespace core;
@@ -170,5 +172,53 @@ inline video::SColor hueShift(video::SColor col, f32 shift)
     return hueShift(video::SColorf(col), shift).toSColor();
 }
 
+inline void writeSettings(SContext* cont)
+{
+    Json::Value root;
+    root["magic_number"] = (u32)MAGIC_NUMBER_KOKOT;
+    root["glow"] = (u32) cont->Settings->Glow;
+    root["antialiasing"] = cont->Settings->Antialiasing;
+
+    Json::StyledWriter jsonWriter;
+    io::IWriteFile* file = cont->Device->getFileSystem()->createAndWriteFile(SETTINGS_PATH);
+
+    std::string jsonStr = jsonWriter.write(root);
+
+    file->write(jsonStr.c_str(), jsonStr.length());
+
+    file->drop();
+}
+
+inline void initDefaultSettings(SSettings* sett)
+{
+    sett->Glow = SSettings::EGS_MEDIUM;
+    sett->Antialiasing = 0;
+}
+
+inline bool loadSettings(SContext* cont)
+{
+    io::IReadFile* file = cont->Device->getFileSystem()->createAndOpenFile(SETTINGS_PATH);
+    if (!file)
+        return false;
+
+    char* buff = new char[file->getSize()];
+    file->read(buff, file->getSize());
+    std::string jsonStr(buff);
+
+    Json::Value root;
+    Json::Reader reader;
+    bool parsingSuccessful = reader.parse(jsonStr, root);
+    if (!parsingSuccessful)
+        return false;
+
+    if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER_KOKOT)
+        return false;
+
+    cont->Settings->Glow = (SSettings::E_GLOW_SETTING) root.get("glow", "2").asUInt();
+    cont->Settings->Antialiasing = root.get("antialiasing", false).asBool();
+
+    file->drop();
+    return true;
+}
 
 #endif // FUNCTIONS_H_INCLUDED

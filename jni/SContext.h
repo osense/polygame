@@ -16,6 +16,8 @@
 #define DESKTOP_WND_Y 480
 #endif // _IRR_ANDROID_PLATFORM_
 
+#define SETTINGS_PATH "settings.json"
+
 #include <irrlicht.h>
 
 class android_app;
@@ -34,6 +36,7 @@ class Object;
 class ObjectManager;
 class EffectRenderer;
 struct SMaterials;
+struct SSettings;
 
 enum E_SCREEN_SIZE
 {
@@ -55,6 +58,7 @@ struct SContext
     EffectRenderer* Renderer;
     SMaterials* Mtls;
 
+    SSettings* Settings;
     irr::f32 TimeScale;
     irr::core::vector2df GUIScale;
     E_SCREEN_SIZE ScreenSize;
