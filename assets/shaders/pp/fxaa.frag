@@ -2,17 +2,13 @@
 precision mediump float;
 
 uniform sampler2D Render;
-uniform float PixelSizeX;
-uniform float PixelSizeY;
+uniform vec2 PixelSize;
 
 varying vec2 TexCoord;
 
-// The inverse of the texture dimensions along X and Y
-//uniform vec2 texcoordOffset;
-
 
 void main() {
-  vec2 texcoordOffset = vec2(PixelSizeX, PixelSizeY);
+  vec2 texcoordOffset = vec2(PixelSize.x, PixelSize.y);
   // The parameters are hardcoded for now, but could be
   // made into uniforms to control fromt he program.
   float FXAA_SPAN_MAX = 8.0;

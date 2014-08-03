@@ -1,7 +1,7 @@
 #ifndef SSETTINGS_H_INCLUDED
 #define SSETTINGS_H_INCLUDED
 
-#define MAGIC_NUMBER_KOKOT 7579757984
+#define MAGIC_NUMBER 9001
 
 #include <irrTypes.h>
 

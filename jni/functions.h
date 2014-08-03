@@ -175,7 +175,7 @@ inline video::SColor hueShift(video::SColor col, f32 shift)
 inline void writeSettings(SContext* cont)
 {
     Json::Value root;
-    root["magic_number"] = (u32)MAGIC_NUMBER_KOKOT;
+    root["magic_number"] = (u32)MAGIC_NUMBER;
     root["glow"] = (u32) cont->Settings->Glow;
     root["antialiasing"] = cont->Settings->Antialiasing;
 
@@ -211,7 +211,7 @@ inline bool loadSettings(SContext* cont)
     if (!parsingSuccessful)
         return false;
 
-    if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER_KOKOT)
+    if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER)
         return false;
 
     cont->Settings->Glow = (SSettings::E_GLOW_SETTING) root.get("glow", "2").asUInt();
