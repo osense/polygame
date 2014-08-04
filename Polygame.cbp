@@ -83,6 +83,8 @@
 		<Unit filename="jni/ObjectStateInit.h" />
 		<Unit filename="jni/ObjectStateMenu.cpp" />
 		<Unit filename="jni/ObjectStateMenu.h" />
+		<Unit filename="jni/ObjectStateOptions.cpp" />
+		<Unit filename="jni/ObjectStateOptions.h" />
 		<Unit filename="jni/ObjectUpdater.cpp" />
 		<Unit filename="jni/ObjectUpdater.h" />
 		<Unit filename="jni/SContext.h" />

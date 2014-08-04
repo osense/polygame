@@ -20,6 +20,9 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
     new ObjectItemSpawner(Context);
     new ObjectSky(Context);
     (new ObjectPlayer(Context))->registerObserver(this);
+
+    Context->Renderer->getFader()->setIncludeGUI(false);
+    Context->Renderer->getFader()->startFadeIn(1.0, 0.5);
 }
 
 ObjectStateGame::~ObjectStateGame()
@@ -66,15 +69,9 @@ void ObjectStateGame::onMessage(SMessage msg)
             if (!GameoverWnd)
             {
                 if (!isPaused())
-                {
-                    Context->Renderer->getFader()->startFadeOut(0.5);
                     setPaused(true);
-                }
                 else
-                {
-                    Context->Renderer->getFader()->startFadeInContinuous();
                     setPaused(false);
-                }
             }
         }
 
@@ -98,17 +95,20 @@ void ObjectStateGame::setPaused(bool paused)
         Context->TimeScale = 0;
         PauseWnd = addOverlayWindow(Context);
 
-        addButton(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 64),
-              L"PAUSE", Context, -1, PauseWnd);
+        addText(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 64),
+              L"PAUSE", Context, PauseWnd);
 
         addButton(core::position2d<s32>(252, 300), core::dimension2d<s32>(350, 64),
               L"BACK TO MAIN MENU", Context, EGGI_OK, PauseWnd);
+
+        Context->Renderer->getFader()->startFadeOut(0.5);
     }
     else
     {
         Context->TimeScale = 1;
         PauseWnd->remove();
         PauseWnd = 0;
+        Context->Renderer->getFader()->startFadeInContinuous();
     }
 }
 
@@ -123,8 +123,8 @@ void ObjectStateGame::createGameoverWindow()
 
     gui::IGUIEnvironment* gui = Context->Device->getGUIEnvironment();
 
-    addButton(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 128),
-              L"GAME OVER", Context, -1, GameoverWnd);
+    addText(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 128),
+              L"GAME OVER", Context, GameoverWnd);
 
     core::rect<s32> dtTextPos(0, 250, 854, 280);
     scaleGUIRect(dtTextPos, Context->GUIScale);

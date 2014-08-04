@@ -7,6 +7,7 @@
 #include "ObjectManager.h"
 
 #include "ObjectStateGame.h"
+#include "ObjectStateOptions.h"
 #include "EffectRenderer.h"
 #include "functions.h"
 
@@ -34,9 +35,9 @@ class ObjectStateMenu : public Object
 
     private:
         void create_menu();
+        void create_options();
 
         gui::IGUIWindow* Window;
-        scene::ICameraSceneNode* Camera;
 };
 
 #endif // GAMESTATEMENU_H

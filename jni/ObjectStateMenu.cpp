@@ -20,8 +20,6 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
 
 ObjectStateMenu::~ObjectStateMenu()
 {
-    Context->Renderer->getFader()->setIncludeGUI(false);
-
     Object* eventRec = Context->ObjManager->getObjectFromName("ObjectEventReceiver");
     if (eventRec)
         eventRec->unregisterObserver(this);
@@ -52,6 +50,9 @@ void ObjectStateMenu::onMessage(SMessage msg)
             delete this;
             break;
         case EGI_OPTIONS:
+            Window->remove();
+            Context->State = new ObjectStateOptions(Context);
+            delete this;
             break;
         case EGI_EXIT:
             Context->Device->closeDevice();

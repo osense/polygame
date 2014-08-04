@@ -23,6 +23,7 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
     WaitCounter = 3;
 
     TextureNames.push_back("textures/noise.png");
+    TextureNames.push_back("textures/line_v.png");
 
     debugLog("LOADING...");
 }
@@ -67,7 +68,7 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->Settings = new SSettings;
 
 #ifdef _IRR_ANDROID_PLATFORM_
-            Context->Settings->FilePath = core::stringc(Context->App->activity->internalDataPath) + SETTINGS_FILENAME;
+            Context->Settings->FilePath = (core::stringc(Context->App->activity->internalDataPath) + "/") + SETTINGS_FILENAME;
 #else
             Context->Settings->FilePath = SETTINGS_FILENAME;
 #endif
@@ -85,26 +86,10 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_FONTS)
         {
-            gui::IGUIFont* font = 0;
-
-            switch(Context->ScreenSize)
-            {
-            case ESS_SMALL:
-                font = Context->Device->getGUIEnvironment()->getFont("getvoip_18.xml");
-                break;
-            case ESS_NORMAL:
-                font = Context->Device->getGUIEnvironment()->getFont("getvoip_20.xml");
-                break;
-            case ESS_LARGE:
-                font = Context->Device->getGUIEnvironment()->getFont("getvoip_28.xml");
-                break;
-            case ESS_XLARGE:
-                font = Context->Device->getGUIEnvironment()->getFont("getvoip_36.xml");
-                break;
-            }
-
-            Context->Device->getGUIEnvironment()->getSkin()->setFont(font);
+            Context->Device->getGUIEnvironment()->getSkin()->setFont(getFont(Context));
+            getOverlayFont(Context);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_BUTTON_TEXT, video::SColor(255, 255, 255, 255));
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_GRAY_TEXT, video::SColor(255, 50, 50, 50));
             Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_X, 0);
             Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_Y, 0);
 

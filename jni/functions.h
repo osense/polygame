@@ -27,6 +27,52 @@ inline void scaleGUIRect(rect<s32> &r, vector2df gscale)
     scaleGUIPos(r.UpperLeftCorner, gscale);
 }
 
+inline gui::IGUIFont* getFont(SContext* cont)
+{
+    gui::IGUIFont* font = 0;
+
+    switch(cont->ScreenSize)
+    {
+    case ESS_SMALL:
+        font = cont->Device->getGUIEnvironment()->getFont("getvoip_18.xml");
+        break;
+    case ESS_NORMAL:
+        font = cont->Device->getGUIEnvironment()->getFont("getvoip_20.xml");
+        break;
+    case ESS_LARGE:
+        font = cont->Device->getGUIEnvironment()->getFont("getvoip_28.xml");
+        break;
+    case ESS_XLARGE:
+        font = cont->Device->getGUIEnvironment()->getFont("getvoip_36.xml");
+        break;
+    }
+
+    return font;
+}
+
+inline gui::IGUIFont* getOverlayFont(SContext* cont)
+{
+    gui::IGUIFont* font = 0;
+
+    switch(cont->ScreenSize)
+    {
+    case ESS_SMALL:
+        font = cont->Device->getGUIEnvironment()->getFont("douar_20.xml");
+        break;
+    case ESS_NORMAL:
+        font = cont->Device->getGUIEnvironment()->getFont("douar_22.xml");
+        break;
+    case ESS_LARGE:
+        font = cont->Device->getGUIEnvironment()->getFont("douar_36.xml");
+        break;
+    case ESS_XLARGE:
+        font = cont->Device->getGUIEnvironment()->getFont("douar_48.xml");
+        break;
+    }
+
+    return font;
+}
+
 inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, video::ITexture* tex, SContext* cont, s32 id = -1, gui::IGUIElement* parent = 0)
 {
     scaleGUIPos(pos, cont->GUIScale);
@@ -51,6 +97,17 @@ inline gui::IGUIButton* addButton(position2d<s32> pos, dimension2d<s32> size, co
     return btn;
 }
 
+inline gui::IGUIStaticText* addText(position2d<s32> pos, dimension2d<s32> size, core::stringw text, SContext* cont, gui::IGUIElement* parent = 0, gui::EGUI_ALIGNMENT al = gui::EGUIA_CENTER)
+{
+    scaleGUIPos(pos, cont->GUIScale);
+    scaleGUIDim(size, cont->GUIScale);
+    gui::IGUIStaticText* staticText = cont->Device->getGUIEnvironment()->addStaticText(text.c_str(), rect<s32>(pos, size), false, false, parent, -1);
+    staticText->setOverrideFont(getOverlayFont(cont));
+    staticText->setTextAlignment(al, gui::EGUIA_CENTER);
+
+    return staticText;
+}
+
 inline gui::IGUIWindow* addOverlayWindow(SContext* cont)
 {
     gui::IGUIEnvironment* gui = cont->Device->getGUIEnvironment();
@@ -72,7 +129,8 @@ inline void clamp(f32 &in, f32 min, f32 max)
     in = in > max ? max : in < min ? min : in;
 }
 
-inline s32 signum(f32 val) {
+inline s32 signum(f32 val)
+{
     return (0 < val) - (val < 0);
 }
 

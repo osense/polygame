@@ -3,7 +3,6 @@
 
 #ifdef _IRR_ANDROID_PLATFORM_
 #include <android_native_app_glue.h>
-//#include <native_activity.h>
 #endif // _IRR_ANDROID_PLATFORM_
 
 #include "Object.h"
