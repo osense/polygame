@@ -180,13 +180,15 @@ inline void writeSettings(SContext* cont)
     root["antialiasing"] = cont->Settings->Antialiasing;
 
     Json::StyledWriter jsonWriter;
-    io::IWriteFile* file = cont->Device->getFileSystem()->createAndWriteFile(SETTINGS_PATH);
+    io::IWriteFile* file = cont->Device->getFileSystem()->createAndWriteFile(cont->Settings->FilePath.c_str());
 
     std::string jsonStr = jsonWriter.write(root);
 
     file->write(jsonStr.c_str(), jsonStr.length());
 
     file->drop();
+
+    cont->Device->getLogger()->log("Wrote settings", cont->Settings->FilePath.c_str());
 }
 
 inline void initDefaultSettings(SSettings* sett)
@@ -197,7 +199,7 @@ inline void initDefaultSettings(SSettings* sett)
 
 inline bool loadSettings(SContext* cont)
 {
-    io::IReadFile* file = cont->Device->getFileSystem()->createAndOpenFile(SETTINGS_PATH);
+    io::IReadFile* file = cont->Device->getFileSystem()->createAndOpenFile(cont->Settings->FilePath.c_str());
     if (!file)
         return false;
 
@@ -218,6 +220,8 @@ inline bool loadSettings(SContext* cont)
     cont->Settings->Antialiasing = root.get("antialiasing", false).asBool();
 
     file->drop();
+
+    cont->Device->getLogger()->log("Loaded settings", cont->Settings->FilePath.c_str());
     return true;
 }
 

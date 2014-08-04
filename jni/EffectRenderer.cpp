@@ -80,7 +80,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
-        //res = ScreenSize;
+        res = ScreenSize;
 
         core::stringc resText;
         resText += res.Width;
@@ -94,10 +94,9 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
 
         Scene = video->addRenderTargetTexture(res, "scene-RT");
-        if (ScreenSize == res)
-            GUIHasEffects = true;
-        else
-            GUIHasEffects = false;
+
+        GUIHasEffects = (ScreenSize == res);
+
         PP->setQuality(res / (u32)EffectQuality);
     }
 
@@ -110,6 +109,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Context->Device->getLogger()->log("EffectRenderer", "initializing fxaa");
         FXAA = PP->createEffect(video::EPE_FXAA);
         FXAA->setQuality(Scene->getSize());
+        GUIHasEffects = false;
         break;
 
     case EET_GLOW:
@@ -132,7 +132,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     }
 
     default:
-        break;
+        return;
     }
 
     Active = true;

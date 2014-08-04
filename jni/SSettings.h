@@ -1,14 +1,17 @@
 #ifndef SSETTINGS_H_INCLUDED
 #define SSETTINGS_H_INCLUDED
 
+#define SETTINGS_FILENAME "settings.json"
 #define MAGIC_NUMBER 9001
 
-#include <irrTypes.h>
+#include <irrlicht.h>
 
 using namespace irr;
 
 struct SSettings
 {
+    core::stringc FilePath;
+
     enum E_GLOW_SETTING
     {
         EGS_OFF = 0,

@@ -65,14 +65,20 @@ void ObjectStateInit::onMessage(SMessage msg)
 
             // saved settings
             Context->Settings = new SSettings;
+
+#ifdef _IRR_ANDROID_PLATFORM_
+            Context->Settings->FilePath = core::stringc(Context->App->activity->internalDataPath) + SETTINGS_FILENAME;
+#else
+            Context->Settings->FilePath = SETTINGS_FILENAME;
+#endif
+
+
             if (!loadSettings(Context))
             {
                 debugLog("could not load saved settings, using default");
                 initDefaultSettings(Context->Settings);
                 writeSettings(Context);
             }
-            else
-                debugLog("loaded saved settings");
 
             LoadingState = EILS_FONTS;
         }
