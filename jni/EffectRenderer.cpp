@@ -4,6 +4,7 @@ EffectRenderer::EffectRenderer(SContext* cont) :
     PP(0),
     Active(false),
     Scene(0),
+    ForceFXAAOff(false),
     FXAA(0),
     Glow(0)
 {
@@ -18,7 +19,7 @@ EffectRenderer::EffectRenderer(SContext* cont) :
     ScreenSize = Context->Device->getVideoDriver()->getScreenSize();
 #endif
 
-    GUIHasEffects = false;
+    GUIHasEffects = true;
 
     Fader = new EffectFader(Context);
 }
@@ -55,7 +56,14 @@ void EffectRenderer::drawAll(u32 timeDelta)
     else
     {
         Smgr->drawAll();
+
+        if (Fader->isActive() && !Fader->getIncludeGUI())
+            Fader->draw(timeDelta / 1000.0);
+
         Context->Device->getGUIEnvironment()->drawAll();
+
+        if (Fader->isActive() && Fader->getIncludeGUI())
+            Fader->draw(timeDelta / 1000.0);
     }
 }
 
@@ -114,7 +122,6 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Context->Device->getLogger()->log("EffectRenderer", "initializing fxaa");
         FXAA = PP->createEffect(video::EPE_FXAA);
         FXAA->setQuality(Scene->getSize());
-        GUIHasEffects = false;
         break;
 
     case EET_GLOW:
@@ -161,12 +168,40 @@ void EffectRenderer::loadPP(bool reload)
     if (Context->Settings->Glow != SSettings::EGS_OFF)
         init(EET_GLOW);
 
-    if (reload)
+    setForceFXAAOff(ForceFXAAOff);
+
+    if(PP)
+        Context->Device->getLogger()->log("EffectRenderer", (core::stringc("Render pipeline setup:\n") + Context->Renderer->PP->getDebugString()).c_str());
+    else
+        Context->Device->getLogger()->log("EffectRenderer", "post-processing inactive");
+}
+
+void EffectRenderer::setForceFXAAOff(bool force)
+{
+    ForceFXAAOff = force;
+
+    if (ForceFXAAOff && FXAA)
     {
-        if(PP)
-            Context->Device->getLogger()->log("EffectRenderer", (core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString()).c_str());
+        FXAA->setActive(false);
+        GUIHasEffects = true;
+        if (Glow)
+        {
+            Glow->getEffectFromIndex(2)->removeTextureFromShader(0);
+            Glow->getEffectFromIndex(2)->addTextureToShader(Scene);
+        }
         else
-            Context->Device->getLogger()->log("EffectRenderer", "post-processing inactive");
+            Active = false;
+    }
+    else if (!ForceFXAAOff && FXAA)
+    {
+        FXAA->setActive(true);
+        GUIHasEffects = false;
+        Active = true;
+        if (Glow)
+        {
+            Glow->getEffectFromIndex(2)->removeTextureFromShader(0);
+            Glow->getEffectFromIndex(2)->addTextureToShader(FXAA->getCustomRTT());
+        }
     }
 }
 

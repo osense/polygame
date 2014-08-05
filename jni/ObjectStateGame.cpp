@@ -21,6 +21,7 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
     new ObjectSky(Context);
     (new ObjectPlayer(Context))->registerObserver(this);
 
+    Context->Renderer->setForceFXAAOff(false);
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, 0.5);
 }

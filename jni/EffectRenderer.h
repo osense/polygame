@@ -36,6 +36,8 @@ public:
 
     void loadPP(bool reload = false);
 
+    void setForceFXAAOff(bool force);
+
     core::dimension2du getScreenSize() const;
 
     EffectFader* getFader() const;
@@ -54,6 +56,7 @@ private:
     scene::ICameraSceneNode* Camera;
     video::ITexture* Scene;
 
+    bool ForceFXAAOff;
     video::CPostProcessingEffect* FXAA;
     video::CPostProcessingEffectChain* Glow;
 

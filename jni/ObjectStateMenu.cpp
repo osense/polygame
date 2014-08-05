@@ -14,6 +14,7 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     else
         debugLog("FATAL ERROR: no ObjectEventReceiver found");
 
+    Context->Renderer->setForceFXAAOff(true);
     Context->Renderer->getFader()->setIncludeGUI(true);
     Context->Renderer->getFader()->startFadeIn();
 }
