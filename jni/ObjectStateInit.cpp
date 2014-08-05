@@ -99,14 +99,7 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_RENDERER)
         {
-            if (Context->Settings->Antialiasing)
-                Context->Renderer->init(EET_FXAA);
-            if (Context->Settings->Glow != SSettings::EGS_OFF)
-                Context->Renderer->init(EET_GLOW);
-
-            if(Context->Renderer->PP)
-                debugLog(core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString());
-
+            Context->Renderer->loadPP();
 
             LoadingState = EILS_SHADERS;
             return;

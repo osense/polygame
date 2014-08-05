@@ -34,6 +34,8 @@ public:
 
     void init(E_EFFECT_TYPE type);
 
+    void loadPP(bool reload = false);
+
     core::dimension2du getScreenSize() const;
 
     EffectFader* getFader() const;

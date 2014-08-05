@@ -103,26 +103,26 @@ void ObjectStateOptions::create_gui()
 {
     Window = addOverlayWindow(Context);
 
-    addText(core::position2d<s32>(0, 100), core::dimension2d<s32>(256, 40), L"GLOW", Context, Window, gui::EGUIA_LOWERRIGHT);
+    addText(core::position2d<s32>(0, 100), core::dimension2d<s32>(270, 40), L"GLOW", Context, Window, gui::EGUIA_LOWERRIGHT);
     addButton(core::position2d<s32>(290, 102), core::dimension2d<s32>(128, 40), L"OFF", Context, EOI_GLOW_OFF, Window)->setIsPushButton(true);
     addButton(core::position2d<s32>(420, 102), core::dimension2d<s32>(128, 40), L"LOW", Context, EOI_GLOW_LOW, Window)->setIsPushButton(true);
-    addButton(core::position2d<s32>(550, 102), core::dimension2d<s32>(160, 40), L"MEDIUM", Context, EOI_GLOW_MEDIUM, Window)->setIsPushButton(true);
-    addButton(core::position2d<s32>(710, 102), core::dimension2d<s32>(128, 40), L"HIGH", Context, EOI_GLOW_HIGH, Window)->setIsPushButton(true);
+    addButton(core::position2d<s32>(555, 102), core::dimension2d<s32>(160, 40), L"MEDIUM", Context, EOI_GLOW_MEDIUM, Window)->setIsPushButton(true);
+    addButton(core::position2d<s32>(720, 102), core::dimension2d<s32>(128, 40), L"HIGH", Context, EOI_GLOW_HIGH, Window)->setIsPushButton(true);
 
 
-    addText(core::position2d<s32>(0, 220), core::dimension2d<s32>(256, 40), L"ANTI", Context, Window, gui::EGUIA_LOWERRIGHT);
-    addText(core::position2d<s32>(0, 250), core::dimension2d<s32>(256, 40), L"ALIASING", Context, Window, gui::EGUIA_LOWERRIGHT);
+    addText(core::position2d<s32>(0, 220), core::dimension2d<s32>(270, 40), L"ANTI", Context, Window, gui::EGUIA_LOWERRIGHT);
+    addText(core::position2d<s32>(0, 250), core::dimension2d<s32>(270, 40), L"ALIASING", Context, Window, gui::EGUIA_LOWERRIGHT);
     addButton(core::position2d<s32>(290, 237), core::dimension2d<s32>(128, 40), L"OFF", Context, EOI_FXAA_OFF, Window)->setIsPushButton(true);
     addButton(core::position2d<s32>(420, 237), core::dimension2d<s32>(128, 40), L"ON", Context, EOI_FXAA_ON, Window)->setIsPushButton(true);
 
+    addButton(core::position2d<s32>(30, 420), core::dimension2d<s32>(128, 32), L"BACK", Context, EOI_BACK, Window);
     serialize();
-    addButton(core::position2d<s32>(363, 400), core::dimension2d<s32>(128, 32), L"BACK", Context, EOI_BACK, Window);
 
     // prepare stuff for the horizontal line
     LineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_v.png");
-    for (u32 i = LineSpacing*Context->GUIScale.Y; i <= Window->getAbsoluteClippingRect().getHeight() - LineSpacing*2*Context->GUIScale.Y; i += LineSegment->getSize().Width)
+    for (u32 i = LineSpacing*Context->GUIScale.Y; i <= Window->getAbsoluteClippingRect().getHeight() - LineSpacing * 1.66*Context->GUIScale.Y; i += LineSegment->getSize().Width)
     {
-        LinePositions.push_back(core::position2d<s32>(270*Context->GUIScale.X, i));
+        LinePositions.push_back(core::position2d<s32>(280*Context->GUIScale.X, i));
         LineRects.push_back(core::rect<s32>(core::vector2d<s32>(0, 0), LineSegment->getSize()));
     }
 }
@@ -153,6 +153,7 @@ void ObjectStateOptions::serialize()
 
 void ObjectStateOptions::deserialize()
 {
+    SSettings::E_GLOW_SETTING oldGlow = Context->Settings->Glow;
     if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_OFF))->isPressed())
         Context->Settings->Glow = SSettings::EGS_OFF;
     else if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_LOW))->isPressed())
@@ -162,8 +163,13 @@ void ObjectStateOptions::deserialize()
     else if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_HIGH))->isPressed())
         Context->Settings->Glow = SSettings::EGS_HIGH;
 
+    bool oldFXAA = Context->Settings->Antialiasing;
     if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_FXAA_ON))->isPressed())
         Context->Settings->Antialiasing = true;
     else
         Context->Settings->Antialiasing = false;
+
+
+    if (Context->Settings->Glow != oldGlow || Context->Settings->Antialiasing != oldFXAA)
+        Context->Renderer->loadPP(true);
 }

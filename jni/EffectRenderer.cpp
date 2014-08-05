@@ -55,6 +55,7 @@ void EffectRenderer::drawAll(u32 timeDelta)
     else
     {
         Smgr->drawAll();
+        Context->Device->getGUIEnvironment()->drawAll();
     }
 }
 
@@ -75,7 +76,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         return;
     }
 
-    if (!Scene)
+    if (!PP)
     {
         PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
 
@@ -83,17 +84,21 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         res = ScreenSize;
 
         core::stringc resText;
-        resText += res.Width;
-        resText += "x";
-        resText += res.Height;
-        Context->Device->getLogger()->log("Using Scene RTT with resolution", resText.c_str(), ELL_DEBUG);
+
+        if (!Scene)
+        {
+            resText += res.Width;
+            resText += "x";
+            resText += res.Height;
+            Context->Device->getLogger()->log("Creating Scene RTT with resolution", resText.c_str(), ELL_DEBUG);
+            Scene = video->addRenderTargetTexture(res, "scene-RT");
+        }
+
         resText = "";
         resText += res.Width / (int)EffectQuality;
         resText += "x";
         resText += res.Height / (int)EffectQuality;
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
-
-        Scene = video->addRenderTargetTexture(res, "scene-RT");
 
         GUIHasEffects = (ScreenSize == res);
 
@@ -136,6 +141,33 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
     }
 
     Active = true;
+}
+
+void EffectRenderer::loadPP(bool reload)
+{
+    if (reload)
+    {
+        if (PP)
+            delete PP;
+        PP = 0;
+        FXAA = 0;
+        Glow = 0;
+        Active = false;
+    }
+
+    if (Context->Settings->Antialiasing)
+        init(EET_FXAA);
+
+    if (Context->Settings->Glow != SSettings::EGS_OFF)
+        init(EET_GLOW);
+
+    if (reload)
+    {
+        if(PP)
+            Context->Device->getLogger()->log("EffectRenderer", (core::stringc("Created render pipeline:\n") + Context->Renderer->PP->getDebugString()).c_str());
+        else
+            Context->Device->getLogger()->log("EffectRenderer", "post-processing inactive");
+    }
 }
 
 core::dimension2du EffectRenderer::getScreenSize() const
