@@ -86,7 +86,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     if (!PP)
     {
-        PP = createIrrPP(Context->Device, EffectQuality, "shaders/pp/");
+        PP = createIrrPP(Context->Device, Context->Settings->EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
         res = ScreenSize;
@@ -103,14 +103,14 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         }
 
         resText = "";
-        resText += res.Width / (int)EffectQuality;
+        resText += res.Width / (u32)Context->Settings->EffectQuality;
         resText += "x";
-        resText += res.Height / (int)EffectQuality;
+        resText += res.Height / (u32)Context->Settings->EffectQuality;
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
 
         GUIHasEffects = (ScreenSize == res);
 
-        PP->setQuality(res / (u32)EffectQuality);
+        PP->setQuality(res / (u32)Context->Settings->EffectQuality);
     }
 
     switch (type)
@@ -132,8 +132,24 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Context->Device->getLogger()->log("EffectRenderer", "initializing glow effect");
         Glow = PP->createEffectChain();
         Glow->createEffect(video::EPE_ALBEDO);
-        Glow->createEffect(video::EPE_BLUR_V);
-        video::CPostProcessingEffect* add = Glow->createEffect(video::EPE_BLUR_H_ADD);
+        video::CPostProcessingEffect* add = 0;
+
+        if (Context->Settings->EffectQuality == video::EPQ_HALF)
+        {
+            Glow->createEffect(video::EPE_BLUR_V_HIGH);
+            add = Glow->createEffect(video::EPE_BLUR_H_ADD_HIGH);
+        }
+        else if (Context->Settings->EffectQuality == video::EPQ_QUARTER)
+        {
+            Glow->createEffect(video::EPE_BLUR_V_MEDIUM);
+            add = Glow->createEffect(video::EPE_BLUR_H_ADD_MEDIUM);
+        }
+        else
+        {
+            Glow->createEffect(video::EPE_BLUR_V_LOW);
+            add = Glow->createEffect(video::EPE_BLUR_H_ADD_LOW);
+        }
+
 
         if (FXAA)
             add->addTextureToShader(FXAA->getCustomRTT());
@@ -165,7 +181,7 @@ void EffectRenderer::loadPP(bool reload)
     if (Context->Settings->Antialiasing)
         init(EET_FXAA);
 
-    if (Context->Settings->Glow != SSettings::EGS_OFF)
+    if (Context->Settings->Glow)
         init(EET_GLOW);
 
     setForceFXAAOff(ForceFXAAOff);
@@ -183,7 +199,7 @@ void EffectRenderer::setForceFXAAOff(bool force)
     if (ForceFXAAOff && FXAA)
     {
         FXAA->setActive(false);
-        GUIHasEffects = true;
+        GUIHasEffects = ScreenSize == Scene->getSize();
         if (Glow)
         {
             Glow->getEffectFromIndex(2)->removeTextureFromShader(0);

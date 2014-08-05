@@ -45,8 +45,6 @@ public:
     video::irrPP* PP;
 
 private:
-    static const video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality = video::EPQ_QUARTER;
-
     SContext* Context;
     bool Active;
     core::dimension2du ScreenSize;

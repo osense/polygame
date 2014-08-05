@@ -129,21 +129,26 @@ void ObjectStateOptions::create_gui()
 
 void ObjectStateOptions::serialize()
 {
-    switch (Context->Settings->Glow)
-    {
-    case SSettings::EGS_OFF:
+    if (!Context->Settings->Glow)
         static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_OFF))->setPressed(true);
-        break;
-    case SSettings::EGS_LOW:
-        static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_LOW))->setPressed(true);
-        break;
-    case SSettings::EGS_MEDIUM:
-        static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(true);
-        break;
-    case SSettings::EGS_HIGH:
-        static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_HIGH))->setPressed(true);
-        break;
+    else
+    {
+        switch (Context->Settings->EffectQuality)
+        {
+        case video::EPQ_OCTOPUS:
+            static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_LOW))->setPressed(true);
+            break;
+        case video::EPQ_QUARTER:
+            static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(true);
+            break;
+        case video::EPQ_HALF:
+            static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_HIGH))->setPressed(true);
+            break;
+        default:
+            break;
+        }
     }
+
 
     if (Context->Settings->Antialiasing)
         static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_FXAA_ON))->setPressed(true);
@@ -153,15 +158,19 @@ void ObjectStateOptions::serialize()
 
 void ObjectStateOptions::deserialize()
 {
-    SSettings::E_GLOW_SETTING oldGlow = Context->Settings->Glow;
+    bool oldGlow = Context->Settings->Glow;
     if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_OFF))->isPressed())
-        Context->Settings->Glow = SSettings::EGS_OFF;
-    else if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_LOW))->isPressed())
-        Context->Settings->Glow = SSettings::EGS_LOW;
+        Context->Settings->Glow = false;
+    else
+        Context->Settings->Glow = true;
+
+    bool oldEffectQuality = Context->Settings->EffectQuality;
+    if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_LOW))->isPressed())
+        Context->Settings->EffectQuality = video::EPQ_OCTOPUS;
     else if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_MEDIUM))->isPressed())
-        Context->Settings->Glow = SSettings::EGS_MEDIUM;
+        Context->Settings->EffectQuality = video::EPQ_QUARTER;
     else if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_GLOW_HIGH))->isPressed())
-        Context->Settings->Glow = SSettings::EGS_HIGH;
+        Context->Settings->EffectQuality = video::EPQ_HALF;
 
     bool oldFXAA = Context->Settings->Antialiasing;
     if (static_cast<gui::IGUIButton*>(Window->getElementFromId(EOI_FXAA_ON))->isPressed())
@@ -170,6 +179,6 @@ void ObjectStateOptions::deserialize()
         Context->Settings->Antialiasing = false;
 
 
-    if (Context->Settings->Glow != oldGlow || Context->Settings->Antialiasing != oldFXAA)
+    if (Context->Settings->Glow != oldGlow || oldEffectQuality != Context->Settings->EffectQuality || Context->Settings->Antialiasing != oldFXAA)
         Context->Renderer->loadPP(true);
 }

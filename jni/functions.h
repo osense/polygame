@@ -234,7 +234,8 @@ inline void writeSettings(SContext* cont)
 {
     Json::Value root;
     root["magic_number"] = (u32)MAGIC_NUMBER;
-    root["glow"] = (u32) cont->Settings->Glow;
+    root["effectQuality"] = (u32) cont->Settings->EffectQuality;
+    root["glow"] = cont->Settings->Glow;
     root["antialiasing"] = cont->Settings->Antialiasing;
 
     Json::StyledWriter jsonWriter;
@@ -251,8 +252,9 @@ inline void writeSettings(SContext* cont)
 
 inline void initDefaultSettings(SSettings* sett)
 {
-    sett->Glow = SSettings::EGS_MEDIUM;
-    sett->Antialiasing = 0;
+    sett->EffectQuality = video::EPQ_QUARTER;
+    sett->Glow = true;
+    sett->Antialiasing = false;
 }
 
 inline bool loadSettings(SContext* cont)
@@ -274,7 +276,8 @@ inline bool loadSettings(SContext* cont)
     if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER)
         return false;
 
-    cont->Settings->Glow = (SSettings::E_GLOW_SETTING) root.get("glow", "2").asUInt();
+    cont->Settings->EffectQuality = (video::E_POSTPROCESSING_EFFECT_QUALITY)root.get("effectQuality", video::EPQ_QUARTER).asUInt();
+    cont->Settings->Glow = root.get("glow", false).asBool();
     cont->Settings->Antialiasing = root.get("antialiasing", false).asBool();
 
     file->drop();
