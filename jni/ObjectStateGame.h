@@ -10,6 +10,7 @@
 #include "ObjectGrid.h"
 #include "ObjectItemSpawner.h"
 #include "ObjectSky.h"
+#include "ObjectHUD.h"
 #include "ObjectPlayer.h"
 #include "EffectFader.h"
 
@@ -35,9 +36,6 @@ class ObjectStateGame : public Object
 
         gui::IGUIWindow* GameoverWnd;
         void createGameoverWindow();
-
-        gui::IGUIStaticText* DistTravelledText;
-        f32 DT;
 };
 
 #endif // OBJECTSTATEGAME_H

@@ -63,6 +63,8 @@
 		<Unit filename="jni/ObjectEventReceiver.h" />
 		<Unit filename="jni/ObjectGrid.cpp" />
 		<Unit filename="jni/ObjectGrid.h" />
+		<Unit filename="jni/ObjectHUD.cpp" />
+		<Unit filename="jni/ObjectHUD.h" />
 		<Unit filename="jni/ObjectItem.cpp" />
 		<Unit filename="jni/ObjectItem.h" />
 		<Unit filename="jni/ObjectItemCube.cpp" />

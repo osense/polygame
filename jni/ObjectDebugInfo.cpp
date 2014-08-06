@@ -35,6 +35,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         {
             dbg += "\nSpeed: ";
             dbg += Player->getSpeed();
+            dbg += "\nHeight: ";
+            dbg += Player->getHeight();
         }
 
         ObjectGrid* grid = static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"));

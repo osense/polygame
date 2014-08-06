@@ -1,9 +1,6 @@
 #include "ObjectPlayer.h"
 
 ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
-    TargetRot(0),
-    RotSpeed(5),
-    Accelerating(false),
     AccSamples(AccSamplesSize)
 {
     Name = "ObjectPlayer";
@@ -20,9 +17,6 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Camera->setFarValue(20);
     Camera->setNearValue(0.05);
     Camera->setPosition(core::vector3df(0, 0.4, 0));
-
-    Speed = MinSpeed;
-    MaxAbsRotY = DefaultMaxAbsRotY;
 
     for (u32 i = 0 ; i < AccSamplesSize; i++)
         AccSamples.push_back(0);
@@ -51,19 +45,25 @@ void ObjectPlayer::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
-        if (Accelerating)
+        /*if (Accelerating)
             Speed += Acceleration * msg.Update.fDelta;
         else
-            Speed -= (Acceleration * 1.5) * msg.Update.fDelta;
+            Speed -= (Acceleration * 1.5) * msg.Update.fDelta;*/
+
+        Speed += Acceleration * msg.Update.fDelta;
 
         if (Speed > MaxSpeed)
             Speed = MaxSpeed;
         else if (Speed < MinSpeed)
             Speed = MinSpeed;
 
+        if (Rising)
+            TargetRot.X = -(MaxRise - FloorAngle);
+        else
+            TargetRot.X =  FloorAngle + (Camera->getPosition().Y - (FloorHeight + Height)) * (MaxRise + FloorAngle);
+
         core::vector3df rotDiff = TargetRot - Camera->getRotation();
         Camera->setRotation(Camera->getRotation() + rotDiff * RotSpeed * msg.Update.fDelta);
-        //Camera->setRotation((Camera->getRotation() + TargetRot) / 2.0);
 
         core::vector3df dir = getDirection();
         Camera->setPosition(Camera->getPosition() + dir * Speed * msg.Update.fDelta);
@@ -74,13 +74,6 @@ void ObjectPlayer::onMessage(SMessage msg)
         DebugCamera->setTarget(Camera->getPosition());
         #endif // DEBUG_PLAYER
 
-        //Quad->setMaterialTexture(0, Context->Renderer->getCrashEffectTexture());
-        //Quad->setMaterialType(Context->Mtls->ColorBlend);
-        //Quad->render();
-        /*video::IVideoDriver* video = Context->Device->getVideoDriver();
-        video::ITexture* crashEffect =
-        video->draw2DImage(crashEffect, core::position2d<s32>(0, 0), core::rect<s32>(core::dimension2d<s32>(0, 0), crashEffect->getSize()), 0, video::SColor(255, 255, 255, 0), true);*/
-
         SMessage msg(this, EMT_OBJ_POS);
         core::vector3df camPos = Camera->getPosition();
         msg.Position.X = camPos.X;
@@ -90,17 +83,19 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_PLAYER_FEEDBACK)
     {
-        core::vector3df pPos = Camera->getPosition();
+        /*core::vector3df pPos = Camera->getPosition();
         pPos.Y = msg.PlayerFeedback.Height + 0.4;
         Camera->setPosition((Camera->getPosition()*2 + pPos) / 3.0);
-        TargetRot.X = msg.PlayerFeedback.GridAngle;
+        TargetRot.X = msg.PlayerFeedback.GridAngle;*/
+        FloorHeight = msg.PlayerFeedback.Height;
+        FloorAngle = msg.PlayerFeedback.GridAngle;
     }
     else if (msg.Type == EMT_INPUT)
     {
         if (msg.Input.Type == ETIE_PRESSED_DOWN)
-            Accelerating = true;
+            Rising = true;
         else if (msg.Input.Type == ETIE_LEFT_UP)
-            Accelerating = false;
+            Rising = false;
 
 #ifdef DEBUG_GLES
         else if (msg.Input.Type == ETIE_MOVED)
@@ -153,6 +148,16 @@ core::vector3df ObjectPlayer::getTargetDirection() const
     core::vector3df rot = TargetRot;
 
     return core::vector3df(sin(core::degToRad(rot.Y)), -sin(core::degToRad(rot.X)), cos(core::degToRad(rot.Y))).normalize();
+}
+
+f32 ObjectPlayer::getHeight() const
+{
+    return Camera->getPosition().Y - FloorHeight;
+}
+
+f32 ObjectPlayer::getDT() const
+{
+    return Camera->getPosition().Z;
 }
 
 scene::ICameraSceneNode* ObjectPlayer::getCamera() const
