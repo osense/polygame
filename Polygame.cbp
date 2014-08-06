@@ -13,7 +13,7 @@
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Compiler>
-					<Add option="-std=c++98" />
+					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add option="-DDEBUG_GLES" />
 					<Add directory="../irrlicht-ogl-es/include" />

@@ -35,12 +35,12 @@ private:
     f32 MaxAbsRotY;
     bool Accelerating;
 
-    static const f32 Acceleration = 1;
-    static const f32 MinSpeed = 1;
-    static const f32 MaxSpeed = 5;
-    static const f32 DefaultMaxAbsRotY = 35;
-    static const f32 AccCutoff = 3.0;
-    static const u32 AccSamplesSize = 5;
+    const f32 Acceleration = 1;
+    const f32 MinSpeed = 1;
+    const f32 MaxSpeed = 5;
+    const f32 DefaultMaxAbsRotY = 40;
+    const f32 AccCutoff = 3.0;
+    static const u32 AccSamplesSize = 3;
 
     circular_buffer<f32> AccSamples;
 };

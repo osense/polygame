@@ -29,6 +29,8 @@ class EffectFader
     private:
         scene::SMesh* createQuadMesh();
 
+        SContext* Context;
+
         enum E_FADE_STATE
         {
             EFS_NONE,
@@ -37,7 +39,6 @@ class EffectFader
             EFS_FADEIN
         } State;
 
-        SContext* Context;
         bool IncludeGUI;
         f32 Strength, TargetStrength, StartStrength;
         f32 FadeTime;

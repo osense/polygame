@@ -5,8 +5,9 @@
 #define DEBUG_INFO
 //#define DEBUG_PLAYER
 #define DEBUG_OBJS
-//#define DEBUG_GRID
+#define DEBUG_GRID
 //#define DEBUG_EFFECTS
+//#define DEBUG_INPUT
 
 #define GUI_TARGET_X 854
 #define GUI_TARGET_Y 480

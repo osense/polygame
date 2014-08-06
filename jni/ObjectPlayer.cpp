@@ -1,10 +1,8 @@
 #include "ObjectPlayer.h"
 
 ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
-    Speed(MinSpeed),
     TargetRot(0),
     RotSpeed(5),
-    MaxAbsRotY(DefaultMaxAbsRotY),
     Accelerating(false),
     AccSamples(AccSamplesSize)
 {
@@ -22,6 +20,9 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Camera->setFarValue(20);
     Camera->setNearValue(0.05);
     Camera->setPosition(core::vector3df(0, 0.4, 0));
+
+    Speed = MinSpeed;
+    MaxAbsRotY = DefaultMaxAbsRotY;
 
     for (u32 i = 0 ; i < AccSamplesSize; i++)
         AccSamples.push_back(0);

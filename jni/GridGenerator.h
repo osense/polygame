@@ -68,8 +68,8 @@ class GridGenerator
 
         void slopeTransform();
 
-        static const f32 SlopeStep = 0.33;
-        static const u32 SlopeChangeInSteps = 5;
+        const f32 SlopeStep = 0.33;
+        const u32 SlopeChangeInSteps = 5;
 };
 
 #endif // GRIDGENERATOR_H

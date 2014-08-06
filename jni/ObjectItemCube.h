@@ -26,12 +26,12 @@ class ObjectItemCube : public ObjectItem
         scene::ISceneNode* Node;
         f32 EffectCounter;
 
-        static const bool Filled = false;
-        static const f32 CubeSize = 0.25;
-        static const f32 RotSpeed = 0.025;
-        static const f32 DestroyDist = 2;
-        static const f32 TimeActive = 15;
-        static const f32 TimeFadein = 1.5;
+        const bool Filled = false;
+        const f32 CubeSize = 0.25;
+        const f32 RotSpeed = 0.025;
+        const f32 DestroyDist = 2;
+        const f32 TimeActive = 15;
+        const f32 TimeFadein = 1.5;
 };
 
 #endif // OBJECTITEMCUBE_H

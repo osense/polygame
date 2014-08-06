@@ -93,6 +93,7 @@ void ObjectGrid::onMessage(SMessage msg)
         if (diffVect.getLength() > 1.0)
         {
 #ifdef DEBUG_GRID
+            Context->Device->getTimer()->tick();
             u32 updStart = Context->Device->getTimer()->getTime();
 #endif // DEBUG_GRID
 
@@ -114,8 +115,9 @@ void ObjectGrid::onMessage(SMessage msg)
             broadcastMessage(SMessage(this, EMT_GRID_REGENED));
 
 #ifdef DEBUG_GRID
+            Context->Device->getTimer()->tick();
             u32 updEnd = Context->Device->getTimer()->getTime();
-            debugLog(core::stringc("Updated grid: ") + core::stringc(updStart - updEnd) + "ms");
+            debugLog(core::stringc("Updated grid: ") + core::stringc(updEnd - updStart) + "ms");
 #endif // DEBUG_GRID
         }
     }

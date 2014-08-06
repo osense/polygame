@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <irrlicht.h>
+#include <thread>
 #include "circular_buffer.h"
 
 using namespace irr;
@@ -36,10 +37,10 @@ public:
 private:
     static const u32 NumPointsY = 18;
     static const u32 NumPointsX = NumPointsY * 2;//(16.0 / 9.0);
-    static const f32 LineThickness = 0.005;
-    static const u32 GenChangeEvery = 50;
-    static const u32 ColorChangeEvery = 35;
-    static const f32 PlayerSize = 0.05;
+    const f32 LineThickness = 0.005;
+    const u32 GenChangeEvery = 50;
+    const u32 ColorChangeEvery = 35;
+    const f32 PlayerSize = 0.05;
 
     core::vector3df Position;
     f32 Points[NumPointsX][NumPointsY];

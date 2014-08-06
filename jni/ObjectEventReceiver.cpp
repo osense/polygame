@@ -23,7 +23,7 @@ void ObjectEventReceiver::onMessage(SMessage msg)
 void ObjectEventReceiver::debugLog(core::stringc text) const
 {
 #ifdef DEBUG_INPUT
-    SContext->Device->getLogger()->log(getName().c_str(), text.c_str());
+    Context->Device->getLogger()->log(getName().c_str(), text.c_str());
 #endif
 }
 

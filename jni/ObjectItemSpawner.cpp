@@ -57,10 +57,10 @@ void ObjectItemSpawner::onMessage(SMessage msg)
             itemPos.X -= Grid->getNumPointsX() / 2.0;
             itemPos.Y = (Grid->getBaseHeight(coordY) + Grid->getBaseHeight(coordY - 1)) / 2.0 + SpawnItemHeight;
 
-            if (pVal >= SpawnChance / 2)
+            //if (pVal >= SpawnChance / 2)
                 new ObjectItemCube(Context, itemPos);
-            else
-                new ObjectItemPyramid(Context, itemPos);
+            //else
+                //new ObjectItemPyramid(Context, itemPos);
         }
     }
 }

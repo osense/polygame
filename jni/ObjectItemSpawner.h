@@ -24,9 +24,9 @@ class ObjectItemSpawner : public Object
         u32 SpawnMinX;
         u32 SpawnMaxX;
 
-        static const f32 SpawnChance = 0.02;
-        static const f32 SpawnHillLimit = 0.2;
-        static const f32 SpawnItemHeight = 0.5;
+        const f32 SpawnChance = 0.005;
+        const f32 SpawnHillLimit = 0.2;
+        const f32 SpawnItemHeight = 0.4;
 };
 
 #endif // OBJECTITEMSPAWNER_H
