@@ -129,6 +129,16 @@ void ObjectPlayer::onMessage(SMessage msg)
                                                                                         Camera->getPosition() + core::vector3df(0, 0.5, -0.75),
                                                                                         400));
     }
+    else if (msg.Type == EMT_DESERIALIZE)
+    {
+        storeVector3df(Camera->getPosition(), (*msg.SData.Root), "player_pos");
+        storeVector3df(Camera->getRotation(), (*msg.SData.Root), "player_rot");
+    }
+    else if (msg.Type == EMT_SERIALIZE)
+    {
+        Camera->setPosition(parseVector3df((*msg.SData.Root), "player_pos"));
+        Camera->setRotation(parseVector3df((*msg.SData.Root), "player_rot"));
+    }
 }
 
 f32 ObjectPlayer::getSpeed() const

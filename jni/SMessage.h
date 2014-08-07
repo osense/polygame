@@ -4,11 +4,17 @@
 #include <irrlicht.h>
 
 class Object;
+namespace Json
+{
+    class Value;
+}
 
 enum E_MESSAGE_TYPE
 {
     EMT_NONE = 0,
     EMT_UPDATE,
+    EMT_SERIALIZE,
+    EMT_DESERIALIZE,
     EMT_OBJ_SPAWNED,
     EMT_OBJ_DIED,
     EMT_OBJ_POS,
@@ -57,6 +63,11 @@ struct SMessage
         irr::f32 fDelta;
     };
 
+    struct SerializeMessage
+    {
+        Json::Value* Root;
+    };
+
     struct ObjectPositionMessage
     {
         irr::f32 X, Y, Z;
@@ -75,6 +86,7 @@ struct SMessage
         KeyMessage Key;
         AccMessage Acc;
         UpdateMessage Update;
+        SerializeMessage SData;
         ObjectPositionMessage Position;
         PlayerFeedbackMessage PlayerFeedback;
     };

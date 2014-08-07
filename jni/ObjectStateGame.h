@@ -16,7 +16,8 @@
 
 enum E_GAME_GUI_ID
 {
-    EGGI_OK = 0
+    EGGI_EXIT_GAMEOVER = 0,
+    EGGI_EXIT_BACK
 };
 
 using namespace irr;
@@ -24,7 +25,7 @@ using namespace irr;
 class ObjectStateGame : public Object
 {
     public:
-        ObjectStateGame(SContext* cont);
+        ObjectStateGame(SContext* cont, bool loadSavedGame = false);
         virtual ~ObjectStateGame();
 
         virtual void onMessage(SMessage msg);
@@ -34,8 +35,12 @@ class ObjectStateGame : public Object
         void setPaused(bool paused);
         bool isPaused() const;
 
+        void saveGame();
+        void loadGame();
+
         gui::IGUIWindow* GameoverWnd;
         void createGameoverWindow();
+        bool isGameover() const;
 };
 
 #endif // OBJECTSTATEGAME_H

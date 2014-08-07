@@ -17,6 +17,12 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     Context->Renderer->setForceFXAAOff(true);
     Context->Renderer->getFader()->setIncludeGUI(true);
     Context->Renderer->getFader()->startFadeIn();
+
+    std::thread ([&] ()
+                {
+                    if (readJson(Context, Context->SavegamePath)["can_continue"].asBool())
+                        Window->getElementFromId(EGI_CONTINUE)->setEnabled(true);
+                }).detach();
 }
 
 ObjectStateMenu::~ObjectStateMenu()
@@ -44,6 +50,12 @@ void ObjectStateMenu::onMessage(SMessage msg)
 
         switch (callerID)
         {
+        case EGI_CONTINUE:
+            debugLog("launching game from save...");
+            Window->remove();
+            Context->State = new ObjectStateGame(Context, true);
+            delete this;
+            break;
         case EGI_NEWGAME:
             debugLog("launching game...");
             Window->remove();
@@ -66,20 +78,8 @@ void ObjectStateMenu::create_menu()
 {
     Window = addOverlayWindow(Context);
 
-    // we'll assume a gui for 854x480, our functions will take care of the scaling
-    /*addButton(position2d<s32>(363, 100), dimension2d<s32>(128, 64),
-              video->getTexture("gui/continue.png"), Context, EGI_CONTINUE, Window);
-    addButton(position2d<s32>(363, 200), dimension2d<s32>(128, 64),
-              video->getTexture("gui/new_game.png"), Context, EGI_NEWGAME, Window);
-
-
-    addButton(position2d<s32>(740, 380), dimension2d<s32>(64, 64),
-              video->getTexture("gui/exit.png"), Context, EGI_EXIT, Window);
-    addButton(position2d<s32>(660, 380), dimension2d<s32>(64, 64),
-              video->getTexture("gui/options.png"), Context, EGI_OPTIONS, Window);*/
-
-    gui::IGUIButton* continueBtn = addButton(position2d<s32>(299, 100), dimension2d<s32>(256, 64),
-              L"CONTINUE", Context, EGI_CONTINUE, Window);
+    addButton(position2d<s32>(299, 100), dimension2d<s32>(256, 64),
+              L"CONTINUE", Context, EGI_CONTINUE, Window)->setEnabled(false);
     addButton(position2d<s32>(299, 200), dimension2d<s32>(256, 64),
               L"NEW GAME", Context, EGI_NEWGAME, Window);
 
@@ -87,6 +87,4 @@ void ObjectStateMenu::create_menu()
               L"OPTIONS", Context, EGI_OPTIONS, Window);
     addButton(position2d<s32>(700, 380), dimension2d<s32>(128, 64),
               L"EXIT", Context, EGI_EXIT, Window);
-
-    continueBtn->setEnabled(false);
 }

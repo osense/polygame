@@ -230,6 +230,36 @@ inline video::SColor hueShift(video::SColor col, f32 shift)
     return hueShift(video::SColorf(col), shift).toSColor();
 }
 
+inline void writeJson(SContext* cont, Json::Value& root, core::stringc path)
+{
+    Json::StyledWriter jsonWriter;
+    io::IWriteFile* file = cont->Device->getFileSystem()->createAndWriteFile(path.c_str());
+
+    std::string jsonStr = jsonWriter.write(root);
+
+    file->write(jsonStr.c_str(), jsonStr.length());
+
+    file->drop();
+}
+
+inline Json::Value readJson(SContext* cont, core::stringc path)
+{
+    Json::Value root;
+    io::IReadFile* file = cont->Device->getFileSystem()->createAndOpenFile(path.c_str());
+    if (!file)
+        return root;
+
+    char* buff = new char[file->getSize()];
+    file->read(buff, file->getSize());
+    file->drop();
+    std::string jsonStr(buff);
+
+    Json::Reader reader;
+    reader.parse(jsonStr, root);
+
+    return root;
+}
+
 inline void writeSettings(SContext* cont)
 {
     Json::Value root;
@@ -238,14 +268,7 @@ inline void writeSettings(SContext* cont)
     root["glow"] = cont->Settings->Glow;
     root["antialiasing"] = cont->Settings->Antialiasing;
 
-    Json::StyledWriter jsonWriter;
-    io::IWriteFile* file = cont->Device->getFileSystem()->createAndWriteFile(cont->Settings->FilePath.c_str());
-
-    std::string jsonStr = jsonWriter.write(root);
-
-    file->write(jsonStr.c_str(), jsonStr.length());
-
-    file->drop();
+    writeJson(cont, root, cont->Settings->FilePath);
 
     cont->Device->getLogger()->log("Wrote settings", cont->Settings->FilePath.c_str());
 }
@@ -259,19 +282,7 @@ inline void initDefaultSettings(SSettings* sett)
 
 inline bool loadSettings(SContext* cont)
 {
-    io::IReadFile* file = cont->Device->getFileSystem()->createAndOpenFile(cont->Settings->FilePath.c_str());
-    if (!file)
-        return false;
-
-    char* buff = new char[file->getSize()];
-    file->read(buff, file->getSize());
-    std::string jsonStr(buff);
-
-    Json::Value root;
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(jsonStr, root);
-    if (!parsingSuccessful)
-        return false;
+    Json::Value root = readJson(cont, cont->Settings->FilePath);
 
     if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER)
         return false;
@@ -280,10 +291,27 @@ inline bool loadSettings(SContext* cont)
     cont->Settings->Glow = root.get("glow", false).asBool();
     cont->Settings->Antialiasing = root.get("antialiasing", false).asBool();
 
-    file->drop();
-
     cont->Device->getLogger()->log("Loaded settings", cont->Settings->FilePath.c_str());
     return true;
+}
+
+inline void storeVector3df(const core::vector3df& vec, Json::Value& val, const core::stringc name)
+{
+    Json::Value vecVal;
+    vecVal.append(vec.X);
+    vecVal.append(vec.Y);
+    vecVal.append(vec.Z);
+    val[name.c_str()] = vecVal;
+}
+
+inline core::vector3df parseVector3df(Json::Value& val, const core::stringc name)
+{
+    core::vector3df vec;
+    vec.X = val[name.c_str()][0].asDouble();
+    vec.Y = val[name.c_str()][1].asDouble();
+    vec.Z = val[name.c_str()][2].asDouble();
+
+    return vec;
 }
 
 #endif // FUNCTIONS_H_INCLUDED

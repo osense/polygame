@@ -1,6 +1,6 @@
 #include "ObjectStateGame.h"
 
-ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
+ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(cont),
     PauseWnd(0),
     GameoverWnd(0)
 {
@@ -19,6 +19,9 @@ ObjectStateGame::ObjectStateGame(SContext* cont) : Object(cont),
     Context->Renderer->setForceFXAAOff(false);
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, 0.5);
+
+    if (loadSavedGame)
+        loadGame();
 }
 
 ObjectStateGame::~ObjectStateGame()
@@ -54,11 +57,15 @@ void ObjectStateGame::onMessage(SMessage msg)
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
             return;
 
-        if (msg.GUI.Caller->getID() == EGGI_OK)
+        switch (msg.GUI.Caller->getID())
         {
+        case EGGI_EXIT_BACK:
+        case EGGI_EXIT_GAMEOVER:
+            saveGame();
             Context->ObjManager->clear();
             new ObjectStateInit(Context, false);
             delete this;
+            return;
         }
     }
 }
@@ -75,7 +82,7 @@ void ObjectStateGame::setPaused(bool paused)
               L"PAUSE", Context, PauseWnd);
 
         addButton(core::position2d<s32>(252, 300), core::dimension2d<s32>(350, 64),
-              L"BACK TO MAIN MENU", Context, EGGI_OK, PauseWnd);
+              L"BACK TO MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
 
         Context->Renderer->getFader()->startFadeOut(0.5);
     }
@@ -91,6 +98,34 @@ void ObjectStateGame::setPaused(bool paused)
 bool ObjectStateGame::isPaused() const
 {
     return PauseWnd;
+}
+
+void ObjectStateGame::saveGame()
+{
+    Json::Value root;
+
+    if (isGameover())
+    {
+        root["can_continue"] = false;
+    }
+    else
+    {
+        root["can_continue"] = true;
+
+        SMessage msg(this, EMT_DESERIALIZE);
+        msg.SData.Root = &root;
+        Context->ObjManager->broadcastMessage(msg);
+    }
+
+    writeJson(Context, root, Context->SavegamePath);
+}
+
+void ObjectStateGame::loadGame()
+{
+    Json::Value root = readJson(Context, Context->SavegamePath);
+    SMessage msg(this, EMT_SERIALIZE);
+    msg.SData.Root = &root;
+    Context->ObjManager->broadcastMessage(msg);
 }
 
 void ObjectStateGame::createGameoverWindow()
@@ -111,5 +146,10 @@ void ObjectStateGame::createGameoverWindow()
     dtText->setTextAlignment(gui::EGUIA_CENTER, gui::EGUIA_CENTER);
 
     addButton(core::position2d<s32>(363, 350), core::dimension2d<s32>(128, 64),
-              L"O.K.", Context, EGGI_OK, GameoverWnd);
+              L"O.K.", Context, EGGI_EXIT_GAMEOVER, GameoverWnd);
+}
+
+bool ObjectStateGame::isGameover() const
+{
+    return GameoverWnd;
 }

@@ -57,6 +57,7 @@ struct SContext
     EffectRenderer* Renderer;
     SMaterials* Mtls;
 
+    core::stringc SavegamePath, SavegameInfoPath;
     SSettings* Settings;
     irr::f32 TimeScale;
     irr::core::vector2df GUIScale;

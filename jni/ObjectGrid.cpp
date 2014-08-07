@@ -416,10 +416,10 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     core::line3df t2l(pPos + t2n, pPos - 999 * t2n);
 
 #ifdef DEBUG_PLAYER
-        Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
-        Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
-        Context->Device->getVideoDriver()->draw3DTriangle(t1);
-        Context->Device->getVideoDriver()->draw3DTriangle(t2);
+    Context->Device->getVideoDriver()->setMaterial(video::SMaterial());
+    Context->Device->getVideoDriver()->setTransform(video::ETS_WORLD, core::IdentityMatrix);
+    Context->Device->getVideoDriver()->draw3DTriangle(t1);
+    Context->Device->getVideoDriver()->draw3DTriangle(t2);
 #endif // DEBUG_PLAYER
 
     core::vector3df t1Int, t2Int;

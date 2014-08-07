@@ -69,8 +69,12 @@ void ObjectStateInit::onMessage(SMessage msg)
 
 #ifdef _IRR_ANDROID_PLATFORM_
             Context->Settings->FilePath = (core::stringc(Context->App->activity->internalDataPath) + "/") + SETTINGS_FILENAME;
+            Context->SavegamePath = (core::stringc(Context->App->activity->internalDataPath) + "/") + "savegame.json";
+            Context->SavegameInfoPath = (core::stringc(Context->App->activity->internalDataPath) + "/") + "savegame_info.json";
 #else
             Context->Settings->FilePath = SETTINGS_FILENAME;
+            Context->SavegamePath = "savegame.json";
+            Context->SavegameInfoPath = "savegame_info.json";
 #endif
 
 

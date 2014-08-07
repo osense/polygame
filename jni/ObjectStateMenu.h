@@ -2,6 +2,7 @@
 #define GAMESTATEMENU_H
 
 #include <irrlicht.h>
+#include <thread>
 
 #include "Object.h"
 #include "ObjectManager.h"
