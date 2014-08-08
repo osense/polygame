@@ -204,32 +204,30 @@ void GridGenerator::slopeTransform()
         if (StepsIntoSlope >= SlopeChangeInSteps)
             setSlope(NextSlope);
 
-    f32 slpStep = SlopeStep;
+    StepsIntoSlope++;
 
     if (Slope == EST_NONE)
     {
-        if (StepsIntoSlope <= SlopeChangeInSteps)
+        if (StepsIntoSlope < SlopeChangeInSteps)
         {
             if (PrevSlope == EST_DOWN)
-                Height -= slpStep * (1.0 / (1.5 + StepsIntoSlope));
+                Height -= SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
             else if (PrevSlope == EST_UP)
-                Height += slpStep * (1.0 / (1.5 + StepsIntoSlope));
+                Height += SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
         }
     }
     else if (Slope == EST_DOWN)
     {
-        if (StepsIntoSlope <= SlopeChangeInSteps)
-            Height -= slpStep * (1.0 / (1.5 + SlopeChangeInSteps - StepsIntoSlope));
-        else Height -= slpStep;
+        if (StepsIntoSlope < SlopeChangeInSteps)
+            Height -= SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
+        else Height -= SlopeStep;
     }
     else if (Slope == EST_UP)
     {
-        if (StepsIntoSlope <= SlopeChangeInSteps)
-            Height += slpStep * (1.0 / (1.5 + SlopeChangeInSteps - StepsIntoSlope));
-        else Height += slpStep;
+        if (StepsIntoSlope < SlopeChangeInSteps)
+            Height += SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
+        else Height += SlopeStep;
     }
-
-    StepsIntoSlope++;
 
     for (u32 i = 0; i < NumPoints; i++)
     {
