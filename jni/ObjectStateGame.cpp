@@ -16,12 +16,12 @@ ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(co
     new ObjectHUD(Context);
     new ObjectPlayer(Context);
 
+    if (loadSavedGame)
+        loadGame();
+
     Context->Renderer->setForceFXAAOff(false);
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, 0.5);
-
-    if (loadSavedGame)
-        loadGame();
 }
 
 ObjectStateGame::~ObjectStateGame()
@@ -112,7 +112,7 @@ void ObjectStateGame::saveGame()
     {
         root["can_continue"] = true;
 
-        SMessage msg(this, EMT_DESERIALIZE);
+        SMessage msg(this, EMT_SERIALIZE);
         msg.SData.Root = &root;
         Context->ObjManager->broadcastMessage(msg);
     }
@@ -123,7 +123,7 @@ void ObjectStateGame::saveGame()
 void ObjectStateGame::loadGame()
 {
     Json::Value root = readJson(Context, Context->SavegamePath);
-    SMessage msg(this, EMT_SERIALIZE);
+    SMessage msg(this, EMT_DESERIALIZE);
     msg.SData.Root = &root;
     Context->ObjManager->broadcastMessage(msg);
 }

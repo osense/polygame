@@ -46,7 +46,7 @@ private:
     f32 FloorHeight = 0, FloorAngle = 0;
     core::vector3df TargetRot = core::vector3df(0);
     core::vector3df RotSpeed = core::vector3df(5, 5, 0);
-    f32 MaxAbsRotY = DefaultMaxAbsRotY;;
+    f32 MaxAbsRotY = DefaultMaxAbsRotY;
     bool Accelerating = false;
     bool Rising = false;
 

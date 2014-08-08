@@ -121,6 +121,66 @@ void ObjectGrid::onMessage(SMessage msg)
 #endif // DEBUG_GRID
         }
     }
+    else if (msg.Type == EMT_SERIALIZE)
+    {
+        Json::Value gridRoot;
+
+        storeVector3df(Position, gridRoot, "pos");
+        gridRoot["gen_changeIn"] = GenChangeIn;
+        gridRoot["generator"] = Generator.serialize();
+
+        gridRoot["color_changeIn"] = ColorChangeIn;
+        gridRoot["color_changeing"] = ChangingColor;
+        gridRoot["color_far"] = serializeSColorf(ColorFar);
+        gridRoot["color_next"] = serializeSColorf(ColorNext);
+        video::SColorf realNear = Context->Mtls->GridCB->getNearColor();
+        gridRoot["color_real_near"] = serializeSColorf(realNear);
+        video::SColorf realFar = Context->Mtls->GridCB->getFarColor();
+        gridRoot["color_real_far"] = serializeSColorf(realFar);
+
+        for (u32 x = 0; x < NumPointsX; x++)
+        {
+            Json::Value pointsY;
+
+            for (u32 y = 0; y < NumPointsY; y++)
+            {
+                pointsY.append(Points[x][y]);
+            }
+
+            gridRoot["points"].append(pointsY);
+        }
+
+        gridRoot["base_height"] = serializeCircularBuffer(BaseHeight);
+
+        (*msg.SData.Root)["grid"] = gridRoot;
+    }
+    else if (msg.Type == EMT_DESERIALIZE)
+    {
+        Json::Value gridRoot = (*msg.SData.Root)["grid"];
+
+        Position = parseVector3df(gridRoot, "pos");
+        GenChangeIn = gridRoot["gen_changeIn"].asUInt();
+        Generator.deserialize(gridRoot["generator"]);
+
+        ColorChangeIn = gridRoot["color_changeIn"].asDouble();
+        ChangingColor = gridRoot["color_changeing"].asDouble();
+        ColorFar = deserializeSColorf(gridRoot["color_far"]);
+        ColorNext = deserializeSColorf(gridRoot["color_next"]);
+        Context->Mtls->GridCB->setNearColor(deserializeSColorf(gridRoot["color_real_near"]));
+        Context->Mtls->GridCB->setFarColor(deserializeSColorf(gridRoot["color_real_far"]));
+
+        for (u32 x = 0; x < NumPointsX; x++)
+        {
+            for (u32 y = 0; y < NumPointsY; y++)
+            {
+                Points[x][y] = gridRoot["points"][x][y].asDouble();
+            }
+        }
+
+        deserializeCircularBuffer(BaseHeight, gridRoot["base_height"]);
+
+        regenerate();
+    }
 }
 
 void ObjectGrid::setCollision(bool active)
@@ -313,13 +373,13 @@ void ObjectGrid::handleGenUpdate()
         GenChangeIn = GenChangeEvery;
     }
 
-    /*if (GenChangeIn == int(0.8 * GenChangeEvery))
-    {
-        Generator.setSlope(EST_DOWN);
-    }*/
-    if (GenChangeIn == int(0.6 * GenChangeEvery))
+    if (GenChangeIn == int(0.2 * GenChangeEvery))
     {
         Generator.setSlope(EST_NONE);
+    }
+    if (GenChangeIn == int(0.6 * GenChangeEvery))
+    {
+        Generator.setSlope(EST_UP);
     }
 }
 
@@ -328,10 +388,9 @@ void ObjectGrid::handleColors()
     ColorChangeIn--;
     if (ColorChangeIn == 0)
     {
-        //do
-            ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 240);// video::SColorf(rand()/(float)RAND_MAX, rand()/(float)RAND_MAX, rand()/(float)RAND_MAX);
-        //while (ColorNext.r + ColorNext.g + ColorNext.b <= 0.5);
         ColorFar = Context->Mtls->GridCB->getFarColor();
+        ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 240);
+
         ChangingColor = NumPointsY;
         ColorChangeIn = ColorChangeEvery;
 

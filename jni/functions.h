@@ -2,6 +2,7 @@
 #define FUNCTIONS_H_INCLUDED
 
 #include <irrlicht.h>
+#include "circular_buffer.h"
 #include "SContext.h"
 #include "SSettings.h"
 #include "json/json.h"
@@ -312,6 +313,47 @@ inline core::vector3df parseVector3df(Json::Value& val, const core::stringc name
     vec.Z = val[name.c_str()][2].asDouble();
 
     return vec;
+}
+
+inline Json::Value serializeSColorf(video::SColorf& col)
+{
+    Json::Value root;
+    root.append(col.getRed());
+    root.append(col.getGreen());
+    root.append(col.getBlue());
+    root.append(col.getAlpha());
+
+    return root;
+}
+
+inline video::SColorf deserializeSColorf(Json::Value& val)
+{
+    video::SColorf col;
+    col.r = val[0].asDouble();
+    col.g = val[1].asDouble();
+    col.b = val[2].asDouble();
+    col.a = val[3].asDouble();
+
+    return col;
+}
+
+inline Json::Value serializeCircularBuffer(circular_buffer<f32>& buff)
+{
+    Json::Value root;
+    root["index"] = buff.getIndex();
+
+    for (u32 i = 0; i < buff.getSize(); i++)
+            root["values"].append(buff[i]);
+
+    return root;
+}
+
+inline void deserializeCircularBuffer(circular_buffer<f32>& buff, Json::Value& val)
+{
+    for (u32 i = 0; i < buff.getSize(); i++)
+            buff.push_back(val["values"][i].asDouble());
+
+    buff.setIndex(val["index"].asUInt());
 }
 
 #endif // FUNCTIONS_H_INCLUDED

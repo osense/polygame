@@ -13,24 +13,43 @@ public:
         Index = Size - 1;
     }
 
-    ~circular_buffer()
+    circular_buffer<T> operator= (const circular_buffer<T>& other)
+    {
+        memcpy(Array, other.Array, Size * sizeof(T));
+
+        setIndex(other.getIndex());
+
+        return *this;
+    }
+
+    ~circular_buffer ()
     {
         delete[] Array;
     }
 
-    void push_back(T val)
+    void push_back (T val)
     {
         Index++;
         Index = Index % Size;
         Array[Index] = val;
     }
 
-    unsigned int getIndex() const
+    const unsigned int getSize () const
+    {
+        return Size;
+    }
+
+    const unsigned int getIndex () const
     {
         return Index;
     }
 
-    T operator[](const unsigned int idx) const
+    void setIndex (const unsigned int newIdx)
+    {
+        Index = newIdx;
+    }
+
+    T operator[] (const unsigned int idx) const
     {
         return Array[idx % Size];
     }

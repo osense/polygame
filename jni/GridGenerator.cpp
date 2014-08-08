@@ -135,6 +135,31 @@ f32 GridGenerator::getDifficulty() const
     return Difficulty;
 }
 
+Json::Value GridGenerator::serialize() const
+{
+    Json::Value root;
+    root["type"] = (u32)Type;
+    root["slope"] = (u32)Slope;
+    root["slope_prev"] = (u32)PrevSlope;
+    root["slope_next"] = (u32)NextSlope;
+    root["slope_stepsinto"] = StepsIntoSlope;
+    root["difficulty"] = Difficulty;
+    root["height"] = Height;
+
+    return root;
+}
+
+void GridGenerator::deserialize(Json::Value& root)
+{
+    Type = (E_GEN_TYPE)root["type"].asUInt();
+    Slope = (E_SLOPE_TYPE)root["slope"].asUInt();
+    PrevSlope = (E_SLOPE_TYPE)root["slope_prev"].asUInt();
+    NextSlope = (E_SLOPE_TYPE)root["slope_next"].asUInt();
+    StepsIntoSlope = root["slope_stepsinto"].asDouble();
+    Difficulty = root["difficulty"].asDouble();
+    Height = root["height"].asDouble();
+}
+
 
 void GridGenerator::genNone()
 {

@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <irrlicht.h>
+#include "json/value.h"
 
 #include "libnoise/perlin.h"
 
@@ -45,6 +46,9 @@ class GridGenerator
 
         void setDifficulty(f32 diff);
         f32 getDifficulty() const;
+
+        Json::Value serialize() const;
+        void deserialize(Json::Value& root);
 
     private:
         f32 Difficulty;

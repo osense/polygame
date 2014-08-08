@@ -129,15 +129,33 @@ void ObjectPlayer::onMessage(SMessage msg)
                                                                                         Camera->getPosition() + core::vector3df(0, 0.5, -0.75),
                                                                                         400));
     }
-    else if (msg.Type == EMT_DESERIALIZE)
-    {
-        storeVector3df(Camera->getPosition(), (*msg.SData.Root), "player_pos");
-        storeVector3df(Camera->getRotation(), (*msg.SData.Root), "player_rot");
-    }
     else if (msg.Type == EMT_SERIALIZE)
     {
-        Camera->setPosition(parseVector3df((*msg.SData.Root), "player_pos"));
-        Camera->setRotation(parseVector3df((*msg.SData.Root), "player_rot"));
+        Json::Value playerRoot;
+
+        storeVector3df(Camera->getPosition(), playerRoot, "pos");
+        storeVector3df(Camera->getRotation(), playerRoot, "rot");
+        playerRoot["speed"] = Speed;
+        playerRoot["energy"] = Energy;
+        playerRoot["max_energy"] = MaxEnergy;
+        playerRoot["floor_height"] = FloorHeight;
+        playerRoot["floor_angle"] = FloorAngle;
+        storeVector3df(TargetRot, playerRoot, "target_rot");
+
+        (*msg.SData.Root)["player"] = playerRoot;
+    }
+    else if (msg.Type == EMT_DESERIALIZE)
+    {
+        Json::Value playerRoot = (*msg.SData.Root)["player"];
+
+        Camera->setPosition(parseVector3df(playerRoot, "pos"));
+        Camera->setRotation(parseVector3df(playerRoot, "rot"));
+        Speed = playerRoot["speed"].asDouble();
+        Energy = playerRoot["energy"].asDouble();
+        MaxEnergy = playerRoot["max_energy"].asDouble();
+        FloorHeight = playerRoot["floor_height"].asDouble();
+        FloorAngle = playerRoot["floor_angle"].asDouble();
+        TargetRot = parseVector3df(playerRoot, "target_rot");
     }
 }
 
