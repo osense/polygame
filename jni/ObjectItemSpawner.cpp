@@ -35,7 +35,7 @@ void ObjectItemSpawner::onMessage(SMessage msg)
     if (msg.Type == EMT_GRID_REGENED)
     {
         core::vector3df gridPos = Grid->getPosition();
-        u32 coordY = Grid->getNumPointsY() - 1;
+        u32 coordZ = Grid->getNumPointsZ() - 1;
 
         // iterate the possible positions for spawning
         for (u32 x = SpawnMinX; x < SpawnMaxX; x++)
@@ -46,16 +46,16 @@ void ObjectItemSpawner::onMessage(SMessage msg)
                 continue;
 
             // perlin checks out, but what about the terrain?
-            if (Grid->getHillHeight(x, coordY) > SpawnHillLimit ||
-                Grid->getHillHeight(x + 1, coordY) > SpawnHillLimit ||
-                Grid->getHillHeight(x, coordY - 1) > SpawnHillLimit ||
-                Grid->getHillHeight(x + 1, coordY - 1) > SpawnHillLimit)
+            if (Grid->getHillHeight(x, coordZ) > SpawnHillLimit ||
+                Grid->getHillHeight(x + 1, coordZ) > SpawnHillLimit ||
+                Grid->getHillHeight(x, coordZ - 1) > SpawnHillLimit ||
+                Grid->getHillHeight(x + 1, coordZ - 1) > SpawnHillLimit)
                 continue;
 
             core::vector3df itemPos(gridPos);
-            itemPos += core::vector3df(x + 0.5, 0, Grid->getNumPointsY() - 2.5);
+            itemPos += core::vector3df(x + 0.5, 0, Grid->getNumPointsZ() - 2.5);
             itemPos.X -= Grid->getNumPointsX() / 2.0;
-            itemPos.Y = (Grid->getBaseHeight(coordY) + Grid->getBaseHeight(coordY - 1)) / 2.0 + SpawnItemHeight;
+            itemPos.Y = (Grid->getBaseHeight(coordZ) + Grid->getBaseHeight(coordZ - 1)) / 2.0 + SpawnItemHeight;
 
             //if (pVal >= SpawnChance / 2)
                 new ObjectItemCube(Context, itemPos);

@@ -3,8 +3,8 @@
 GridGenerator::GridGenerator(u32 numPoints)
 {
     NumPoints = numPoints;
-    LastPts = new f32[NumPoints];
     NewPts = new f32[NumPoints];
+    LastPts = new f32[NumPoints];
     ArraySize = 0;
     Type = EGT_NONE;
     Slope = EST_NONE;
@@ -19,7 +19,8 @@ GridGenerator::GridGenerator(u32 numPoints)
 
 GridGenerator::~GridGenerator()
 {
-    //dtor
+    delete[] NewPts;
+    delete[] LastPts;
 }
 
 void GridGenerator::addPoint(f32 p)

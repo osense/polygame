@@ -25,25 +25,25 @@ public:
     void setCollision(bool active);
 
     core::vector3df getPosition() const;
+    u32 getNumPointsZ() const;
     u32 getNumPointsX() const;
-    u32 getNumPointsY() const;
 
-    f32 getBaseHeight(u32 y) const;
-    f32 getHillHeight(u32 x, u32 y) const;
+    f32 getBaseHeight(u32 z) const;
+    f32 getHillHeight(u32 x, u32 z) const;
 
     const GridGenerator& getGenerator() const;
 
 
 private:
-    static const u32 NumPointsY = 18;
-    static const u32 NumPointsX = NumPointsY * 2;//(16.0 / 9.0);
-    const f32 LineThickness = 0.005;
-    const u32 GenChangeEvery = 50;
-    const u32 ColorChangeEvery = 35;
-    const f32 PlayerSize = 0.05;
+    static constexpr u32 NumPointsZ = 18;
+    static constexpr u32 NumPointsX = NumPointsZ * 2;//(16.0 / 9.0);
+    static constexpr f32 LineThickness = 0.005;
+    static constexpr u32 GenChangeEvery = 50;
+    static constexpr u32 ColorChangeEvery = 35;
+    static constexpr f32 PlayerSize = 0.05;
 
     core::vector3df Position;
-    f32 Points[NumPointsX][NumPointsY];
+    f32 Points[NumPointsZ][NumPointsX];
     circular_buffer<f32> BaseHeight;
 
     bool CollisionActive;
@@ -64,9 +64,11 @@ private:
 
 
     void regenerate();
-    void addX();
-    void addPlusY();
-    void addMinusY();
+    void addZ();
+    void addPlusX();
+    void addMinusX();
+
+    void removeXsegment();
 
     void handleGenUpdate();
     void handleColors();

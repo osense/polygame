@@ -1,7 +1,7 @@
 #include "ObjectGrid.h"
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
-    BaseHeight(NumPointsY),
+    BaseHeight(NumPointsZ),
     CollisionActive(true),
     Generator(NumPointsX),
     GenChangeIn(GenChangeEvery),
@@ -13,10 +13,10 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     Position = core::vector3df(0);
 
-    for (u32 y = 0; y < NumPointsY; y++)
+    for (u32 z = 0; z < NumPointsZ; z++)
     {
         for (u32 x = 0; x < NumPointsX; x++)
-            Points[x][y] = 0;
+            Points[z][x] = 0;
 
         BaseHeight.push_back(0);
     }
@@ -42,6 +42,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Grid);
+    //Node->setMaterialType(Context->Mtls->GridBack);
     Node->setAutomaticCulling(scene::EAC_OFF);
     mesh->drop();
 
@@ -52,6 +53,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BufferAppx->drop();
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->GridBack);
+    //BackNode->setMaterialType(Context->Mtls->Grid);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     backMesh->drop();
 
@@ -98,13 +100,13 @@ void ObjectGrid::onMessage(SMessage msg)
 #endif // DEBUG_GRID
 
             if (diffVect.X > 0.5)
-                addPlusY();
+                addPlusX();
             else if (diffVect.X < -0.5)
-                addMinusY();
+                addMinusX();
 
             if (diffVect.Z > 0.5)
             {
-                addX();
+                addZ();
 
                 handleGenUpdate();
 
@@ -138,16 +140,16 @@ void ObjectGrid::onMessage(SMessage msg)
         video::SColorf realFar = Context->Mtls->GridCB->getFarColor();
         gridRoot["color_real_far"] = serializeSColorf(realFar);
 
-        for (u32 x = 0; x < NumPointsX; x++)
+        for (u32 z = 0; z < NumPointsZ; z++)
         {
-            Json::Value pointsY;
+            Json::Value pointsZ;
 
-            for (u32 y = 0; y < NumPointsY; y++)
+            for (u32 x = 0; x < NumPointsX; x++)
             {
-                pointsY.append(Points[x][y]);
+                pointsZ.append(Points[z][x]);
             }
 
-            gridRoot["points"].append(pointsY);
+            gridRoot["points"].append(pointsZ);
         }
 
         gridRoot["base_height"] = serializeCircularBuffer(BaseHeight);
@@ -169,11 +171,11 @@ void ObjectGrid::onMessage(SMessage msg)
         Context->Mtls->GridCB->setNearColor(deserializeSColorf(gridRoot["color_real_near"]));
         Context->Mtls->GridCB->setFarColor(deserializeSColorf(gridRoot["color_real_far"]));
 
-        for (u32 x = 0; x < NumPointsX; x++)
+        for (u32 z = 0; z < NumPointsZ; z++)
         {
-            for (u32 y = 0; y < NumPointsY; y++)
+            for (u32 x = 0; x < NumPointsX; x++)
             {
-                Points[x][y] = gridRoot["points"][x][y].asDouble();
+                Points[z][x] = gridRoot["points"][z][x].asDouble();
             }
         }
 
@@ -198,19 +200,19 @@ u32 ObjectGrid::getNumPointsX() const
     return NumPointsX;
 }
 
-u32 ObjectGrid::getNumPointsY() const
+u32 ObjectGrid::getNumPointsZ() const
 {
-    return NumPointsY;
+    return NumPointsZ;
 }
 
-f32 ObjectGrid::getBaseHeight(u32 y) const
+f32 ObjectGrid::getBaseHeight(u32 z) const
 {
-    return BaseHeight[BaseHeight.getIndex() + y + 1];
+    return BaseHeight[BaseHeight.getIndex() + z + 1];
 }
 
-f32 ObjectGrid::getHillHeight(u32 x, u32 y) const
+f32 ObjectGrid::getHillHeight(u32 x, u32 z) const
 {
-    return Points[x][y] - getBaseHeight(y);
+    return Points[z][x] - getBaseHeight(z);
 }
 
 const GridGenerator& ObjectGrid::getGenerator() const
@@ -232,7 +234,8 @@ void ObjectGrid::regenerate()
     core::vector3df null3d(0);
 
     core::vector3df center(NumPointsX/2.0, 0, 1);
-    center -= Position;
+    Node->setPosition(Position);
+    BackNode->setPosition(Position);
     center.Y = 0;
 
     core::vector3df pointVec(0, Points[0][0], 0);
@@ -246,25 +249,25 @@ void ObjectGrid::regenerate()
 
 
     // iterate the grid, spawning vertices and faces
-    for (u32 y = 0; y < NumPointsY; y++)
+    for (u32 z = 0; z < NumPointsZ; z++)
     {
-        pointVec.Z = y - center.Z;
+        pointVec.Z = z - center.Z;
 
         for (u32 x = 0; x < NumPointsX; x++)
         {
             pointVec.X = x - center.X;
-            pointVec.Y = Points[x][y];
+            pointVec.Y = Points[z][x];
 
             distModX.X = thicknessCorrection;
             distModY.Y = thicknessCorrection;
             distModZ.Z = thicknessCorrection;
 
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), black, null2d));
 
             BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
 
@@ -278,10 +281,10 @@ void ObjectGrid::regenerate()
                 Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
                 Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
             }
-            if (y > 0)
+            if (z > 0)
             {
                 const u32 vertC = Buffer->Vertices.size();
-                const u32 prevYVertC = ((y - 1) * NumPointsX + x) * 6;
+                const u32 prevYVertC = ((z - 1) * NumPointsX + x) * 6;
                 //X quad
                 Buffer->Indices.push_back(vertC-5); Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC+1);
                 Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC); Buffer->Indices.push_back(prevYVertC+1);
@@ -289,12 +292,12 @@ void ObjectGrid::regenerate()
                 Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+2);
                 Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+3); Buffer->Indices.push_back(prevYVertC+2);
             }
-            if (x > 0 && y > 0)
+            if (x > 0 && z > 0)
             {
-                const u32 vertC = y * NumPointsX + x;
+                const u32 vertC = z * NumPointsX + x;
                 const u32 prevYVertC = vertC - NumPointsX;
 
-                if (Points[x][y] + Points[x-1][y-1] > Points[x-1][y] + Points[x][y-1])
+                if (Points[z][x] + Points[z-1][x-1] > Points[z-1][x] + Points[z][x-1])
                 {
                     BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(vertC-1);
                     BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(prevYVertC);
@@ -314,44 +317,45 @@ void ObjectGrid::regenerate()
 }
 
 
-void ObjectGrid::addX()
+void ObjectGrid::addZ()
 {
     Generator.reset();
+    Generator.setPoints(Points[NumPointsZ-1]);
+    memmove(Points, Points[1], sizeof(f32) * (NumPointsZ-1) * NumPointsX);
+    memcpy(Points[NumPointsZ-1], Generator.generate(Position), sizeof(f32) * NumPointsX);
 
-    for (u32 x = 0; x < NumPointsX; x++)
+    /*for (u32 x = 0; x < NumPointsX; x++)
     {
-        Generator.addPoint(Points[x][NumPointsY-1]);
-        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPointsY-1));
+        Generator.addPoint(Points[NumPointsZ-1][x]);
+        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPointsZ-1));
     }
 
 
     Generator.generate(Position);
 
     for (u32 x = 0; x < NumPointsX; x++)
-        Points[x][NumPointsY-1] = Generator.getGenerated(x);
+        Points[x][NumPointsZ-1] = Generator.getGenerated(x);*/
 
     Position += core::vector3df(0, 0, 1);
 }
 
-void ObjectGrid::addPlusY()
+void ObjectGrid::addPlusX()
 {
-    memmove(Points, Points[1], sizeof(f32) * NumPointsY * (NumPointsX-1));
-
-    for (u32 y = 0; y < NumPointsY; y++)
+    for (u32 z = 0; z < NumPointsZ; z++)
     {
-        Points[NumPointsX - 1][y] = getBaseHeight(y);
+        memmove(Points[z], &Points[z][1], sizeof(f32) * (NumPointsX - 1));
+        Points[z][NumPointsX-1] = getBaseHeight(z);
     }
 
     Position += core::vector3df(1, 0, 0);
 }
 
-void ObjectGrid::addMinusY()
+void ObjectGrid::addMinusX()
 {
-    memmove(Points[1], Points, sizeof(f32) * NumPointsY * (NumPointsX-1));
-
-    for (u32 y = 0; y < NumPointsY; y++)
+    for (u32 z = 0; z < NumPointsZ; z++)
     {
-        Points[0][y] = getBaseHeight(y);
+        memmove(&Points[z][1], Points[z], sizeof(f32) * (NumPointsX - 1));
+        Points[z][NumPointsX-1] = getBaseHeight(z);
     }
 
     Position += core::vector3df(-1, 0, 0);
@@ -360,7 +364,7 @@ void ObjectGrid::addMinusY()
 void ObjectGrid::handleGenUpdate()
 {
     BaseHeight.push_back(Generator.getHeight());
-    //Context->Device->getSceneManager()->addCubeSceneNode(0.1, 0, -1, core::vector3df(Position.X, getBaseHeight(NumPointsY - 1), Position.Z+NumPointsY-1));
+    //Context->Device->getSceneManager()->addCubeSceneNode(0.1, 0, -1, core::vector3df(Position.X, getBaseHeight(NumPointsZ - 1), Position.Z+NumPointsZ-1));
 
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
@@ -391,7 +395,7 @@ void ObjectGrid::handleColors()
         ColorFar = Context->Mtls->GridCB->getFarColor();
         ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 240);
 
-        ChangingColor = NumPointsY;
+        ChangingColor = NumPointsZ;
         ColorChangeIn = ColorChangeEvery;
 
 #ifdef DEBUG_GRID
@@ -405,8 +409,8 @@ void ObjectGrid::handleColors()
         video::SColorf near = callback->getNearColor();
         video::SColorf far = callback->getFarColor();
 
-        near = ColorFar.getInterpolated(near, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
-        far = ColorNext.getInterpolated(far, 1.0 / (NumPointsY-(NumPointsY-ChangingColor)));
+        near = ColorFar.getInterpolated(near, 1.0 / (NumPointsZ-(NumPointsZ-ChangingColor)));
+        far = ColorNext.getInterpolated(far, 1.0 / (NumPointsZ-(NumPointsZ-ChangingColor)));
 
         callback->setNearColor(near);
         callback->setFarColor(far);
@@ -436,16 +440,16 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
     f32 posZ = Position.Z;
 
     core::vector3df ld(posX, 0, posZ);
-    ld.Y = Points[halfPtsX - posXOffset][posZOffset];
+    ld.Y = Points[posZOffset][halfPtsX - posXOffset];
 
     core::vector3df rd(posX + 1, 0, posZ);
-    rd.Y = Points[halfPtsX - posXOffset + 1][posZOffset];
+    rd.Y = Points[posZOffset][halfPtsX - posXOffset + 1];
 
     core::vector3df lu(posX, 0, posZ + 1);
-    lu.Y = Points[halfPtsX - posXOffset][posZOffset + 1];
+    lu.Y = Points[posZOffset + 1][halfPtsX - posXOffset];
 
     core::vector3df ru(posX + 1, 0, posZ + 1);
-    ru.Y = Points[halfPtsX - posXOffset + 1][posZOffset + 1];
+    ru.Y = Points[posZOffset + 1][halfPtsX - posXOffset + 1];
 
 
     core::triangle3df t1, t2;
