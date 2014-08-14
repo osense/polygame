@@ -8,6 +8,7 @@ using namespace irr;
 class ShaderCBSky : public video::IShaderConstantSetCallBack
 {
     public:
+        ShaderCBSky();
 
         void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 

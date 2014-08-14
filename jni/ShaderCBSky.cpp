@@ -1,5 +1,11 @@
 #include "ShaderCBSky.h"
 
+ShaderCBSky::ShaderCBSky()
+    :FirstUpdate(false)
+{
+
+}
+
 void ShaderCBSky::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
 {
     if(!FirstUpdate)

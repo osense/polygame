@@ -1,6 +1,7 @@
 #include "ShaderCBGridBack.h"
 
 ShaderCBGridBack::ShaderCBGridBack(SContext* cont)
+    :FirstUpdate(false)
 {
     Context = cont;
     Transform = 0;

@@ -1,6 +1,7 @@
 #include "ShaderCBGrid.h"
 
 ShaderCBGrid::ShaderCBGrid(SContext* cont)
+    :FirstUpdate(false)
 {
     Context = cont;
 

@@ -3,6 +3,7 @@
 ShaderCBCube::ShaderCBCube(SContext* cont)
 {
     Context = cont;
+    FirstUpdate = false;
     BaseColor = video::SColorf(1.0, 1.0, 1.0);
     Transform = 0;
 }

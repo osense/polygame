@@ -8,6 +8,7 @@ using namespace irr;
 class ShaderCBFader : public video::IShaderConstantSetCallBack
 {
     public:
+        ShaderCBFader();
 
         void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 

@@ -1,5 +1,12 @@
 #include "ShaderCBFader.h"
 
+ShaderCBFader::ShaderCBFader()
+    :FirstUpdate(false),
+    Alpha(0)
+{
+
+}
+
 void ShaderCBFader::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
 {
     if(!FirstUpdate)
