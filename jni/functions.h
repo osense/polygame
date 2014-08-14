@@ -252,12 +252,14 @@ inline Json::Value readJson(SContext* cont, core::stringc path)
 
     char* buff = new char[file->getSize()];
     file->read(buff, file->getSize());
+    buff[file->getSize()-1] = '\0';
     file->drop();
     std::string jsonStr(buff);
 
     Json::Reader reader;
     reader.parse(jsonStr, root);
 
+    delete[] buff;
     return root;
 }
 
