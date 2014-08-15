@@ -58,9 +58,19 @@ void ObjectPlayer::onMessage(SMessage msg)
             Speed = MinSpeed;
 
         if (Rising)
+        {
+            Energy -= msg.Update.fDelta;
+            if (Energy <= 0)
+                Rising = false;
             TargetRot.X = -(MaxRise - FloorAngle);
+        }
         else
-            TargetRot.X =  FloorAngle + (Camera->getPosition().Y - (FloorHeight + Height)) * (MaxRise + FloorAngle);
+        {
+            Energy += msg.Update.fDelta;
+            if (Energy > MaxEnergy)
+                Energy = MaxEnergy;
+            TargetRot.X =  FloorAngle + (Camera->getPosition().Y - (FloorHeight + Height)) * (MaxRise - FloorAngle);
+        }
 
         core::vector3df rotDiff = TargetRot - Camera->getRotation();
         Camera->setRotation(Camera->getRotation() + rotDiff * RotSpeed * msg.Update.fDelta);
@@ -124,10 +134,11 @@ void ObjectPlayer::onMessage(SMessage msg)
     {
         Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
 
-        Camera->setTarget(Camera->getPosition() + core::vector3df(0, 0, 0.001));
+        core::vector3df camPos = Camera->getPosition();
+        Camera->setTarget(camPos + core::vector3df(0, 0, 0.001));
         Camera->addAnimator(Context->Device->getSceneManager()->createFlyStraightAnimator(Camera->getPosition(),
-                                                                                        Camera->getPosition() + core::vector3df(0, 0.5, -0.75),
-                                                                                        400));
+                                                                                        Camera->getPosition() + core::vector3df(0, 0.3, -1),
+                                                                                        600));
     }
     else if (msg.Type == EMT_SERIALIZE)
     {
@@ -186,6 +197,16 @@ f32 ObjectPlayer::getHeight() const
 f32 ObjectPlayer::getDT() const
 {
     return Camera->getPosition().Z;
+}
+
+f32 ObjectPlayer::getEnergy() const
+{
+    return Energy;
+}
+
+f32 ObjectPlayer::getMaxEnergy() const
+{
+    return MaxEnergy;
 }
 
 scene::ICameraSceneNode* ObjectPlayer::getCamera() const

@@ -22,6 +22,8 @@ public:
     core::vector3df getTargetDirection() const;
     f32 getHeight() const;
     f32 getDT() const;
+    f32 getEnergy() const;
+    f32 getMaxEnergy() const;
     scene::ICameraSceneNode* getCamera() const;
 
 private:
@@ -34,7 +36,7 @@ private:
     const f32 MinSpeed = 1;
     const f32 MaxSpeed = 5;
     const f32 MaxRise = 20;
-    const f32 DefaultMaxEnergy = 5;
+    const f32 DefaultMaxEnergy = 3;
     const f32 DefaultMaxAbsRotY = 40;
     const f32 AccCutoff = 3.0;
     static const u32 AccSamplesSize = 3;
