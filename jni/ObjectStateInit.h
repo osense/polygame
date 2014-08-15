@@ -17,6 +17,7 @@
 #include "ShaderCBFader.h"
 #include "ShaderCBSky.h"
 
+#include "GeometryGenerator.h"
 #include "ObjectItemCube.h"
 
 

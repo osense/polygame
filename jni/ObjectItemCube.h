@@ -22,16 +22,21 @@ class ObjectItemCube : public ObjectItem
 
         scene::IMesh* getCubeMesh();
 
+        static constexpr f32 getCubeSize()
+        {
+            return CubeSize;
+        }
+
     private:
         scene::ISceneNode* Node;
         f32 EffectCounter;
 
-        const bool Filled = false;
-        const f32 CubeSize = 0.25;
-        const f32 RotSpeed = 0.025;
-        const f32 DestroyDist = 2;
-        const f32 TimeActive = 15;
-        const f32 TimeFadein = 1.5;
+        static constexpr bool Filled = false;
+        static constexpr f32 CubeSize = 0.25;
+        static constexpr f32 RotSpeed = 0.025;
+        static constexpr f32 DestroyDist = 2;
+        static constexpr f32 TimeActive = 15;
+        static constexpr f32 TimeFadein = 1.5;
 };
 
 #endif // OBJECTITEMCUBE_H

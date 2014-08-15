@@ -9,7 +9,7 @@ ObjectItemCube::ObjectItemCube(SContext* cont, core::vector3df pos) : ObjectItem
     Context->ObjManager->getObjectFromName("ObjectPlayer")->registerObserver(this);
 
     scene::ISceneManager* smgr = Context->Device->getSceneManager();
-    Node = smgr->addMeshSceneNode(getCubeMesh());
+    Node = smgr->addMeshSceneNode(Context->Device->getSceneManager()->getMesh("cube-mesh"));
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->ItemCube);
 

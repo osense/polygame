@@ -8,7 +8,6 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
 
-    // we'll need to parse saved settings here
     Context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
 
@@ -150,6 +149,11 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_MESHES)
         {
+            GeometryGenerator geomGen;
+            scene::IAnimatedMesh* mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize()));
+            Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", mesh);
+            mesh->drop();
+
             LoadingState = EILS_TEXTURES;
         }
 
