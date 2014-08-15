@@ -11,8 +11,16 @@
 
 using namespace irr;
 
+enum E_OPTIONS_STATE
+{
+    EOS_GFX,
+    EOS_CONTROLS
+};
+
 enum E_OPTIONS_ID
 {
+    EOI_GFX,
+    EOI_CONTROLS,
     EOI_BACK,
     EOI_GLOW_OFF,
     EOI_GLOW_LOW,
@@ -33,16 +41,20 @@ class ObjectStateOptions : public Object
 
     private:
         void create_gui();
+        void create_gfx();
+        void create_controls();
         void serialize();
         void deserialize();
 
-        gui::IGUIWindow* Window;
+        E_OPTIONS_STATE State;
+        gui::IGUIWindow* MainWindow, *PaneWindow;
         scene::ICameraSceneNode* Camera;
 
-        static const u32 LineSpacing = 75;
-        video::ITexture* LineSegment;
+        video::ITexture* HLineSegment, *VLineSegment;
         core::array<core::position2d< s32 > > LinePositions;
         core::array<core::rect< s32 > > LineRects;
+        core::array<core::position2d< s32 > > GfxLinePositions;
+        core::array<core::rect< s32 > > GfxLineRects;
 
 
 };

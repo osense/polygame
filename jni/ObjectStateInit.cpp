@@ -31,6 +31,8 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
     TextureNames.push_back("textures/noise.png");
     TextureNames.push_back("textures/line_v.png");
+    TextureNames.push_back("textures/line_h.png");
+    TextureNames.push_back("textures/line_v_bright.png");
 
     debugLog("LOADING...");
 }

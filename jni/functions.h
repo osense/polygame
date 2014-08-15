@@ -109,14 +109,16 @@ inline gui::IGUIStaticText* addText(position2d<s32> pos, dimension2d<s32> size, 
     return staticText;
 }
 
-inline gui::IGUIWindow* addOverlayWindow(SContext* cont)
+inline gui::IGUIWindow* addOverlayWindow(SContext* cont, f32 xVolume = 1, f32 yVolume = 1)
 {
     gui::IGUIEnvironment* gui = cont->Device->getGUIEnvironment();
     position2d<s32> screenSize;
     screenSize.X = cont->Device->getVideoDriver()->getScreenSize().Width;
     screenSize.Y = cont->Device->getVideoDriver()->getScreenSize().Height;
+    position2d<s32> startPos(screenSize.X - screenSize.X*xVolume, screenSize.Y - screenSize.Y*yVolume);
+    position2d<s32> endPos(screenSize.X*xVolume, screenSize.Y*yVolume);
 
-    gui::IGUIWindow* wnd = gui->addWindow(rect<s32>(position2d<s32>(0, 0), screenSize));
+    gui::IGUIWindow* wnd = gui->addWindow(rect<s32>(startPos, endPos));
     wnd->setDraggable(false);
     wnd->setDrawBackground(false);
     wnd->getCloseButton()->remove();
