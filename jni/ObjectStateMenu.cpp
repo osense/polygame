@@ -14,7 +14,14 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     else
         debugLog("FATAL ERROR: no ObjectEventReceiver found");
 
-    Context->Renderer->setForceFXAAOff(true);
+
+    Camera = Context->Device->getSceneManager()->addCameraSceneNode();
+    Camera->setFarValue(20);
+    //Camera->setProjectionMatrix(core::matrix4().buildProjectionMatrixPerspectiveLH(16, 9, 0.1, 10));
+    new ObjectSky(Context);
+    new ObjectCinematicCubes(Context);
+
+    //Context->Renderer->setForceFXAAOff(true);
     Context->Renderer->getFader()->setIncludeGUI(true);
     Context->Renderer->getFader()->startFadeIn();
 
@@ -30,6 +37,9 @@ ObjectStateMenu::~ObjectStateMenu()
     Object* eventRec = Context->ObjManager->getObjectFromName("ObjectEventReceiver");
     if (eventRec)
         eventRec->unregisterObserver(this);
+
+    Camera->remove();
+    Window->remove();
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -52,18 +62,16 @@ void ObjectStateMenu::onMessage(SMessage msg)
         {
         case EGI_CONTINUE:
             debugLog("launching game from save...");
-            Window->remove();
             Context->State = new ObjectStateGame(Context, true);
             delete this;
             break;
         case EGI_NEWGAME:
             debugLog("launching game...");
-            Window->remove();
+            Context->ObjManager->clear();
             Context->State = new ObjectStateGame(Context);
             delete this;
             break;
         case EGI_OPTIONS:
-            Window->remove();
             Context->State = new ObjectStateOptions(Context);
             delete this;
             break;

@@ -150,9 +150,14 @@ void ObjectStateInit::onMessage(SMessage msg)
         else if (LoadingState == EILS_MESHES)
         {
             GeometryGenerator geomGen;
-            scene::IAnimatedMesh* mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize()));
-            Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", mesh);
-            mesh->drop();
+
+            scene::IAnimatedMesh* cube_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize()));
+            Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", cube_mesh);
+            cube_mesh->drop();
+
+            scene::IAnimatedMesh* cube_mesh_filled = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize(), true));
+            Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh-filled", cube_mesh_filled);
+            cube_mesh_filled->drop();
 
             LoadingState = EILS_TEXTURES;
         }

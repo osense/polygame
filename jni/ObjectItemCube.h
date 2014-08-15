@@ -36,7 +36,7 @@ class ObjectItemCube : public ObjectItem
         static constexpr f32 RotSpeed = 0.025;
         static constexpr f32 DestroyDist = 2;
         static constexpr f32 TimeActive = 15;
-        static constexpr f32 TimeFadein = 1.5;
+        static constexpr f32 TimeFadein = 0.75;
 };
 
 #endif // OBJECTITEMCUBE_H

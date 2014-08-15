@@ -10,6 +10,8 @@
 #include "ObjectStateGame.h"
 #include "ObjectStateOptions.h"
 #include "EffectRenderer.h"
+#include "ObjectSky.h"
+#include "ObjectCinematicCubes.h"
 #include "functions.h"
 
 enum E_GUI_ID
@@ -38,6 +40,7 @@ class ObjectStateMenu : public Object
         void create_menu();
         void create_options();
 
+        scene::ICameraSceneNode* Camera;
         gui::IGUIWindow* Window;
 };
 
