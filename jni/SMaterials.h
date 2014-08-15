@@ -7,7 +7,7 @@ using namespace irr;
 
 class ShaderCBGrid;
 class ShaderCBGridBack;
-class ShaderCBCube;
+class ShaderCBSolid;
 class ShaderCBFader;
 
 struct SMaterials
@@ -20,8 +20,8 @@ struct SMaterials
     video::E_MATERIAL_TYPE GridBack;
     ShaderCBGridBack* GridBackCB;
 
-    video::E_MATERIAL_TYPE ItemCube;
-    ShaderCBCube* CubeCB;
+    video::E_MATERIAL_TYPE Solid;
+    ShaderCBSolid* SolidCB;
 
     video::E_MATERIAL_TYPE Fader;
     ShaderCBFader* FaderCB;

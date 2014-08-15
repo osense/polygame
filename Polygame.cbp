@@ -57,6 +57,8 @@
 		<Unit filename="jni/GridGenerator.h" />
 		<Unit filename="jni/Object.cpp" />
 		<Unit filename="jni/Object.h" />
+		<Unit filename="jni/ObjectCinematicCubes.cpp" />
+		<Unit filename="jni/ObjectCinematicCubes.h" />
 		<Unit filename="jni/ObjectDebugInfo.cpp" />
 		<Unit filename="jni/ObjectDebugInfo.h" />
 		<Unit filename="jni/ObjectEventReceiver.cpp" />
@@ -93,8 +95,6 @@
 		<Unit filename="jni/SMaterials.h" />
 		<Unit filename="jni/SMessage.h" />
 		<Unit filename="jni/SSettings.h" />
-		<Unit filename="jni/ShaderCBCube.cpp" />
-		<Unit filename="jni/ShaderCBCube.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
 		<Unit filename="jni/ShaderCBFader.cpp" />
@@ -105,6 +105,8 @@
 		<Unit filename="jni/ShaderCBGridBack.h" />
 		<Unit filename="jni/ShaderCBSky.cpp" />
 		<Unit filename="jni/ShaderCBSky.h" />
+		<Unit filename="jni/ShaderCBSolid.cpp" />
+		<Unit filename="jni/ShaderCBSolid.h" />
 		<Unit filename="jni/circular_buffer.h" />
 		<Unit filename="jni/functions.h" />
 		<Unit filename="jni/json/assertions.h" />

@@ -7,10 +7,6 @@
 #include "EffectFader.h"
 #include "SMaterials.h"
 
-#ifdef _IRR_ANDROID_PLATFORM_
-#include <android_native_app_glue.h>
-#endif // _IRR_ANDROID_PLATFORM_
-
 
 using namespace irr;
 
@@ -38,7 +34,7 @@ public:
 
     void setForceFXAAOff(bool force);
 
-    core::dimension2du getScreenSize() const;
+    //core::dimension2du getScreenSize() const;
 
     EffectFader* getFader() const;
 
@@ -47,7 +43,6 @@ public:
 private:
     SContext* Context;
     bool Active;
-    core::dimension2du ScreenSize;
     bool GUIHasEffects;
 
     scene::ISceneManager* Smgr;

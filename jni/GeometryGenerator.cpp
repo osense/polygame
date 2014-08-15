@@ -148,7 +148,7 @@ scene::IMesh* GeometryGenerator::createPyramidMesh(f32 size, bool filled) const
     static_cast<scene::SAnimatedMesh*>(mesh)->addMesh(tmpMesh);
     tmpMesh->drop();
 
-    video::SColor white(255, 0, 255, 0);
+    video::SColor white(255, 255, 255, 255);
     core::vector2df null2d(0, 0);
     f32 cs = size;
     f32 height = sqrt(2 * cs * cs);

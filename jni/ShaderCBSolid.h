@@ -7,15 +7,15 @@
 using namespace irr;
 
 
-class ShaderCBCube : public video::IShaderConstantSetCallBack
+class ShaderCBSolid : public video::IShaderConstantSetCallBack
 {
     public:
 
-        ShaderCBCube(SContext* cont);
+        ShaderCBSolid(SContext* cont);
 
         void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 
-        void setBaseColor(video::SColorf col);
+        void OnSetMaterial(const video::SMaterial &material);
 
         void setTransform(f32 t);
 
@@ -25,12 +25,14 @@ class ShaderCBCube : public video::IShaderConstantSetCallBack
         SContext* Context;
         bool FirstUpdate;
 
-        video::SColorf BaseColor;
+        video::SColorf Color;
+        f32 ThicknessBias;
         f32 Transform;
 
         s32 CamFarID;
         s32 WorldViewProjMatID, WorldViewMatID;
-        s32 BaseColorID;
+        s32 ColorID;
+        s32 ThicknessBiasID;
         s32 TransformID;
 };
 

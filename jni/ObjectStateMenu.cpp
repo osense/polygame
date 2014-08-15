@@ -18,8 +18,10 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     Camera = Context->Device->getSceneManager()->addCameraSceneNode();
     Camera->setFarValue(20);
     //Camera->setProjectionMatrix(core::matrix4().buildProjectionMatrixPerspectiveLH(16, 9, 0.1, 10));
-    new ObjectSky(Context);
-    new ObjectCinematicCubes(Context);
+    if (!Context->ObjManager->getObjectFromName("ObjectSky"))
+        new ObjectSky(Context);
+    if (!Context->ObjManager->getObjectFromName("ObjectCinematicCubes"))
+        new ObjectCinematicCubes(Context);
 
     //Context->Renderer->setForceFXAAOff(true);
     Context->Renderer->getFader()->setIncludeGUI(true);

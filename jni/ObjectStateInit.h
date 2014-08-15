@@ -13,12 +13,13 @@
 #include "ShaderCBDepth.h"
 #include "ShaderCBGrid.h"
 #include "ShaderCBGridBack.h"
-#include "ShaderCBCube.h"
+#include "ShaderCBSolid.h"
 #include "ShaderCBFader.h"
 #include "ShaderCBSky.h"
 
 #include "GeometryGenerator.h"
 #include "ObjectItemCube.h"
+#include "ObjectItemPyramid.h"
 
 
 enum E_INIT_LOADING_STATE

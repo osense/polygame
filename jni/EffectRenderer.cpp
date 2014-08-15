@@ -11,14 +11,6 @@ EffectRenderer::EffectRenderer(SContext* cont) :
     Context = cont;
     Smgr = Context->Device->getSceneManager();
 
-#ifdef _IRR_ANDROID_PLATFORM_
-    ANativeWindow* nativeWindow = static_cast<ANativeWindow*>(Context->Device->getVideoDriver()->getExposedVideoData().OGLESAndroid.Window);
-    ScreenSize.Width = ANativeWindow_getWidth(Context->App->window);
-    ScreenSize.Height = ANativeWindow_getHeight(Context->App->window);
-#else
-    ScreenSize = Context->Device->getVideoDriver()->getScreenSize();
-#endif
-
     GUIHasEffects = true;
 
     Fader = new EffectFader(Context);
@@ -89,7 +81,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         PP = createIrrPP(Context->Device, Context->Settings->EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
-        res = ScreenSize;
+        //res = Context->ScreenResolution;
 
         core::stringc resText;
 
@@ -108,7 +100,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         resText += res.Height / (u32)Context->Settings->EffectQuality;
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
 
-        GUIHasEffects = (ScreenSize == res);
+        GUIHasEffects = (Context->ScreenResolution == res);
 
         PP->setQuality(res / (u32)Context->Settings->EffectQuality);
     }
@@ -199,7 +191,7 @@ void EffectRenderer::setForceFXAAOff(bool force)
     if (ForceFXAAOff && FXAA)
     {
         FXAA->setActive(false);
-        GUIHasEffects = ScreenSize == Scene->getSize();
+        GUIHasEffects = Context->ScreenResolution == Scene->getSize();
         if (Glow)
         {
             Glow->getEffectFromIndex(2)->removeTextureFromShader(0);
@@ -221,14 +213,14 @@ void EffectRenderer::setForceFXAAOff(bool force)
     }
 }
 
-core::dimension2du EffectRenderer::getScreenSize() const
+/*core::dimension2du EffectRenderer::getScreenSize() const
 {
     if (isActive() && GUIHasEffects)
         return Scene->getSize();
     else
         return ScreenSize;
 
-}
+}*/
 
 EffectFader* EffectRenderer::getFader() const
 {

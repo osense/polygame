@@ -87,6 +87,7 @@ void ObjectStateOptions::onMessage(SMessage msg)
             break;
 
         case EOI_BACK:
+            Context->Renderer->getFader()->startFadeOut(1, 0, 1);
             writeSettings(Context);
             Window->remove();
             Context->State = new ObjectStateInit(Context);

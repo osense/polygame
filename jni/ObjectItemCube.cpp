@@ -11,7 +11,8 @@ ObjectItemCube::ObjectItemCube(SContext* cont, core::vector3df pos) : ObjectItem
     scene::ISceneManager* smgr = Context->Device->getSceneManager();
     Node = smgr->addMeshSceneNode(Context->Device->getSceneManager()->getMesh("cube-mesh"));
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-    Node->setMaterialType(Context->Mtls->ItemCube);
+    Node->setMaterialType(Context->Mtls->Solid);
+    Node->getMaterial(0).Thickness = 1.05;
 
     Node->setPosition(pos);
 }
@@ -38,7 +39,7 @@ void ObjectItemCube::onMessage(SMessage msg)
     {
         if (State == EIS_ITEM)
         {
-            Node->setRotation(Node->getRotation() + core::vector3df(RotSpeed) * msg.Update.Delta);
+            Node->setRotation(Node->getRotation() + core::vector3df(RotSpeed) * msg.Update.fDelta);
         }
         else if (State == EIS_EFFECT_FADEIN)
         {
@@ -64,6 +65,7 @@ void ObjectItemCube::onMessage(SMessage msg)
 
             if (EffectCounter <= 0)
             {
+                Context->Mtls->GridBackCB->setAlpha(1);
                 static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"))->setCollision(true);
                 delete this;
             }
@@ -79,7 +81,15 @@ void ObjectItemCube::onMessage(SMessage msg)
         }
         if ((Node->getPosition() - core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z)).getLength() <= CubeSize*1.5)
         {
-            static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"))->setCollision(false);
+            ObjectGrid* grid = static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"));
+
+            if (!grid->getCollision())
+            {
+                delete this;
+                return;
+            }
+
+            grid->setCollision(false);
             EffectCounter = TimeActive;
             State = EIS_EFFECT_FADEIN;
 
@@ -87,18 +97,4 @@ void ObjectItemCube::onMessage(SMessage msg)
             Context->ObjManager->getObjectFromName("ObjectPlayer")->unregisterObserver(this);
         }
     }
-}
-
-scene::IMesh* ObjectItemCube::getCubeMesh()
-{
-    scene::IAnimatedMesh* mesh = Context->Device->getSceneManager()->getMesh("cube-mesh");
-    if (!mesh)
-    {
-        GeometryGenerator geomGen;
-        mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(CubeSize));
-        Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", mesh);
-        mesh->drop();
-    }
-
-    return mesh;
 }

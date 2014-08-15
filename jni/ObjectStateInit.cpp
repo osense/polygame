@@ -10,6 +10,14 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
     Context->Device->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
+#ifdef _IRR_ANDROID_PLATFORM_
+    ANativeWindow* nativeWindow = static_cast<ANativeWindow*>(Context->Device->getVideoDriver()->getExposedVideoData().OGLESAndroid.Window);
+    Context->ScreenResolution.Width = ANativeWindow_getWidth(Context->App->window);
+    Context->ScreenResolution.Height = ANativeWindow_getHeight(Context->App->window);
+#else
+    Context->ScreenResolution = Context->Device->getVideoDriver()->getScreenSize();
+#endif
+
 
     if (showLoading)
     {
@@ -47,7 +55,7 @@ void ObjectStateInit::onMessage(SMessage msg)
         else if (LoadingState == EILS_SETTINGS)
         {
             // setting determined on the fly
-            core::dimension2du screenSize = Context->Renderer->getScreenSize();
+            core::dimension2du screenSize = Context->ScreenResolution; //Context->Renderer->getScreenSize();
             f32 gScaleX = screenSize.Width / float(GUI_TARGET_X);
             f32 gScaleY = screenSize.Height / float(GUI_TARGET_Y);
             Context->GUIScale = core::vector2df(gScaleX, gScaleY);
@@ -126,9 +134,9 @@ void ObjectStateInit::onMessage(SMessage msg)
                 Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
                                                                                                             Context->Mtls->GridBackCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
-                Context->Mtls->CubeCB = new ShaderCBCube(Context);
-                Context->Mtls->ItemCube = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/cube.vert", "shaders/cube.frag",
-                                                                                                            Context->Mtls->CubeCB);
+                Context->Mtls->SolidCB = new ShaderCBSolid(Context);
+                Context->Mtls->Solid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/solid.vert", "shaders/solid.frag",
+                                                                                                            Context->Mtls->SolidCB);
 
                 Context->Mtls->FaderCB = new ShaderCBFader();
                 Context->Mtls->Fader = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
@@ -158,6 +166,10 @@ void ObjectStateInit::onMessage(SMessage msg)
             scene::IAnimatedMesh* cube_mesh_filled = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize(), true));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh-filled", cube_mesh_filled);
             cube_mesh_filled->drop();
+
+            scene::IAnimatedMesh* pyramid_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createPyramidMesh(ObjectItemPyramid::getPyramidSize()));
+            Context->Device->getSceneManager()->getMeshCache()->addMesh("pyramid-mesh", pyramid_mesh);
+            pyramid_mesh->drop();
 
             LoadingState = EILS_TEXTURES;
         }

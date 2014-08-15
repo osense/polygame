@@ -20,8 +20,6 @@ class ObjectItemCube : public ObjectItem
 
         virtual void onMessage(SMessage msg);
 
-        scene::IMesh* getCubeMesh();
-
         static constexpr f32 getCubeSize()
         {
             return CubeSize;
@@ -33,7 +31,7 @@ class ObjectItemCube : public ObjectItem
 
         static constexpr bool Filled = false;
         static constexpr f32 CubeSize = 0.25;
-        static constexpr f32 RotSpeed = 0.025;
+        static constexpr f32 RotSpeed = 40;
         static constexpr f32 DestroyDist = 2;
         static constexpr f32 TimeActive = 15;
         static constexpr f32 TimeFadein = 0.75;

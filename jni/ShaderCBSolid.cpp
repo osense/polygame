@@ -1,21 +1,22 @@
-#include "ShaderCBCube.h"
+#include "ShaderCBSolid.h"
 
-ShaderCBCube::ShaderCBCube(SContext* cont)
+ShaderCBSolid::ShaderCBSolid(SContext* cont)
 {
     Context = cont;
     FirstUpdate = false;
-    BaseColor = video::SColorf(1.0, 1.0, 1.0);
+    Color = video::SColorf(1.0, 1.0, 1.0);
     Transform = 0;
 }
 
-void ShaderCBCube::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
+void ShaderCBSolid::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
 {
     if(!FirstUpdate)
     {
         CamFarID = services->getVertexShaderConstantID("CamFar");
         WorldViewProjMatID = services->getVertexShaderConstantID("WorldViewProjMat");
         WorldViewMatID = services->getVertexShaderConstantID("WorldViewMat");
-        BaseColorID = services->getVertexShaderConstantID("BaseColor");
+        ColorID = services->getVertexShaderConstantID("Color");
+        ThicknessBiasID = services->getVertexShaderConstantID("ThicknessBias");
         TransformID = services->getVertexShaderConstantID("Transform");
 
         FirstUpdate = true;
@@ -33,22 +34,25 @@ void ShaderCBCube::OnSetConstants(video::IMaterialRendererServices* services, s3
     f32 farDist = Context->Device->getSceneManager()->getActiveCamera()->getFarValue();
     services->setVertexShaderConstant(CamFarID, &farDist, 1);
 
-    services->setVertexShaderConstant(BaseColorID, reinterpret_cast<f32*>(&BaseColor), 3);
+    services->setVertexShaderConstant(ColorID, reinterpret_cast<f32*>(&Color), 3);
+
+    services->setVertexShaderConstant(ThicknessBiasID, &ThicknessBias, 1);
 
     services->setVertexShaderConstant(TransformID, &Transform, 1);
 }
 
-void ShaderCBCube::setBaseColor(video::SColorf col)
+void ShaderCBSolid::OnSetMaterial(const video::SMaterial &material)
 {
-    BaseColor = col;
+    Color = video::SColorf(material.AmbientColor);
+    ThicknessBias = material.Thickness - 1;
 }
 
-void ShaderCBCube::setTransform(f32 t)
+void ShaderCBSolid::setTransform(f32 t)
 {
     Transform = t;
 }
 
-f32 ShaderCBCube::getTransform() const
+f32 ShaderCBSolid::getTransform() const
 {
     return Transform;
 }

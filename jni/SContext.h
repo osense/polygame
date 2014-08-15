@@ -2,7 +2,7 @@
 #define SContext_H_INCLUDED
 
 
-#define DEBUG_INFO
+//#define DEBUG_INFO
 //#define DEBUG_PLAYER
 #define DEBUG_OBJS
 #define DEBUG_GRID
@@ -61,6 +61,7 @@ struct SContext
     SSettings* Settings;
     irr::f32 TimeScale;
     irr::core::vector2df GUIScale;
+    core::dimension2du ScreenResolution;
     E_SCREEN_SIZE ScreenSize;
 };
 

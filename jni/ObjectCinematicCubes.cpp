@@ -5,6 +5,7 @@ ObjectCinematicCubes::ObjectCinematicCubes(SContext* cont) : Object(cont)
     Name = "ObjectCinematicCubes";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
+    AspectRatio = Context->ScreenResolution.Width / f32(Context->ScreenResolution.Height);
     Parent = Context->Device->getSceneManager()->addEmptySceneNode();
 
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
@@ -26,14 +27,20 @@ void ObjectCinematicCubes::onMessage(SMessage msg)
         {
             scene::ISceneManager* smgr = Context->Device->getSceneManager();
             scene::IMeshSceneNode* cube = smgr->addMeshSceneNode(smgr->getMesh("cube-mesh-filled"), Parent);
+            cube->getMaterial(1).AmbientColor = video::SColor(255, 0, 0, 0);
             cube->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-            cube->setMaterialType(Context->Mtls->ItemCube);
+            cube->setMaterialType(Context->Mtls->Solid);
 
             f32 depth = (SpawnDepth - SpawnDepthRandomOffset) + (rand() % u32(SpawnDepthRandomOffset * 2 * 100)) / 100.0;
-            core::vector3df startP = getRandomPointOnCircle();
-            core::vector3df endP = getRandomPointOnCircle();
+            core::vector3df startP(0);
+            core::vector3df endP(0);
+            while ((endP - startP).getLength() < depth * AspectRatio * 0.5)
+            {
+               startP = getRandomPointOnCircle(depth * AspectRatio);
+               endP = getRandomPointOnCircle(depth * AspectRatio);
+            }
             startP.Z = endP.Z = depth;
-            scene::ISceneNodeAnimator* flyA = smgr->createFlyStraightAnimator(startP, endP, (TravelTime - TravelTimeRandomOffset) + rand() % (TravelTimeRandomOffset * 2));
+            scene::ISceneNodeAnimator* flyA = smgr->createFlyStraightAnimator(startP, endP, ((TravelTime - TravelTimeRandomOffset) + rand() % (TravelTimeRandomOffset * 2)) * (1 - 1/depth));
             cube->addAnimator(flyA);
             scene::ISceneNodeAnimator* rotA = smgr->createRotationAnimator(core::vector3df(((rand() % 100) / 100.0) * MaxRotationSpeed));
             cube->addAnimator(rotA);
@@ -66,11 +73,11 @@ bool ObjectCinematicCubes::isVisible() const
     return Parent->isVisible();
 }
 
-core::vector3df ObjectCinematicCubes::getRandomPointOnCircle()
+core::vector3df ObjectCinematicCubes::getRandomPointOnCircle(f32 cRadius)
 {
     u32 randN = rand() % 360;
     core::vector3df point(cos(randN), sin(randN), 0);
-    point.setLength(SpawnCircleRadius);
+    point.setLength(cRadius);
 
     return point;
 }

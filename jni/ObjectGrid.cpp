@@ -52,7 +52,8 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     backMesh->addMeshBuffer(BufferAppx);
     BufferAppx->drop();
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
-    BackNode->setMaterialType(Context->Mtls->GridBack);
+    BackNode->setMaterialType(Context->Mtls->Solid);
+    BackNode->getMaterial(0).AmbientColor = video::SColor(255, 0, 0, 0);
     //BackNode->setMaterialType(Context->Mtls->Grid);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     backMesh->drop();
@@ -114,6 +115,8 @@ void ObjectGrid::onMessage(SMessage msg)
             }
 
             regenerate();
+            Node->setPosition(Position);
+            BackNode->setPosition(Position);
             broadcastMessage(SMessage(this, EMT_GRID_REGENED));
 
 #ifdef DEBUG_GRID
@@ -188,6 +191,16 @@ void ObjectGrid::onMessage(SMessage msg)
 void ObjectGrid::setCollision(bool active)
 {
     CollisionActive = active;
+
+    if (CollisionActive)
+        BackNode->setMaterialType(Context->Mtls->Solid);
+    else
+        BackNode->setMaterialType(Context->Mtls->GridBack);
+}
+
+bool ObjectGrid::getCollision() const
+{
+    return CollisionActive;
 }
 
 core::vector3df ObjectGrid::getPosition() const
@@ -233,22 +246,10 @@ void ObjectGrid::regenerate()
     core::vector2df null2d(0);
     core::vector3df null3d(0);
 
-    core::vector3df center(NumPointsX/2.0, 0, 1);
-    Node->setPosition(Position);
-    BackNode->setPosition(Position);
-    center.Y = 0;
+    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
 
     core::vector3df pointVec(0, Points[0][0], 0);
-    pointVec -= center;
 
-    f32 thicknessCorrection = 0;
-    thicknessCorrection += LineThickness;
-    core::vector3df distModX(thicknessCorrection, 0, 0);
-    core::vector3df distModY(0, thicknessCorrection, 0);
-    core::vector3df distModZ(0, 0, thicknessCorrection);
-
-
-    // iterate the grid, spawning vertices and faces
     for (u32 z = 0; z < NumPointsZ; z++)
     {
         pointVec.Z = z - center.Z;
@@ -257,10 +258,6 @@ void ObjectGrid::regenerate()
         {
             pointVec.X = x - center.X;
             pointVec.Y = Points[z][x];
-
-            distModX.X = thicknessCorrection;
-            distModY.Y = thicknessCorrection;
-            distModZ.Z = thicknessCorrection;
 
             Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), black, null2d));
             Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), black, null2d));
@@ -316,6 +313,74 @@ void ObjectGrid::regenerate()
     BufferAppx->setDirty();
 }
 
+void ObjectGrid::addPoint(u32 z, u32 x, u32 insertAt)
+{
+    core::vector2df null2d(0);
+    video::SColor white(255, 255, 255, 255), black(255, 0, 0, 0);
+
+    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
+
+    core::vector3df pointVec(x - center.X, Points[z][x], z - center.Z);
+
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), black, null2d));
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), black, null2d));
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), black, null2d));
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), black, null2d));
+    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), black, null2d));
+
+    BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
+
+    if (x > 0)
+    {
+        const u32 vertC = insertAt;
+        //Y quad
+        Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
+        Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
+        //Z quad
+        Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
+        Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
+    }
+    if (z > 0)
+    {
+        const u32 vertC = insertAt;
+        const u32 prevZVertC = ((z - 1) * NumPointsX + x) * 6;
+        //X quad
+        Buffer->Indices.push_back(vertC-5); Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevZVertC+1);
+        Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevZVertC); Buffer->Indices.push_back(prevZVertC+1);
+        //Y quad
+        Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevZVertC+2);
+        Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevZVertC+3); Buffer->Indices.push_back(prevZVertC+2);
+    }
+    if (x > 0 && z > 0)
+    {
+        const u32 vertC = z * NumPointsX + x;
+        const u32 prevZVertC = vertC - NumPointsX;
+
+        if (Points[z][x] + Points[z-1][x-1] > Points[z-1][x] + Points[z][x-1])
+        {
+            BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevZVertC); BufferAppx->Indices.push_back(vertC-1);
+            BufferAppx->Indices.push_back(prevZVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(prevZVertC);
+        }
+        else
+        {
+            BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevZVertC); BufferAppx->Indices.push_back(prevZVertC-1);
+            BufferAppx->Indices.push_back(prevZVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(vertC);
+        }
+    }
+}
+
+void ObjectGrid::eraseLastRow()
+{
+    Buffer->Vertices.erase(0, NumPointsX * 6);
+    Buffer->Indices.erase(0, NumPointsX * 24);
+
+    for (u32 i = 0; i < Buffer->Indices.size(); i++)
+    {
+        Buffer->Indices[i] = Buffer->Indices[i] - NumPointsX * 24;
+    }
+}
+
 
 void ObjectGrid::addZ()
 {
@@ -323,18 +388,6 @@ void ObjectGrid::addZ()
     Generator.setPoints(Points[NumPointsZ-1]);
     memmove(Points, Points[1], sizeof(f32) * (NumPointsZ-1) * NumPointsX);
     memcpy(Points[NumPointsZ-1], Generator.generate(Position), sizeof(f32) * NumPointsX);
-
-    /*for (u32 x = 0; x < NumPointsX; x++)
-    {
-        Generator.addPoint(Points[NumPointsZ-1][x]);
-        memmove(Points[x], &Points[x][1], sizeof(f32) * (NumPointsZ-1));
-    }
-
-
-    Generator.generate(Position);
-
-    for (u32 x = 0; x < NumPointsX; x++)
-        Points[x][NumPointsZ-1] = Generator.getGenerated(x);*/
 
     Position += core::vector3df(0, 0, 1);
 }
