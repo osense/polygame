@@ -102,7 +102,7 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_CONTROLS:
             if (State != EOS_CONTROLS)
             {
-                deserialize();
+
                 create_controls();
             }
             else if (State == EOS_CONTROLS)
@@ -111,13 +111,14 @@ void ObjectStateOptions::onMessage(SMessage msg)
 
         case EOI_BACK:
             Context->Renderer->getFader()->startFadeOut(1, 0, 1);
-            deserialize();
             writeSettings(Context);
             MainWindow->remove();
             Context->State = new ObjectStateInit(Context);
             delete this;
             return;
         }
+
+        deserialize();
     }
 }
 
