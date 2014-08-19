@@ -78,7 +78,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
 
     if (!PP)
     {
-        PP = createIrrPP(Context->Device, Context->Settings->EffectQuality, "shaders/pp/");
+        PP = createIrrPP(Context->Device, Context->Sets->EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
         //res = Context->ScreenResolution;
@@ -95,14 +95,14 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         }
 
         resText = "";
-        resText += res.Width / (u32)Context->Settings->EffectQuality;
+        resText += res.Width / (u32)Context->Sets->EffectQuality;
         resText += "x";
-        resText += res.Height / (u32)Context->Settings->EffectQuality;
+        resText += res.Height / (u32)Context->Sets->EffectQuality;
         Context->Device->getLogger()->log("Effect RTT resolution is", resText.c_str(), ELL_DEBUG);
 
         GUIHasEffects = (Context->ScreenResolution == res);
 
-        PP->setQuality(res / (u32)Context->Settings->EffectQuality);
+        PP->setQuality(res / (u32)Context->Sets->EffectQuality);
     }
 
     switch (type)
@@ -126,12 +126,12 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         Glow->createEffect(video::EPE_ALBEDO);
         video::CPostProcessingEffect* add = 0;
 
-        if (Context->Settings->EffectQuality == video::EPQ_HALF)
+        if (Context->Sets->EffectQuality == video::EPQ_HALF)
         {
             Glow->createEffect(video::EPE_BLUR_V_HIGH);
             add = Glow->createEffect(video::EPE_BLUR_H_ADD_HIGH);
         }
-        else if (Context->Settings->EffectQuality == video::EPQ_QUARTER)
+        else if (Context->Sets->EffectQuality == video::EPQ_QUARTER)
         {
             Glow->createEffect(video::EPE_BLUR_V_MEDIUM);
             add = Glow->createEffect(video::EPE_BLUR_H_ADD_MEDIUM);
@@ -170,10 +170,10 @@ void EffectRenderer::loadPP(bool reload)
         Active = false;
     }
 
-    if (Context->Settings->Antialiasing)
+    if (Context->Sets->Antialiasing)
         init(EET_FXAA);
 
-    if (Context->Settings->Glow)
+    if (Context->Sets->Glow)
         init(EET_GLOW);
 
     setForceFXAAOff(ForceFXAAOff);

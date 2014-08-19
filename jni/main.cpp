@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
     cont->Renderer = new EffectRenderer(cont);
 
-    cont->Settings = 0;
+    cont->Sets = 0;
 
     cont->TimeScale = 1;
 

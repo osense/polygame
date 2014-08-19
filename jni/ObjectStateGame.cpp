@@ -117,12 +117,12 @@ void ObjectStateGame::saveGame()
         Context->ObjManager->broadcastMessage(msg);
     }
 
-    writeJson(Context, root, Context->SavegamePath);
+    writeJson(Context, root, Context->Sets->SavegamePath);
 }
 
 void ObjectStateGame::loadGame()
 {
-    Json::Value root = readJson(Context, Context->SavegamePath);
+    Json::Value root = readJson(Context, Context->Sets->SavegamePath);
     SMessage msg(this, EMT_DESERIALIZE);
     msg.SData.Root = &root;
     Context->ObjManager->broadcastMessage(msg);

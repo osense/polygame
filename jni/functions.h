@@ -4,7 +4,6 @@
 #include <irrlicht.h>
 #include "circular_buffer.h"
 #include "SContext.h"
-#include "SSettings.h"
 #include "json/json.h"
 
 using namespace irr;
@@ -263,41 +262,6 @@ inline Json::Value readJson(SContext* cont, core::stringc path)
 
     delete[] buff;
     return root;
-}
-
-inline void writeSettings(SContext* cont)
-{
-    Json::Value root;
-    root["magic_number"] = (u32)MAGIC_NUMBER;
-    root["effectQuality"] = (u32) cont->Settings->EffectQuality;
-    root["glow"] = cont->Settings->Glow;
-    root["antialiasing"] = cont->Settings->Antialiasing;
-
-    writeJson(cont, root, cont->Settings->FilePath);
-
-    cont->Device->getLogger()->log("Wrote settings", cont->Settings->FilePath.c_str());
-}
-
-inline void initDefaultSettings(SSettings* sett)
-{
-    sett->EffectQuality = video::EPQ_QUARTER;
-    sett->Glow = true;
-    sett->Antialiasing = false;
-}
-
-inline bool loadSettings(SContext* cont)
-{
-    Json::Value root = readJson(cont, cont->Settings->FilePath);
-
-    if (root.get("magic_number", 0).asUInt() != MAGIC_NUMBER)
-        return false;
-
-    cont->Settings->EffectQuality = (video::E_POSTPROCESSING_EFFECT_QUALITY)root.get("effectQuality", video::EPQ_QUARTER).asUInt();
-    cont->Settings->Glow = root.get("glow", false).asBool();
-    cont->Settings->Antialiasing = root.get("antialiasing", false).asBool();
-
-    cont->Device->getLogger()->log("Loaded settings", cont->Settings->FilePath.c_str());
-    return true;
 }
 
 inline void storeVector3df(const core::vector3df& vec, Json::Value& val, const core::stringc name)

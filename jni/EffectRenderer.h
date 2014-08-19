@@ -6,6 +6,7 @@
 #include <irrPP.h>
 #include "EffectFader.h"
 #include "SMaterials.h"
+#include "Settings.h"
 
 
 using namespace irr;

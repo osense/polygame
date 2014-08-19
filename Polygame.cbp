@@ -94,7 +94,8 @@
 		<Unit filename="jni/SContext.h" />
 		<Unit filename="jni/SMaterials.h" />
 		<Unit filename="jni/SMessage.h" />
-		<Unit filename="jni/SSettings.h" />
+		<Unit filename="jni/Settings.cpp" />
+		<Unit filename="jni/Settings.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
 		<Unit filename="jni/ShaderCBFader.cpp" />

@@ -29,7 +29,7 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
 
     std::thread ([&] ()
                 {
-                    if (readJson(Context, Context->SavegamePath)["can_continue"].asBool())
+                    if (readJson(Context, Context->Sets->SavegamePath)["can_continue"].asBool())
                         Window->getElementFromId(EGI_CONTINUE)->setEnabled(true);
                 }).detach();
 }

@@ -74,24 +74,18 @@ void ObjectStateInit::onMessage(SMessage msg)
             debugLog(core::stringc("Screen size is ") + core::stringc(Context->ScreenSize));
 
             // saved settings
-            Context->Settings = new SSettings;
-
 #ifdef _IRR_ANDROID_PLATFORM_
-            Context->Settings->FilePath = (core::stringc(Context->App->activity->internalDataPath) + "/") + SETTINGS_FILENAME;
-            Context->SavegamePath = (core::stringc(Context->App->activity->internalDataPath) + "/") + "savegame.json";
-            Context->SavegameInfoPath = (core::stringc(Context->App->activity->internalDataPath) + "/") + "savegame_info.json";
+            Context->StoragePath = core::stringc(Context->App->activity->internalDataPath) + "/";
 #else
-            Context->Settings->FilePath = SETTINGS_FILENAME;
-            Context->SavegamePath = "savegame.json";
-            Context->SavegameInfoPath = "savegame_info.json";
+            Context->StoragePath = core::stringc();
 #endif
 
+            Context->Sets = new Settings(Context, Context->StoragePath);
 
-            if (!loadSettings(Context))
+            if (!Context->Sets->read())
             {
                 debugLog("could not load saved settings, using default");
-                initDefaultSettings(Context->Settings);
-                writeSettings(Context);
+                Context->Sets->write();
             }
 
             LoadingState = EILS_FONTS;

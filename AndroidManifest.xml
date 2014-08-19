@@ -10,8 +10,7 @@
 		android:label="Polygame"
 		android:launchMode="singleTask"
 		android:configChanges="orientation|keyboardHidden|keyboard"
-		android:screenOrientation="landscape"
-		android:clearTaskOnLaunch="true">
+		android:screenOrientation="landscape">
 		<meta-data android:name="android.app.lib_name" android:value="Polygame" />
 		<intent-filter>
                 	<action android:name="android.intent.action.MAIN" />
