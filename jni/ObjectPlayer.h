@@ -32,19 +32,22 @@ private:
     scene::ICameraSceneNode* DebugCamera;
 #endif // DEBUG_PLAYER
 
-    const f32 Acceleration = 0.1;
-    const f32 MinSpeed = 1;
-    const f32 MaxSpeed = 5;
-    const f32 MaxRise = 20;
-    const f32 DefaultMaxEnergy = 3;
-    const f32 DefaultMaxAbsRotY = 40;
-    const f32 AccCutoff = 3.0;
-    static const u32 AccSamplesSize = 3;
+    static constexpr f32 Acceleration = 0.05;
+    static constexpr f32 MinSpeed = 1;
+    static constexpr f32 MaxSpeed = 5;
+    static constexpr f32 MaxRise = 20;
+    static constexpr f32 DefaultMaxEnergy = 3;
+    static constexpr f32 DefaultMaxAbsRotY = 40;
+    static constexpr f32 EnergyRegenSpeed = 0.25;
+    static constexpr f32 EnergyRegenCooldown = 1.5;
+    static constexpr f32 AccCutoff = 3.0;
+    static constexpr u32 AccSamplesSize = 3;
 
     f32 Height = 0.4;
     f32 Speed = MinSpeed;
     f32 Energy = DefaultMaxEnergy;
     f32 MaxEnergy = DefaultMaxEnergy;
+    f32 TimeTillRegen;
     f32 FloorHeight = 0, FloorAngle = 0;
     core::vector3df TargetRot = core::vector3df(0);
     core::vector3df RotSpeed = core::vector3df(5, 5, 0);

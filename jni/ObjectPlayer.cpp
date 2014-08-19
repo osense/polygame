@@ -66,9 +66,17 @@ void ObjectPlayer::onMessage(SMessage msg)
         }
         else
         {
-            Energy += msg.Update.fDelta;
-            if (Energy > MaxEnergy)
-                Energy = MaxEnergy;
+            if (TimeTillRegen > 0)
+            {
+                TimeTillRegen -= msg.Update.fDelta;
+            }
+            else
+            {
+                Energy += msg.Update.fDelta * EnergyRegenSpeed;
+                if (Energy > MaxEnergy)
+                    Energy = MaxEnergy;
+            }
+
             TargetRot.X =  FloorAngle + (Camera->getPosition().Y - (FloorHeight + Height)) * (MaxRise - FloorAngle);
         }
 
@@ -105,7 +113,10 @@ void ObjectPlayer::onMessage(SMessage msg)
         if (msg.Input.Type == ETIE_PRESSED_DOWN)
             Rising = true;
         else if (msg.Input.Type == ETIE_LEFT_UP)
+        {
             Rising = false;
+            TimeTillRegen = EnergyRegenCooldown;
+        }
 
 #ifdef DEBUG_GLES
         else if (msg.Input.Type == ETIE_MOVED)
