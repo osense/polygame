@@ -14,13 +14,15 @@ using namespace irr;
 enum E_OPTIONS_STATE
 {
     EOS_GFX,
-    EOS_CONTROLS
+    EOS_CONTROLS,
+    EOS_SEED
 };
 
 enum E_OPTIONS_ID
 {
     EOI_GFX,
     EOI_CONTROLS,
+    EOI_SEED,
     EOI_BACK,
     EOI_GLOW_OFF,
     EOI_GLOW_LOW,
@@ -43,6 +45,8 @@ class ObjectStateOptions : public Object
         void create_gui();
         void create_gfx();
         void create_controls();
+        void create_seed();
+
         void serialize();
         void deserialize();
 

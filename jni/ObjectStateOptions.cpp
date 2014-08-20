@@ -109,6 +109,16 @@ void ObjectStateOptions::onMessage(SMessage msg)
                 static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(true);
             break;
 
+        case EOI_SEED:
+            if (State != EOS_SEED)
+            {
+
+                create_seed();
+            }
+            else if (State == EOS_SEED)
+                static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(true);
+            break;
+
         case EOI_BACK:
             Context->Renderer->getFader()->startFadeOut(1, 0, 1);
             Context->Sets->write();
@@ -127,9 +137,10 @@ void ObjectStateOptions::create_gui()
 {
     MainWindow = addOverlayWindow(Context);
 
-    addButton(core::position2d<s32>(40, 25), core::dimension2d<s32>(150, 40), L"GFX", Context, EOI_GFX, MainWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(150, 25), core::dimension2d<s32>(270, 40), L"CONTROLS", Context, EOI_CONTROLS, MainWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(30, 420), core::dimension2d<s32>(128, 32), L"BACK", Context, EOI_BACK, MainWindow);
+    addButton(core::position2d<s32>(720, 27), core::dimension2d<s32>(100, 40), L"GFX", Context, EOI_GFX, MainWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(470, 27), core::dimension2d<s32>(270, 40), L"CONTROLS", Context, EOI_CONTROLS, MainWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(370, 27), core::dimension2d<s32>(120, 40), L"SEED", Context, EOI_SEED, MainWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(30, 27), core::dimension2d<s32>(128, 32), L"BACK", Context, EOI_BACK, MainWindow);
 
     // prepare stuff for the horizontal line
     HLineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_h.png");
@@ -148,6 +159,7 @@ void ObjectStateOptions::create_gfx()
     State = EOS_GFX;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(true);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(false);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 1, 0.80);
@@ -181,11 +193,25 @@ void ObjectStateOptions::create_controls()
     State = EOS_CONTROLS;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(false);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(true);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 1, 0.80);
     MainWindow->addChild(PaneWindow);
 }
+
+void ObjectStateOptions::create_seed()
+{
+    State = EOS_SEED;
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(false);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(false);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(true);
+    if (PaneWindow)
+        PaneWindow->remove();
+    PaneWindow = addOverlayWindow(Context, 1, 0.80);
+    MainWindow->addChild(PaneWindow);
+}
+
 void ObjectStateOptions::serialize()
 {
     if (State == EOS_GFX)
