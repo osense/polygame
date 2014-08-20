@@ -2,6 +2,10 @@
 #define GAMEOBJECTUPDATER_H
 
 #include <irrlicht.h>
+#ifdef _IRR_ANDROID_PLATFORM_
+#include <android_native_app_glue.h>
+#endif // _IRR_ANDROID_PLATFORM_
+
 #include "Object.h"
 #include "ObjectManager.h"
 #include "SContext.h"

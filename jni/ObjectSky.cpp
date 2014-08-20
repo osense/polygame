@@ -1,7 +1,7 @@
 #include "ObjectSky.h"
 
 ObjectSky::ObjectSky(SContext* cont) : Object(cont),
-    RotationSpeed(0.0005)
+    CurrentRotSpeed(RotSpeed)
 {
     Name = "ObjectSky";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -33,14 +33,15 @@ void ObjectSky::onMessage(SMessage msg)
     if (msg.Type == EMT_OBJ_POS)
     {
         SkyNode->setPosition(core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z));
+        CurrentRotSpeed = RotSpeed * msg.Position.Speed;
     }
     else if (msg.Type == EMT_UPDATE)
     {
-        SkyNode->setRotation(SkyNode->getRotation() + core::vector3df(0, RotationSpeed * msg.Update.Delta, 0));
+        SkyNode->setRotation(SkyNode->getRotation() + core::vector3df(0, CurrentRotSpeed * msg.Update.Delta, 0));
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {
-        RotationSpeed = 0;
+        CurrentRotSpeed = 0;
     }
     else if (msg.Type == EMT_OBJ_SPAWNED)
     {

@@ -69,9 +69,9 @@ int main(int argc, char *argv[])
     cont->Mtls = new SMaterials;
     cont->Mtls->Loaded = false;
 
-    ObjectUpdater* updater = new ObjectUpdater(cont);
-
     new ObjectEventReceiver(cont);
+
+    ObjectUpdater* updater = new ObjectUpdater(cont);
 
     cont->Renderer = new EffectRenderer(cont);
 

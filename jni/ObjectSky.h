@@ -20,8 +20,9 @@ class ObjectSky : public Object
 
     private:
         scene::ISceneNode* SkyNode;
+        f32 CurrentRotSpeed;
 
-        f32 RotationSpeed;
+        static constexpr f32 RotSpeed = 0.0003;
 };
 
 #endif // OBJECTSKY_H

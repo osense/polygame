@@ -158,8 +158,11 @@ void ObjectHUD::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {
-        DistTravelledText->remove();
-        DistTravelledText = 0;
+        if (DistVisibility != EHEV_OFF)
+        {
+            DistVisibility = EHEV_FADEOUT;
+            DTFadeCounter = EnergyFadeTime;
+        }
     }
     else if (msg.Type == EMT_OBJ_SPAWNED)
     {

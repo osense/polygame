@@ -68,12 +68,19 @@ void ObjectStateGame::onMessage(SMessage msg)
             return;
         }
     }
+#ifdef _IRR_ANDROID_PLATFORM_
+    else if (msg.Type == EMT_APPCOMMAND && msg.AppCommand.Cmd == APP_CMD_SAVE_STATE)
+    {
+        setPaused(true);
+        saveGame();
+    }
+#endif // _IRR_ANDROID_PLATFORM_
 }
 
 
 void ObjectStateGame::setPaused(bool paused)
 {
-    if (paused)
+    if (paused && !isPaused())
     {
         Context->TimeScale = 0;
         PauseWnd = addOverlayWindow(Context);
@@ -86,7 +93,7 @@ void ObjectStateGame::setPaused(bool paused)
 
         Context->Renderer->getFader()->startFadeOut(0.5);
     }
-    else
+    else if (!paused && isPaused())
     {
         Context->TimeScale = 1;
         PauseWnd->remove();
@@ -118,10 +125,12 @@ void ObjectStateGame::saveGame()
     }
 
     writeJson(Context, root, Context->Sets->SavegamePath);
+    debugLog(core::stringc("saved game") + Context->Sets->SavegamePath);
 }
 
 void ObjectStateGame::loadGame()
 {
+    debugLog(core::stringc("loading game") + Context->Sets->SavegamePath);
     Json::Value root = readJson(Context, Context->Sets->SavegamePath);
     SMessage msg(this, EMT_DESERIALIZE);
     msg.SData.Root = &root;

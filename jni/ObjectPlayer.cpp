@@ -97,6 +97,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         msg.Position.X = camPos.X;
         msg.Position.Y = camPos.Y;
         msg.Position.Z = camPos.Z;
+        msg.Position.Speed = Speed;
         broadcastMessage(msg);
     }
     else if (msg.Type == EMT_PLAYER_FEEDBACK)
@@ -144,6 +145,9 @@ void ObjectPlayer::onMessage(SMessage msg)
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {
         Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
+
+        Speed = 0;
+        MaxEnergy = Energy;
 
         core::vector3df camPos = Camera->getPosition();
         Camera->setTarget(camPos + core::vector3df(0, 0, 0.001));

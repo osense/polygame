@@ -2,7 +2,7 @@
 
 ObjectItemPyramid::ObjectItemPyramid(SContext* cont, core::vector3df pos, bool negative) : ObjectItem(cont)
 {
-    Name = "ObjectItemCube";
+    Name = "ObjectItemPyramid";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);

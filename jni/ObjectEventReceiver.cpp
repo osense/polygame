@@ -133,6 +133,14 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         broadcastMessage(msg);
         return true;
     }
+    else if (event.EventType == EET_SYSTEM_EVENT && event.SystemEvent.EventType == ESET_ANDROID_CMD)
+    {
+        SMessage msg(this, EMT_APPCOMMAND);
+        msg.AppCommand.Cmd = event.SystemEvent.AndroidCmd.Cmd;
+
+        broadcastMessage(msg);
+        return false;
+    }
 
     return false;
 }

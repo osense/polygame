@@ -25,7 +25,8 @@ enum E_MESSAGE_TYPE
     EMT_ACC,
     EMT_GUI,
     EMT_PLAYER_CRASHED,
-    EMT_PLAYER_CUBED
+    EMT_PLAYER_CUBED,
+    EMT_APPCOMMAND
 };
 
 struct SMessage
@@ -71,12 +72,18 @@ struct SMessage
     struct ObjectPositionMessage
     {
         irr::f32 X, Y, Z;
+        irr::f32 Speed;
     };
 
     struct PlayerFeedbackMessage
     {
         irr::f32 Height;
         irr::f32 GridAngle;
+    };
+
+    struct AppCommandMessage
+    {
+        irr::u32 Cmd;
     };
 
     union
@@ -89,6 +96,7 @@ struct SMessage
         SerializeMessage SData;
         ObjectPositionMessage Position;
         PlayerFeedbackMessage PlayerFeedback;
+        AppCommandMessage AppCommand;
     };
 
 
