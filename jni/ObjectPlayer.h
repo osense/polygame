@@ -35,9 +35,9 @@ private:
     static constexpr f32 Acceleration = 0.05;
     static constexpr f32 MinSpeed = 1;
     static constexpr f32 MaxSpeed = 5;
-    static constexpr f32 MaxRise = 20;
+    static constexpr f32 MaxRise = 45;
     static constexpr f32 DefaultMaxEnergy = 3;
-    static constexpr f32 DefaultMaxAbsRotY = 40;
+    static constexpr f32 DefaultMaxAbsRotY = 85;
     static constexpr f32 EnergyRegenSpeed = 0.25;
     static constexpr f32 EnergyRegenCooldown = 1.5;
     static constexpr f32 AccCutoff = 3.0;

@@ -57,7 +57,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         else if (Speed < MinSpeed)
             Speed = MinSpeed;
 
-        if (Rising)
+        /*if (Rising)
         {
             Energy -= msg.Update.fDelta;
             if (Energy <= 0)
@@ -75,16 +75,16 @@ void ObjectPlayer::onMessage(SMessage msg)
                 Energy += msg.Update.fDelta * EnergyRegenSpeed;
                 if (Energy > MaxEnergy)
                     Energy = MaxEnergy;
-            }
+            }*/
 
-            TargetRot.X =  FloorAngle + (Camera->getPosition().Y - (FloorHeight + Height)) * (MaxRise - FloorAngle);
-        }
+            TargetRot.X =  + ((Camera->getPosition().Y - (FloorHeight + Height)) / Height) * MaxRise;
+        //}
 
         core::vector3df rotDiff = TargetRot - Camera->getRotation();
-        Camera->setRotation(Camera->getRotation() + rotDiff * RotSpeed * msg.Update.fDelta);
+        Camera->setRotation(Camera->getRotation() + rotDiff * (RotSpeed * msg.Update.fDelta));
 
         core::vector3df dir = getDirection();
-        Camera->setPosition(Camera->getPosition() + dir * Speed * msg.Update.fDelta);
+        Camera->setPosition(Camera->getPosition() + dir * (Speed * msg.Update.fDelta));
         Camera->setTarget(Camera->getPosition() + dir);
 
         #ifdef DEBUG_PLAYER
@@ -111,16 +111,16 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_INPUT)
     {
-        if (msg.Input.Type == ETIE_PRESSED_DOWN)
+        /*if (msg.Input.Type == ETIE_PRESSED_DOWN)
             Rising = true;
         else if (msg.Input.Type == ETIE_LEFT_UP)
         {
             Rising = false;
             TimeTillRegen = EnergyRegenCooldown;
-        }
+        }*/
 
 #ifdef DEBUG_GLES
-        else if (msg.Input.Type == ETIE_MOVED)
+        if (msg.Input.Type == ETIE_MOVED)
         {
             const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
             TargetRot.Y = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
