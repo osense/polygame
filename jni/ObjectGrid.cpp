@@ -312,75 +312,6 @@ void ObjectGrid::regenerate()
     BufferAppx->setDirty();
 }
 
-void ObjectGrid::addPoint(u32 z, u32 x, u32 insertAt)
-{
-    core::vector2df null2d(0);
-    video::SColor white(255, 255, 255, 255), black(255, 0, 0, 0);
-
-    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
-
-    core::vector3df pointVec(x - center.X, Points[z][x], z - center.Z);
-
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), black, null2d));
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), black, null2d));
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), black, null2d));
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), black, null2d));
-    Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), black, null2d));
-
-    BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
-
-    if (x > 0)
-    {
-        const u32 vertC = insertAt;
-        //Y quad
-        Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
-        Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
-        //Z quad
-        Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
-        Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
-    }
-    if (z > 0)
-    {
-        const u32 vertC = insertAt;
-        const u32 prevZVertC = ((z - 1) * NumPointsX + x) * 6;
-        //X quad
-        Buffer->Indices.push_back(vertC-5); Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevZVertC+1);
-        Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevZVertC); Buffer->Indices.push_back(prevZVertC+1);
-        //Y quad
-        Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevZVertC+2);
-        Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevZVertC+3); Buffer->Indices.push_back(prevZVertC+2);
-    }
-    if (x > 0 && z > 0)
-    {
-        const u32 vertC = z * NumPointsX + x;
-        const u32 prevZVertC = vertC - NumPointsX;
-
-        if (Points[z][x] + Points[z-1][x-1] > Points[z-1][x] + Points[z][x-1])
-        {
-            BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevZVertC); BufferAppx->Indices.push_back(vertC-1);
-            BufferAppx->Indices.push_back(prevZVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(prevZVertC);
-        }
-        else
-        {
-            BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevZVertC); BufferAppx->Indices.push_back(prevZVertC-1);
-            BufferAppx->Indices.push_back(prevZVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(vertC);
-        }
-    }
-}
-
-void ObjectGrid::eraseLastRow()
-{
-    Buffer->Vertices.erase(0, NumPointsX * 6);
-    Buffer->Indices.erase(0, NumPointsX * 24);
-
-    for (u32 i = 0; i < Buffer->Indices.size(); i++)
-    {
-        Buffer->Indices[i] = Buffer->Indices[i] - NumPointsX * 24;
-    }
-}
-
-
 void ObjectGrid::addZ()
 {
     Generator.reset();
@@ -416,7 +347,6 @@ void ObjectGrid::addMinusX()
 void ObjectGrid::handleGenUpdate()
 {
     BaseHeight.push_back(Generator.getHeight());
-    //Context->Device->getSceneManager()->addCubeSceneNode(0.1, 0, -1, core::vector3df(Position.X, getBaseHeight(NumPointsZ - 1), Position.Z+NumPointsZ-1));
 
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
@@ -474,8 +404,8 @@ bool ObjectGrid::handleCollision(core::vector3df pPos, core::vector3df diffV)
 {
     SMessage msg(this, EMT_PLAYER_FEEDBACK);
 
-    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(2) - getBaseHeight(1)));
-    msg.PlayerFeedback.Height = getBaseHeight(1) + (getBaseHeight(2) - getBaseHeight(1)) * (pPos.Z - Position.Z);
+    msg.PlayerFeedback.GridAngle = -radToDeg(atan(getBaseHeight(OffsetZ+1) - getBaseHeight(OffsetZ)));
+    msg.PlayerFeedback.Height = getBaseHeight(OffsetZ) + (getBaseHeight(OffsetZ+1) - getBaseHeight(OffsetZ)) * (pPos.Z - Position.Z);
 
     // "hack"
     Context->ObjManager->getObjectFromName("ObjectPlayer")->onMessage(msg);

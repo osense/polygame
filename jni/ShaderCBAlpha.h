@@ -8,11 +8,11 @@
 using namespace irr;
 
 
-class ShaderCBGridBack : public video::IShaderConstantSetCallBack
+class ShaderCBAlpha : public video::IShaderConstantSetCallBack
 {
     public:
 
-        ShaderCBGridBack(SContext* cont);
+        ShaderCBAlpha(SContext* cont);
 
         virtual void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 
@@ -21,10 +21,6 @@ class ShaderCBGridBack : public video::IShaderConstantSetCallBack
         void setTransform(f32 t);
 
         f32 getTransform() const;
-
-        void setAlpha(f32 a);
-
-        f32 getAlpha() const;
 
     private:
         SContext* Context;

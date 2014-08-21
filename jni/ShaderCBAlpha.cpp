@@ -1,6 +1,6 @@
-#include "ShaderCBGridBack.h"
+#include "ShaderCBAlpha.h"
 
-ShaderCBGridBack::ShaderCBGridBack(SContext* cont)
+ShaderCBAlpha::ShaderCBAlpha(SContext* cont)
     :FirstUpdate(false)
 {
     Context = cont;
@@ -8,7 +8,7 @@ ShaderCBGridBack::ShaderCBGridBack(SContext* cont)
     Alpha = 1;
 }
 
-void ShaderCBGridBack::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
+void ShaderCBAlpha::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
 {
     if(!FirstUpdate)
     {
@@ -40,27 +40,17 @@ void ShaderCBGridBack::OnSetConstants(video::IMaterialRendererServices* services
     services->setVertexShaderConstant(AlphaID, &clAlpha, 1);
 }
 
-void ShaderCBGridBack::OnSetMaterial (const video::SMaterial &material)
+void ShaderCBAlpha::OnSetMaterial (const video::SMaterial &material)
 {
-
+    Alpha = material.MaterialTypeParam;
 }
 
-void ShaderCBGridBack::setTransform(f32 t)
+void ShaderCBAlpha::setTransform(f32 t)
 {
     Transform = t;
 }
 
-f32 ShaderCBGridBack::getTransform() const
+f32 ShaderCBAlpha::getTransform() const
 {
     return Transform;
-}
-
-void ShaderCBGridBack::setAlpha(f32 a)
-{
-    Alpha = a;
-}
-
-f32 ShaderCBGridBack::getAlpha() const
-{
-    return Alpha;
 }

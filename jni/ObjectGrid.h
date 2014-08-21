@@ -40,7 +40,7 @@ private:
     static constexpr u32 NumPointsZ = 18;
     static constexpr u32 NumPointsX = NumPointsZ * 2;//(16.0 / 9.0);
     // how much is the mesh offseted from it's origin
-    static constexpr f32 OffsetZ = 1;
+    static constexpr u32 OffsetZ = 1;
     static constexpr f32 LineThickness = 0.005;
     static constexpr u32 GenChangeEvery = 50;
     static constexpr u32 ColorChangeEvery = 35;
@@ -68,13 +68,9 @@ private:
 
 
     void regenerate();
-    void addPoint(u32 z, u32 x, u32 insertAt);
-    void eraseLastRow();
     void addZ();
     void addPlusX();
     void addMinusX();
-
-    void removeXsegment();
 
     void handleGenUpdate();
     void handleColors();
