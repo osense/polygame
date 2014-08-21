@@ -1,9 +1,8 @@
 #include "ObjectGrid.h"
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
-    BaseHeight(NumPointsZ),
     CollisionActive(true),
-    Generator(NumPointsX),
+    Generator(NumPointsX, NumPointsZ),
     GenChangeIn(GenChangeEvery),
     ColorChangeIn(5),
     ChangingColor(0)
@@ -14,12 +13,8 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Position = core::vector3df(0);
 
     for (u32 z = 0; z < NumPointsZ; z++)
-    {
         for (u32 x = 0; x < NumPointsX; x++)
             Points[z][x] = 0;
-
-        BaseHeight.push_back(0);
-    }
 
     srand(0);
     Generator.setType(EGT_PLAINS);
@@ -41,7 +36,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Grid);
-    //Node->setMaterialType(Context->Mtls->GridBack);
     Node->setAutomaticCulling(scene::EAC_OFF);
     mesh->drop();
 
@@ -53,7 +47,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BackNode = Context->Device->getSceneManager()->addMeshSceneNode(backMesh);
     BackNode->setMaterialType(Context->Mtls->Solid);
     BackNode->getMaterial(0).AmbientColor = video::SColor(255, 0, 0, 0);
-    //BackNode->setMaterialType(Context->Mtls->Grid);
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     backMesh->drop();
 
@@ -114,8 +107,6 @@ void ObjectGrid::onMessage(SMessage msg)
             }
 
             regenerate();
-            Node->setPosition(Position);
-            BackNode->setPosition(Position);
             broadcastMessage(SMessage(this, EMT_GRID_REGENED));
 
 #ifdef DEBUG_GRID
@@ -154,8 +145,6 @@ void ObjectGrid::onMessage(SMessage msg)
             gridRoot["points"].append(pointsZ);
         }
 
-        gridRoot["base_height"] = serializeCircularBuffer(BaseHeight);
-
         (*msg.SData.Root)["grid"] = gridRoot;
     }
     else if (msg.Type == EMT_DESERIALIZE)
@@ -180,8 +169,6 @@ void ObjectGrid::onMessage(SMessage msg)
                 Points[z][x] = gridRoot["points"][z][x].asDouble();
             }
         }
-
-        deserializeCircularBuffer(BaseHeight, gridRoot["base_height"]);
 
         regenerate();
     }
@@ -219,7 +206,7 @@ u32 ObjectGrid::getNumPointsZ() const
 
 f32 ObjectGrid::getBaseHeight(u32 z) const
 {
-    return BaseHeight[BaseHeight.getIndex() + z + 1];
+    return Generator.getHeight(z);
 }
 
 f32 ObjectGrid::getHillHeight(u32 x, u32 z) const
@@ -310,24 +297,27 @@ void ObjectGrid::regenerate()
 
     Buffer->setDirty();
     BufferAppx->setDirty();
+
+    Node->setPosition(Position);
+    BackNode->setPosition(Position);
 }
 
 void ObjectGrid::addZ()
 {
-    Generator.reset();
-    Generator.setPoints(Points[NumPointsZ-1]);
     memmove(Points, Points[1], sizeof(f32) * (NumPointsZ-1) * NumPointsX);
-    memcpy(Points[NumPointsZ-1], Generator.generate(Position), sizeof(f32) * NumPointsX);
+    memcpy(Points[NumPointsZ-1], Generator.generate(Position, EGD_FRONT), sizeof(f32) * NumPointsX);
 
     Position += core::vector3df(0, 0, 1);
 }
 
 void ObjectGrid::addPlusX()
 {
+    Generator.generate(Position, EGD_RIGHT);
+
     for (u32 z = 0; z < NumPointsZ; z++)
     {
         memmove(Points[z], &Points[z][1], sizeof(f32) * (NumPointsX - 1));
-        Points[z][NumPointsX-1] = getBaseHeight(z);
+        Points[z][NumPointsX-1] = Generator.getGenerated(z);
     }
 
     Position += core::vector3df(1, 0, 0);
@@ -335,10 +325,12 @@ void ObjectGrid::addPlusX()
 
 void ObjectGrid::addMinusX()
 {
+    Generator.generate(Position, EGD_LEFT);
+
     for (u32 z = 0; z < NumPointsZ; z++)
     {
         memmove(&Points[z][1], Points[z], sizeof(f32) * (NumPointsX - 1));
-        Points[z][NumPointsX-1] = getBaseHeight(z);
+        Points[z][0] = Generator.getGenerated(z);
     }
 
     Position += core::vector3df(-1, 0, 0);
@@ -346,8 +338,6 @@ void ObjectGrid::addMinusX()
 
 void ObjectGrid::handleGenUpdate()
 {
-    BaseHeight.push_back(Generator.getHeight());
-
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
     GenChangeIn--;

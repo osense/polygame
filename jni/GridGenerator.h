@@ -1,11 +1,11 @@
 #ifndef GRIDGENERATOR_H
 #define GRIDGENERATOR_H
 
-#include <stdlib.h>
 #include <irrlicht.h>
-#include "json/value.h"
-
+#include "functions.h"
+#include "circular_buffer.h"
 #include "libnoise/perlin.h"
+#include "json/value.h"
 
 using namespace irr;
 
@@ -19,6 +19,13 @@ enum E_GEN_TYPE
     EGT_COUNT
 };
 
+enum E_GEN_DIRECTION
+{
+    EGD_FRONT,
+    EGD_LEFT,
+    EGD_RIGHT
+};
+
 enum E_SLOPE_TYPE
 {
     EST_NONE = 0,
@@ -29,20 +36,17 @@ enum E_SLOPE_TYPE
 class GridGenerator
 {
     public:
-        GridGenerator(u32 numPoints);
+        GridGenerator(u32 numPointsX, u32 numPointsZ);
         ~GridGenerator();
 
-        void addPoint(f32 p);
-        void setPoints(f32 *p);
-        void reset();
-        f32* generate(core::vector3df position);
+        f32* generate(core::vector3df position, E_GEN_DIRECTION dir);
         f32 getGenerated(u32 idx) const;
 
         void setType(E_GEN_TYPE type);
         E_GEN_TYPE getType() const;
 
         void setSlope(E_SLOPE_TYPE type);
-        f32 getHeight() const;
+        f32 getHeight(u32 z) const;
 
         void setDifficulty(f32 diff);
         f32 getDifficulty() const;
@@ -53,22 +57,22 @@ class GridGenerator
     private:
         f32 Difficulty;
 
-        u32 NumPoints;
-        f32* LastPts, *NewPts;
+        u32 NumPointsX, NumPointsZ;
+        f32* NewPts;
         u32 ArraySize;
 
         E_GEN_TYPE Type;
         E_SLOPE_TYPE Slope, PrevSlope, NextSlope;
-        f32 Height;
+        circular_buffer<f32> Height;
         u32 StepsIntoSlope;
 
         noise::Perlin PerlinN;
 
-        void genNone();
-        void genPlains(core::vector3df pos);
-        void genHills(core::vector3df pos);
-        void genCanyons(core::vector3df pos);
-        void genWalls(core::vector3df pos);
+        f32 genNone(core::vector3df pos);
+        f32 genPlains(core::vector3df pos);
+        f32 genHills(core::vector3df pos);
+        f32 genCanyons(core::vector3df pos);
+        f32 genWalls(core::vector3df pos);
 
         void slopeTransform();
 

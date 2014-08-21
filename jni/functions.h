@@ -305,7 +305,7 @@ inline video::SColorf deserializeSColorf(Json::Value& val)
     return col;
 }
 
-inline Json::Value serializeCircularBuffer(circular_buffer<f32>& buff)
+inline Json::Value serializeCircularBuffer(const circular_buffer<f32>& buff)
 {
     Json::Value root;
     root["index"] = buff.getIndex();

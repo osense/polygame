@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <irrlicht.h>
 #include <thread>
-#include "circular_buffer.h"
 
 using namespace irr;
 
@@ -48,7 +47,6 @@ private:
 
     core::vector3df Position;
     f32 Points[NumPointsZ][NumPointsX];
-    circular_buffer<f32> BaseHeight;
 
     bool CollisionActive;
 

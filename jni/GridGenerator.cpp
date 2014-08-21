@@ -1,18 +1,21 @@
 #include "GridGenerator.h"
 
-GridGenerator::GridGenerator(u32 numPoints)
+GridGenerator::GridGenerator(u32 numPointsX, u32 numPointsZ)
+    :Height(numPointsZ)
 {
-    NumPoints = numPoints;
-    NewPts = new f32[NumPoints];
-    LastPts = new f32[NumPoints];
+    NumPointsX = numPointsX;
+    NumPointsZ = numPointsZ;
+    NewPts = new f32[NumPointsX];
     ArraySize = 0;
     Type = EGT_NONE;
     Slope = EST_NONE;
     NextSlope = EST_NONE;
-    Height = 0;
     Difficulty = 0;
 
-    PerlinN.SetNoiseQuality(noise::QUALITY_BEST);
+    for (u32 z = 0; z < NumPointsZ; z++)
+        Height.push_back(0);
+
+    //PerlinN.SetNoiseQuality(noise::QUALITY_BEST);
     PerlinN.SetSeed(0);
     PerlinN.SetOctaveCount(1);
 }
@@ -20,50 +23,54 @@ GridGenerator::GridGenerator(u32 numPoints)
 GridGenerator::~GridGenerator()
 {
     delete[] NewPts;
-    delete[] LastPts;
 }
 
-void GridGenerator::addPoint(f32 p)
+f32* GridGenerator::generate(core::vector3df position, E_GEN_DIRECTION dir)
 {
-    LastPts[ArraySize] = p;
-    ArraySize++;
-}
+    f32 (GridGenerator::*genFunc)(core::vector3df);
 
-void GridGenerator::setPoints(f32 *p)
-{
-    memcpy(LastPts, p, sizeof(f32) * NumPoints);
-    ArraySize = NumPoints;
-}
-
-void GridGenerator::reset()
-{
-    ArraySize = 0;
-}
-
-f32* GridGenerator::generate(core::vector3df position)
-{
     switch(Type)
     {
-    case EGT_NONE:
-        genNone();
-        break;
     case EGT_PLAINS:
-        genPlains(position);
+        genFunc = &GridGenerator::genPlains;
         break;
     case EGT_HILLS:
-        genHills(position);
+        genFunc = &GridGenerator::genHills;
         break;
     case EGT_CANYONS:
-        genCanyons(position);
+        genFunc = &GridGenerator::genCanyons;
         break;
     case EGT_WALLS:
-        genWalls(position);
+        genFunc = &GridGenerator::genWalls;
         break;
+
+    case EGT_NONE:
     default:
+        genFunc = &GridGenerator::genNone;
         break;
     }
 
-    slopeTransform();
+    switch (dir)
+    {
+    case EGD_FRONT:
+        slopeTransform();
+
+        for (u32 i = 0; i < NumPointsX; i++)
+        {
+            NewPts[i] = getHeight(NumPointsZ - 1) + (this->*genFunc)(core::vector3df(position.X + i, 0, position.Z));
+        }
+        break;
+
+    case EGD_LEFT:
+    case EGD_RIGHT:
+        u32 rightOffset = dir == EGD_RIGHT ? NumPointsX - 1 : 0;
+
+        for (u32 i = 0; i < NumPointsZ; i++)
+        {
+            NewPts[i] = getHeight(i) + (this->*genFunc)(core::vector3df(position.X + rightOffset, 0, position.Z + i));
+        }
+        break;
+    }
 
     return NewPts;
 }
@@ -121,9 +128,9 @@ void GridGenerator::setSlope(E_SLOPE_TYPE type)
     }
 }
 
-f32 GridGenerator::getHeight() const
+f32 GridGenerator::getHeight(u32 z) const
 {
-    return Height;
+    return Height[Height.getIndex() + z + 1];
 }
 
 void GridGenerator::setDifficulty(f32 diff)
@@ -145,7 +152,7 @@ Json::Value GridGenerator::serialize() const
     root["slope_next"] = (u32)NextSlope;
     root["slope_stepsinto"] = StepsIntoSlope;
     root["difficulty"] = Difficulty;
-    root["height"] = Height;
+    root["height"] = serializeCircularBuffer(Height);
 
     return root;
 }
@@ -158,70 +165,51 @@ void GridGenerator::deserialize(Json::Value& root)
     NextSlope = (E_SLOPE_TYPE)root["slope_next"].asUInt();
     StepsIntoSlope = root["slope_stepsinto"].asDouble();
     Difficulty = root["difficulty"].asDouble();
-    Height = root["height"].asDouble();
+    deserializeCircularBuffer(Height, root["height"]);
 }
 
 
-void GridGenerator::genNone()
+f32 GridGenerator::genNone(core::vector3df pos)
 {
-    for (u32 i = 0; i < NumPoints; i++)
-    {
-        NewPts[i] = 0;
-    }
+    return 0;
 }
 
-void GridGenerator::genPlains(core::vector3df pos)
+f32 GridGenerator::genPlains(core::vector3df pos)
 {
-    NewPts[0] = 0;
-    NewPts[NumPoints-1] = 0;
+    f32 newPt = PerlinN.GetValue(pos.X, 0.5, pos.Z);
+    if (newPt < 0.5 - Difficulty/2)
+        newPt = 0;
 
-    for (u32 i = 1; i < NumPoints-1; i++)
-    {
-        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z);
-        if (NewPts[i] < 0.5 - Difficulty/2)
-            NewPts[i] = 0;
-    }
+    return newPt;
 }
 
-void GridGenerator::genHills(core::vector3df pos)
+f32 GridGenerator::genHills(core::vector3df pos)
 {
-    NewPts[0] = 0;
-    NewPts[NumPoints-1] = 0;
+    f32 newPt = PerlinN.GetValue(pos.X, 0.5, pos.Z) * 2;
+    if (newPt < 1 - Difficulty)
+        newPt = 0;
 
-    for (u32 i = 1; i < NumPoints-1; i++)
-    {
-        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z) * 2;
-        if (NewPts[i] < 1 - Difficulty)
-            NewPts[i] = 0;
-    }
+    return newPt;
 }
 
 
-void GridGenerator::genCanyons(core::vector3df pos)
+f32 GridGenerator::genCanyons(core::vector3df pos)
 {
-    NewPts[0] = 0;
-    NewPts[NumPoints-1] = 0;
+    f32 newPt = PerlinN.GetValue(pos.X, 0.5, pos.Z * 0.5);
+    if (newPt < 0)
+        newPt = 0;
 
-    for (u32 i = 1; i < NumPoints-1; i++)
-    {
-        NewPts[i] = PerlinN.GetValue(pos.X + i, 0.5, pos.Z * 0.25);
-        if (NewPts[i] < 0.5 - Difficulty/2)
-            NewPts[i] = 0;
-    }
+    return newPt;
 }
 
 
-void GridGenerator::genWalls(core::vector3df pos)
+f32 GridGenerator::genWalls(core::vector3df pos)
 {
-    NewPts[0] = 0;
-    NewPts[NumPoints-1] = 0;
+    f32 newPt = PerlinN.GetValue(pos.X * 0.5, 0.5, pos.Z);
+    if (newPt < 0)
+        newPt = 0;
 
-    for (u32 i = 1; i < NumPoints-1; i++)
-    {
-        NewPts[i] = PerlinN.GetValue((pos.X + i) * 0.45, 0.5, pos.Z);
-        if (NewPts[i] < 0.5 - Difficulty/2)
-            NewPts[i] = 0;
-    }
+    return newPt;
 }
 
 void GridGenerator::slopeTransform()
@@ -231,32 +219,30 @@ void GridGenerator::slopeTransform()
             setSlope(NextSlope);
 
     StepsIntoSlope++;
+    f32 nextHeight = getHeight(NumPointsZ - 1);
 
     if (Slope == EST_NONE)
     {
         if (StepsIntoSlope < SlopeChangeInSteps)
         {
             if (PrevSlope == EST_DOWN)
-                Height -= SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
+                nextHeight -= SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
             else if (PrevSlope == EST_UP)
-                Height += SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
+                nextHeight += SlopeStep * (1 - (StepsIntoSlope / f32(SlopeChangeInSteps)));
         }
     }
     else if (Slope == EST_DOWN)
     {
         if (StepsIntoSlope < SlopeChangeInSteps)
-            Height -= SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
-        else Height -= SlopeStep;
+            nextHeight -= SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
+        else nextHeight -= SlopeStep;
     }
     else if (Slope == EST_UP)
     {
         if (StepsIntoSlope < SlopeChangeInSteps)
-            Height += SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
-        else Height += SlopeStep;
+            nextHeight += SlopeStep * (StepsIntoSlope / f32(SlopeChangeInSteps));
+        else nextHeight += SlopeStep;
     }
 
-    for (u32 i = 0; i < NumPoints; i++)
-    {
-        NewPts[i] += Height;
-    }
+    Height.push_back(nextHeight);
 }
