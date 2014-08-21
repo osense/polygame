@@ -126,9 +126,9 @@ void ObjectStateInit::onMessage(SMessage msg)
                 Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
                                                                                                         Context->Mtls->GridCB);
 
-                Context->Mtls->GridBackCB = new ShaderCBGridBack(Context);
-                Context->Mtls->GridBack = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid_back.vert", "shaders/grid_back.frag",
-                                                                                                            Context->Mtls->GridBackCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                Context->Mtls->AlphaCB = new ShaderCBAlpha(Context);
+                Context->Mtls->Alpha = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/alpha.vert", "shaders/alpha.frag",
+                                                                                                            Context->Mtls->AlphaCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
                 Context->Mtls->SolidCB = new ShaderCBSolid(Context);
                 Context->Mtls->Solid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/solid.vert", "shaders/solid.frag",

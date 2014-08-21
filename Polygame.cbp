@@ -96,14 +96,14 @@
 		<Unit filename="jni/SMessage.h" />
 		<Unit filename="jni/Settings.cpp" />
 		<Unit filename="jni/Settings.h" />
+		<Unit filename="jni/ShaderCBAlpha.cpp" />
+		<Unit filename="jni/ShaderCBAlpha.h" />
 		<Unit filename="jni/ShaderCBDepth.cpp" />
 		<Unit filename="jni/ShaderCBDepth.h" />
 		<Unit filename="jni/ShaderCBFader.cpp" />
 		<Unit filename="jni/ShaderCBFader.h" />
 		<Unit filename="jni/ShaderCBGrid.cpp" />
 		<Unit filename="jni/ShaderCBGrid.h" />
-		<Unit filename="jni/ShaderCBGridBack.cpp" />
-		<Unit filename="jni/ShaderCBGridBack.h" />
 		<Unit filename="jni/ShaderCBSky.cpp" />
 		<Unit filename="jni/ShaderCBSky.h" />
 		<Unit filename="jni/ShaderCBSolid.cpp" />

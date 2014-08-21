@@ -12,7 +12,7 @@
 #include "EffectRenderer.h"
 #include "ShaderCBDepth.h"
 #include "ShaderCBGrid.h"
-#include "ShaderCBGridBack.h"
+#include "ShaderCBAlpha.h"
 #include "ShaderCBSolid.h"
 #include "ShaderCBFader.h"
 #include "ShaderCBSky.h"

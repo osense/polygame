@@ -43,7 +43,7 @@ void ObjectItemCube::onMessage(SMessage msg)
         }
         else if (State == EIS_EFFECT_FADEIN)
         {
-            Context->Mtls->GridBackCB->setAlpha(Context->Mtls->GridBackCB->getAlpha() - msg.Update.fDelta * (1/TimeFadein));
+            //Context->Mtls->GridBackCB->setAlpha(Context->Mtls->GridBackCB->getAlpha() - msg.Update.fDelta * (1/TimeFadein));
 
             EffectCounter -= msg.Update.fDelta;
 
@@ -59,13 +59,13 @@ void ObjectItemCube::onMessage(SMessage msg)
         }
         else if (State == EIS_EFFECT_FADEOUT)
         {
-            Context->Mtls->GridBackCB->setAlpha(Context->Mtls->GridBackCB->getAlpha() + msg.Update.fDelta * (1/TimeFadein));
+            //Context->Mtls->GridBackCB->setAlpha(Context->Mtls->GridBackCB->getAlpha() + msg.Update.fDelta * (1/TimeFadein));
 
             EffectCounter -= msg.Update.fDelta;
 
             if (EffectCounter <= 0)
             {
-                Context->Mtls->GridBackCB->setAlpha(1);
+                //Context->Mtls->GridBackCB->setAlpha(1);
                 static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"))->setCollision(true);
                 delete this;
             }

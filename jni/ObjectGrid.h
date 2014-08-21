@@ -5,7 +5,7 @@
 #include "GridGenerator.h"
 #include "SMaterials.h"
 #include "ShaderCBGrid.h"
-#include "ShaderCBGridBack.h"
+#include "ShaderCBAlpha.h"
 #include "ShaderCBSolid.h"
 #include "functions.h"
 

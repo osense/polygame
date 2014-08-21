@@ -27,7 +27,6 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     Context->Mtls->GridCB->setNearColor(video::SColorf(1, 1, 0));
     Context->Mtls->GridCB->setFarColor(video::SColorf(1, 1, 0));
-    Context->Mtls->GridBackCB->setAlpha(1);
 
     Points[10][15] = 2;
     Points[11][15] = 1;
@@ -195,7 +194,7 @@ void ObjectGrid::setCollision(bool active)
     if (CollisionActive)
         BackNode->setMaterialType(Context->Mtls->Solid);
     else
-        BackNode->setMaterialType(Context->Mtls->GridBack);
+        BackNode->setMaterialType(Context->Mtls->Alpha);
 }
 
 bool ObjectGrid::getCollision() const

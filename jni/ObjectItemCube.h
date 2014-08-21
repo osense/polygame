@@ -6,7 +6,6 @@
 #include "GeometryGenerator.h"
 #include "SMaterials.h"
 #include "ObjectGrid.h"
-#include "ShaderCBGridBack.h"
 #include <irrlicht.h>
 
 using namespace irr;

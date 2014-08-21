@@ -48,11 +48,9 @@ void ObjectItemPyramid::onMessage(SMessage msg)
         }
         else if (State == EIS_EFFECT_FADEIN)
         {
-            f32 newT = Context->Mtls->GridCB->getTransform() + msg.Update.fDelta * (1/TimeFadein) * Negativity;
+            f32 newT = Context->Mtls->getTransform() + msg.Update.fDelta * (1/TimeFadein) * Negativity;
 
-            Context->Mtls->GridCB->setTransform(newT);
-            Context->Mtls->GridBackCB->setTransform(newT);
-            Context->Mtls->SolidCB->setTransform(newT);
+            Context->Mtls->setTransform(newT);
 
             EffectCounter -= msg.Update.fDelta;
 
@@ -70,17 +68,13 @@ void ObjectItemPyramid::onMessage(SMessage msg)
         {
             f32 newT = Context->Mtls->GridCB->getTransform() - msg.Update.fDelta * (1/TimeFadein) * Negativity;
 
-            Context->Mtls->GridCB->setTransform(newT);
-            Context->Mtls->GridBackCB->setTransform(newT);
-            Context->Mtls->SolidCB->setTransform(newT);
+            Context->Mtls->setTransform(newT);
 
             EffectCounter -= msg.Update.fDelta;
 
             if (EffectCounter <= 0)
             {
-                Context->Mtls->GridCB->setTransform(0);
-                Context->Mtls->GridBackCB->setTransform(0);
-                Context->Mtls->SolidCB->setTransform(0);
+                Context->Mtls->setTransform(0);
 
                 delete this;
             }

@@ -5,9 +5,6 @@
 #include "ObjectManager.h"
 #include "GeometryGenerator.h"
 #include "SMaterials.h"
-#include "ShaderCBGrid.h"
-#include "ShaderCBGridBack.h"
-#include "ShaderCBSolid.h"
 
 
 class ObjectItemPyramid : public ObjectItem
