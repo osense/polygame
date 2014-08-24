@@ -1,5 +1,39 @@
 #include "GeometryGenerator.h"
 
+scene::IMesh* GeometryGenerator::createLineMesh(f32 size) const
+{
+    scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
+    scene::SMesh* tmpMesh = new scene::SMesh();
+    scene::SMeshBuffer* buffer = new scene::SMeshBuffer();
+    tmpMesh->addMeshBuffer(buffer);
+    buffer->drop();
+    static_cast<scene::SAnimatedMesh*>(mesh)->addMesh(tmpMesh);
+    tmpMesh->drop();
+
+    video::SColor white(255, 255, 255, 255);
+    core::vector2df null2d(0, 0);
+    f32 cs = size;
+
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(0, 1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(0, -1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(-1, 0, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(1, 0, 0), white, null2d));
+
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(0, 1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(0, -1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(-1, 0, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(1, 0, 0), white, null2d));
+
+    buffer->Indices.push_back(0); buffer->Indices.push_back(4); buffer->Indices.push_back(5);
+    buffer->Indices.push_back(0); buffer->Indices.push_back(5); buffer->Indices.push_back(1);
+    buffer->Indices.push_back(2); buffer->Indices.push_back(3); buffer->Indices.push_back(6);
+    buffer->Indices.push_back(3); buffer->Indices.push_back(7); buffer->Indices.push_back(6);
+
+
+    static_cast<scene::SAnimatedMesh*>(mesh)->recalculateBoundingBox();
+    return mesh;
+}
+
 scene::IMesh* GeometryGenerator::createCubeMesh(f32 size, bool filled) const
 {
     scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;

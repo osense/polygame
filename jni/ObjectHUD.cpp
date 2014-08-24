@@ -59,7 +59,7 @@ void ObjectHUD::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_UPDATE)
     {
-        // HUD fading
+        /*// HUD fading
         u32 flDT = core::floor32(DT);
         if (DistVisibility == EHEV_ON || DistVisibility == EHEV_OFF)
         {
@@ -154,7 +154,7 @@ void ObjectHUD::onMessage(SMessage msg)
         }
 
         if (EnergyVisibility != EHEV_OFF)
-            Context->Device->getVideoDriver()->draw2DImageBatch(VLineSegment, EnergyPositions, EnergyRects, 0, energyCol, true);
+            Context->Device->getVideoDriver()->draw2DImageBatch(VLineSegment, EnergyPositions, EnergyRects, 0, energyCol, true);*/
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {

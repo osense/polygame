@@ -44,6 +44,8 @@ struct SMaterials
     {
         if (Loaded)
             return GridCB->getTransform();
+
+        return 0;
     }
 };
 

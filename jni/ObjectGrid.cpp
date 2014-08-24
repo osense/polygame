@@ -1,6 +1,7 @@
 #include "ObjectGrid.h"
 
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
+    UpdateState(EGUS_NONE),
     CollisionActive(true),
     Generator(NumPointsX, NumPointsZ),
     GenChangeIn(GenChangeEvery),
@@ -19,6 +20,8 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     srand(0);
     Generator.setType(EGT_PLAINS);
     Generator.setSlope(EST_DOWN);
+
+    CinLines = new ObjectGridCinematicLines(Context, NumPointsX, OffsetZ);
 
     Context->Mtls->GridCB->setNearColor(video::SColorf(1, 1, 0));
     Context->Mtls->GridCB->setFarColor(video::SColorf(1, 1, 0));
@@ -50,12 +53,13 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     backMesh->drop();
 
-
-    regenerate();
+    UpdateState = EGUS_GRID;
 }
 
 ObjectGrid::~ObjectGrid()
 {
+    delete CinLines;
+
     Node->remove();
     BackNode->remove();
 
@@ -84,36 +88,54 @@ void ObjectGrid::onMessage(SMessage msg)
             return;
         }
 
-        // handle all kinds of update stuff
+        switch (UpdateState)
+        {
+        case EGUS_NONE:
+            break;
+
+        case EGUS_LINES:
+            CinLines->spawn(Position, Context->Mtls->GridCB->getNearColor(), Context->Mtls->GridCB->getFarColor(), Points[0], Points[1]);
+            UpdateState = EGUS_ZDATA;
+            return;
+
+        case EGUS_ZDATA:
+            addZ();
+            handleGenUpdate();
+            handleColors();
+            UpdateState = EGUS_GRID;
+            return;
+
+        case EGUS_GRID:
+            regenerate();
+            UpdateState = EGUS_BACKGRID;
+            return;
+
+        case EGUS_BACKGRID:
+            regenerateAppx();
+            broadcastMessage(SMessage(this, EMT_GRID_REGENED));
+            UpdateState = EGUS_NONE;
+            return;
+        }
+
         if (diffVect.getLength() > 1.0)
         {
-#ifdef DEBUG_GRID
-            Context->Device->getTimer()->tick();
-            u32 updStart = Context->Device->getTimer()->getTime();
-#endif // DEBUG_GRID
-
             if (diffVect.X > 0.5)
+            {
                 addPlusX();
+                UpdateState = EGUS_GRID;
+                return;
+            }
             else if (diffVect.X < -0.5)
+            {
                 addMinusX();
+                UpdateState = EGUS_GRID;
+                return;
+            }
 
             if (diffVect.Z > 0.5)
             {
-                addZ();
-
-                handleGenUpdate();
-
-                handleColors();
+                UpdateState = EGUS_LINES;
             }
-
-            regenerate();
-            broadcastMessage(SMessage(this, EMT_GRID_REGENED));
-
-#ifdef DEBUG_GRID
-            Context->Device->getTimer()->tick();
-            u32 updEnd = Context->Device->getTimer()->getTime();
-            debugLog(core::stringc("Updated grid: ") + core::stringc(updEnd - updStart) + "ms");
-#endif // DEBUG_GRID
         }
     }
     else if (msg.Type == EMT_SERIALIZE)
@@ -170,7 +192,7 @@ void ObjectGrid::onMessage(SMessage msg)
             }
         }
 
-        regenerate();
+        UpdateState = EGUS_GRID;
     }
 }
 
@@ -224,13 +246,9 @@ void ObjectGrid::regenerate()
 {
     Buffer->Vertices.clear();
     Buffer->Indices.clear();
-    BufferAppx->Vertices.clear();
-    BufferAppx->Indices.clear();
 
-
-    video::SColor white(255, 255, 255, 255), black(255, 0, 0, 0);
+    video::SColor white(255, 255, 255, 255);
     core::vector2df null2d(0);
-    core::vector3df null3d(0);
 
     core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
 
@@ -245,14 +263,12 @@ void ObjectGrid::regenerate()
             pointVec.X = x - center.X;
             pointVec.Y = Points[z][x];
 
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), black, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), black, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), black, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), black, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), black, null2d));
-
-            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), black, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
+            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
 
             if (x > 0)
             {
@@ -275,6 +291,36 @@ void ObjectGrid::regenerate()
                 Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+2);
                 Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+3); Buffer->Indices.push_back(prevYVertC+2);
             }
+        }
+    }
+
+    Buffer->setDirty();
+    Node->setPosition(Position);
+}
+
+void ObjectGrid::regenerateAppx()
+{
+    BufferAppx->Vertices.clear();
+    BufferAppx->Indices.clear();
+
+    video::SColor white(255, 255, 255, 255);
+    core::vector2df null2d(0);
+
+    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
+
+    core::vector3df pointVec(0, Points[0][0], 0);
+
+    for (u32 z = 0; z < NumPointsZ; z++)
+    {
+        pointVec.Z = z - center.Z;
+
+        for (u32 x = 0; x < NumPointsX; x++)
+        {
+            pointVec.X = x - center.X;
+            pointVec.Y = Points[z][x];
+
+            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+
             if (x > 0 && z > 0)
             {
                 const u32 vertC = z * NumPointsX + x;
@@ -291,14 +337,10 @@ void ObjectGrid::regenerate()
                     BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(vertC);
                 }
             }
-
         }
     }
 
-    Buffer->setDirty();
     BufferAppx->setDirty();
-
-    Node->setPosition(Position);
     BackNode->setPosition(Position);
 }
 

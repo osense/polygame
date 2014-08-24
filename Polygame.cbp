@@ -36,17 +36,19 @@
 			<Add option="-g" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="assets/shaders/cube.frag" />
-		<Unit filename="assets/shaders/cube.vert" />
+		<Unit filename="assets/shaders/alpha.frag" />
+		<Unit filename="assets/shaders/alpha.vert" />
 		<Unit filename="assets/shaders/depth.frag" />
 		<Unit filename="assets/shaders/depth.vert" />
+		<Unit filename="assets/shaders/fader.frag" />
+		<Unit filename="assets/shaders/fader.vert" />
 		<Unit filename="assets/shaders/grid.frag" />
 		<Unit filename="assets/shaders/grid.vert" />
-		<Unit filename="assets/shaders/grid_back.frag" />
-		<Unit filename="assets/shaders/grid_back.vert" />
 		<Unit filename="assets/shaders/pp/blur_select.frag" />
 		<Unit filename="assets/shaders/sky.frag" />
 		<Unit filename="assets/shaders/sky.vert" />
+		<Unit filename="assets/shaders/solid.frag" />
+		<Unit filename="assets/shaders/solid.vert" />
 		<Unit filename="jni/EffectFader.cpp" />
 		<Unit filename="jni/EffectFader.h" />
 		<Unit filename="jni/EffectRenderer.cpp" />
@@ -65,6 +67,8 @@
 		<Unit filename="jni/ObjectEventReceiver.h" />
 		<Unit filename="jni/ObjectGrid.cpp" />
 		<Unit filename="jni/ObjectGrid.h" />
+		<Unit filename="jni/ObjectGridCinematicLines.cpp" />
+		<Unit filename="jni/ObjectGridCinematicLines.h" />
 		<Unit filename="jni/ObjectHUD.cpp" />
 		<Unit filename="jni/ObjectHUD.h" />
 		<Unit filename="jni/ObjectItem.cpp" />

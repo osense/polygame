@@ -3,6 +3,7 @@
 
 #include "ObjectManager.h"
 #include "GridGenerator.h"
+#include "ObjectGridCinematicLines.h"
 #include "SMaterials.h"
 #include "ShaderCBGrid.h"
 #include "ShaderCBAlpha.h"
@@ -14,6 +15,15 @@
 #include <thread>
 
 using namespace irr;
+
+enum E_GRID_UPDATE_STATE
+{
+    EGUS_LINES = 0,
+    EGUS_ZDATA,
+    EGUS_GRID,
+    EGUS_BACKGRID,
+    EGUS_NONE
+};
 
 class ObjectGrid : public Object
 {
@@ -46,12 +56,15 @@ private:
     static constexpr f32 PlayerSize = 0.05;
 
     core::vector3df Position;
+    E_GRID_UPDATE_STATE UpdateState;
     f32 Points[NumPointsZ][NumPointsX];
 
     bool CollisionActive;
 
     GridGenerator Generator;
     u32 GenChangeIn;
+
+    ObjectGridCinematicLines* CinLines;
 
     u32 ColorChangeIn;
     u32 ChangingColor;
@@ -66,6 +79,7 @@ private:
 
 
     void regenerate();
+    void regenerateAppx();
     void addZ();
     void addPlusX();
     void addMinusX();

@@ -32,7 +32,8 @@ private:
     scene::ICameraSceneNode* DebugCamera;
 #endif // DEBUG_PLAYER
 
-    static constexpr f32 Acceleration = 0.05;
+    // accel. per one tile
+    static constexpr f32 Acceleration = 0.01;
     static constexpr f32 MinSpeed = 1;
     static constexpr f32 MaxSpeed = 5;
     static constexpr f32 MaxRise = 45;

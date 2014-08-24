@@ -3,7 +3,6 @@
 
 #include "ObjectItem.h"
 #include "ObjectManager.h"
-#include "GeometryGenerator.h"
 #include "SMaterials.h"
 #include "ObjectGrid.h"
 #include <irrlicht.h>

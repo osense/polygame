@@ -50,8 +50,6 @@ void ObjectPlayer::onMessage(SMessage msg)
         else
             Speed -= (Acceleration * 1.5) * msg.Update.fDelta;*/
 
-        Speed += Acceleration * msg.Update.fDelta;
-
         if (Speed > MaxSpeed)
             Speed = MaxSpeed;
         else if (Speed < MinSpeed)
@@ -77,14 +75,17 @@ void ObjectPlayer::onMessage(SMessage msg)
                     Energy = MaxEnergy;
             }*/
 
-            TargetRot.X =  + ((Camera->getPosition().Y - (FloorHeight + Height)) / Height) * MaxRise;
+            TargetRot.X = ((Camera->getPosition().Y - (FloorHeight + Height)) / Height) * MaxRise;
         //}
 
         core::vector3df rotDiff = TargetRot - Camera->getRotation();
         Camera->setRotation(Camera->getRotation() + rotDiff * (RotSpeed * msg.Update.fDelta));
 
         core::vector3df dir = getDirection();
-        Camera->setPosition(Camera->getPosition() + dir * (Speed * msg.Update.fDelta));
+        core::vector3df oldPos = Camera->getPosition();
+        core::vector3df newPos = oldPos + dir * (Speed * msg.Update.fDelta);
+        Speed += Acceleration * (newPos.Z - oldPos.Z);
+        Camera->setPosition(newPos);
         Camera->setTarget(Camera->getPosition() + dir);
 
         #ifdef DEBUG_PLAYER

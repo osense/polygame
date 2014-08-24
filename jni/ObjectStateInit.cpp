@@ -155,6 +155,10 @@ void ObjectStateInit::onMessage(SMessage msg)
         {
             GeometryGenerator geomGen;
 
+            scene::IAnimatedMesh* line_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createLineMesh(1));
+            Context->Device->getSceneManager()->getMeshCache()->addMesh("line-mesh", line_mesh);
+            line_mesh->drop();
+
             scene::IAnimatedMesh* cube_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize()));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", cube_mesh);
             cube_mesh->drop();

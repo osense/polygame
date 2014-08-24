@@ -4,7 +4,6 @@
 #include "Object.h"
 #include "ObjectManager.h"
 #include "SMaterials.h"
-#include "GeometryGenerator.h"
 #include <irrlicht.h>
 
 using namespace irr;

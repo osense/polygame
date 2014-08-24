@@ -10,6 +10,7 @@
 #include "ObjectEventReceiver.h"
 #include "ObjectPlayer.h"
 #include "ObjectGrid.h"
+#include "ObjectGridCinematicLines.h"
 #include "GridGenerator.h"
 
 using namespace irr;

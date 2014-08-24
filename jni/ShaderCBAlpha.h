@@ -26,13 +26,15 @@ class ShaderCBAlpha : public video::IShaderConstantSetCallBack
         SContext* Context;
         bool FirstUpdate;
 
-        video::SColorf NearColor, FarColor;
-        f32 Transform;
         f32 Alpha;
+        video::SColorf Color, ColorFar;
+        f32 ThicknessBias;
+        f32 Transform;
 
         s32 CamFarID;
         s32 WorldViewProjMatID, WorldViewMatID;
-        s32 NearColorID, FarColorID;
+        s32 ColorID, ColorFarID;
+        s32 ThicknessBiasID;
         s32 TransformID;
         s32 AlphaID;
 };

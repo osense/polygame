@@ -65,6 +65,13 @@ void ObjectDebugInfo::onMessage(SMessage msg)
             dbg += grid->getGenerator().getDifficulty();
         }
 
+        ObjectGridCinematicLines* gridLines = static_cast<ObjectGridCinematicLines*>(Context->ObjManager->getObjectFromName("ObjectGridCinematicLines"));
+        if (gridLines)
+        {
+            dbg += "\nCin. lines: ";
+            dbg += gridLines->getLineCount();
+        }
+
         Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));
 
         core::dimension2d<u32> screenSize = Context->Device->getVideoDriver()->getScreenSize();

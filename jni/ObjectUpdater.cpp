@@ -21,16 +21,16 @@ ObjectUpdater::~ObjectUpdater()
 void ObjectUpdater::onMessage(SMessage msg)
 {
 #ifdef _IRR_ANDROID_PLATFORM_
-    if (msg.Type == EMT_APPCOMMAND && msg.AppCommand.Cmd == APP_CMD_LOST_FOCUS)
+    /*if (msg.Type == EMT_APPCOMMAND && msg.AppCommand.Cmd == APP_CMD_LOST_FOCUS)
     {
         Context->Device->getTimer()->stop();
         debugLog("PAUSED");
     }
-    else if (msg.Type == EMT_APPCOMMAND && msg.AppCommand.Cmd == APP_CMD_GAINED_FOCUS)
+    else if (msg.Type == EMT_APPCOMMAND && (msg.AppCommand.Cmd == APP_CMD_GAINED_FOCUS || msg.AppCommand.Cmd == APP_CMD_INIT_WINDOW))
     {
         Context->Device->getTimer()->start();
         debugLog("RESUMED");
-    }
+    }*/
 #endif // _IRR_ANDROID_PLATFORM_
 }
 
