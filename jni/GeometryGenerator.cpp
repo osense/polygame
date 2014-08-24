@@ -14,15 +14,15 @@ scene::IMesh* GeometryGenerator::createLineMesh(f32 size) const
     core::vector2df null2d(0, 0);
     f32 cs = size;
 
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(0, 1, 0), white, null2d));
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(0, -1, 0), white, null2d));
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(-1, 0, 0), white, null2d));
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, cs), core::vector3df(1, 0, 0), white, null2d));
-
     buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(0, 1, 0), white, null2d));
     buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(0, -1, 0), white, null2d));
     buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(-1, 0, 0), white, null2d));
     buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, 0), core::vector3df(1, 0, 0), white, null2d));
+
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, -cs), core::vector3df(0, 1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, -cs), core::vector3df(0, -1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, -cs), core::vector3df(-1, 0, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, 0, -cs), core::vector3df(1, 0, 0), white, null2d));
 
     buffer->Indices.push_back(0); buffer->Indices.push_back(4); buffer->Indices.push_back(5);
     buffer->Indices.push_back(0); buffer->Indices.push_back(5); buffer->Indices.push_back(1);

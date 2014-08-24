@@ -13,7 +13,7 @@ using namespace irr;
 class ObjectGridCinematicLines : public Object
 {
     public:
-        ObjectGridCinematicLines(SContext* cont, u32 numPtsX, u32 offsetZ);
+        ObjectGridCinematicLines(SContext* cont, u32 numPtsX);
         virtual ~ObjectGridCinematicLines();
 
         virtual void onMessage(SMessage msg);

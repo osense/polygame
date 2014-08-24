@@ -21,7 +21,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Generator.setType(EGT_PLAINS);
     Generator.setSlope(EST_DOWN);
 
-    CinLines = new ObjectGridCinematicLines(Context, NumPointsX, OffsetZ);
+    CinLines = new ObjectGridCinematicLines(Context, NumPointsX);
 
     Context->Mtls->GridCB->setNearColor(video::SColorf(1, 1, 0));
     Context->Mtls->GridCB->setFarColor(video::SColorf(1, 1, 0));

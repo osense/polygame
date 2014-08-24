@@ -1,12 +1,10 @@
 #include "ObjectGridCinematicLines.h"
 
-ObjectGridCinematicLines::ObjectGridCinematicLines(SContext* cont, u32 numPtsX, u32 offsetZ) : Object(cont),
+ObjectGridCinematicLines::ObjectGridCinematicLines(SContext* cont, u32 numPtsX) : Object(cont),
     NumPointsX(numPtsX)
 {
     Name = "ObjectGridCinematicLines";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
-
-    OffsetZ = -1.0 * offsetZ;
 
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
 }
@@ -64,7 +62,7 @@ void ObjectGridCinematicLines::spawn(core::vector3df pos, video::SColorf col, vi
         node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
         node->getMaterial(0).AmbientColor = c;
         node->getMaterial(0).DiffuseColor = fc;
-        node->setPosition(pos + core::vector3df(f32(i) - halfPtsX, last[i], OffsetZ));
+        node->setPosition(pos + core::vector3df(f32(i) - halfPtsX, prev[i], 0));
         f32 heightDiff = last[i] - prev[i];
         f32 rotAngleRad = atan(heightDiff);
         node->setRotation(core::vector3df(radToDeg(rotAngleRad), 0, 0));
