@@ -22,7 +22,21 @@ enum E_OPTIONS_ID
 {
     EOI_GFX,
     EOI_CONTROLS,
+
     EOI_SEED,
+    EOI_SEED_BOX,
+    EOI_SEED_1,
+    EOI_SEED_2,
+    EOI_SEED_3,
+    EOI_SEED_4,
+    EOI_SEED_5,
+    EOI_SEED_6,
+    EOI_SEED_7,
+    EOI_SEED_8,
+    EOI_SEED_9,
+    EOI_SEED_0,
+    EOI_SEED_C,
+
     EOI_BACK,
     EOI_GLOW_OFF,
     EOI_GLOW_LOW,

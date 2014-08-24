@@ -102,7 +102,6 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_CONTROLS:
             if (State != EOS_CONTROLS)
             {
-
                 create_controls();
             }
             else if (State == EOS_CONTROLS)
@@ -112,7 +111,6 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_SEED:
             if (State != EOS_SEED)
             {
-
                 create_seed();
             }
             else if (State == EOS_SEED)
@@ -140,7 +138,7 @@ void ObjectStateOptions::create_gui()
     addButton(core::position2d<s32>(720, 27), core::dimension2d<s32>(100, 40), L"GFX", Context, EOI_GFX, MainWindow)->setIsPushButton(true);
     addButton(core::position2d<s32>(470, 27), core::dimension2d<s32>(270, 40), L"CONTROLS", Context, EOI_CONTROLS, MainWindow)->setIsPushButton(true);
     addButton(core::position2d<s32>(370, 27), core::dimension2d<s32>(120, 40), L"SEED", Context, EOI_SEED, MainWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(30, 27), core::dimension2d<s32>(128, 32), L"BACK", Context, EOI_BACK, MainWindow);
+    addButton(core::position2d<s32>(30, 27), core::dimension2d<s32>(128, 40), L"BACK", Context, EOI_BACK, MainWindow);
 
     // prepare stuff for the horizontal line
     HLineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_h.png");
@@ -162,7 +160,7 @@ void ObjectStateOptions::create_gfx()
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
-    PaneWindow = addOverlayWindow(Context, 1, 0.80);
+    PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
 
     addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(270, 40), L"GLOW", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
@@ -196,7 +194,7 @@ void ObjectStateOptions::create_controls()
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
-    PaneWindow = addOverlayWindow(Context, 1, 0.80);
+    PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
 }
 
@@ -208,8 +206,27 @@ void ObjectStateOptions::create_seed()
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(true);
     if (PaneWindow)
         PaneWindow->remove();
-    PaneWindow = addOverlayWindow(Context, 1, 0.80);
+    PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
+
+    core::rect<s32> boxRect(core::position2d<s32>(140, 100), core::dimension2d<s32>(200, 40));
+    scaleGUIRect(boxRect, Context->GUIScale);
+    gui::IGUIEditBox* box = Context->Device->getGUIEnvironment()->addEditBox(L"32768", boxRect, true, PaneWindow, EOI_SEED_BOX);
+    box->setOverrideFont(getOverlayFont(Context));
+    box->setDrawBackground(false);
+    box->setTextAlignment(gui::EGUIA_LOWERRIGHT, gui::EGUIA_CENTER);
+
+    addButton(core::position2d<s32>(500, 40), core::dimension2d<s32>(50, 50), L"1", Context, EOI_SEED_1, PaneWindow);
+    addButton(core::position2d<s32>(600, 40), core::dimension2d<s32>(50, 50), L"2", Context, EOI_SEED_2, PaneWindow);
+    addButton(core::position2d<s32>(700, 40), core::dimension2d<s32>(50, 50), L"3", Context, EOI_SEED_3, PaneWindow);
+    addButton(core::position2d<s32>(500, 130), core::dimension2d<s32>(50, 50), L"4", Context, EOI_SEED_1, PaneWindow);
+    addButton(core::position2d<s32>(600, 130), core::dimension2d<s32>(50, 50), L"5", Context, EOI_SEED_2, PaneWindow);
+    addButton(core::position2d<s32>(700, 130), core::dimension2d<s32>(50, 50), L"6", Context, EOI_SEED_3, PaneWindow);
+    addButton(core::position2d<s32>(500, 220), core::dimension2d<s32>(50, 50), L"7", Context, EOI_SEED_1, PaneWindow);
+    addButton(core::position2d<s32>(600, 220), core::dimension2d<s32>(50, 50), L"8", Context, EOI_SEED_2, PaneWindow);
+    addButton(core::position2d<s32>(700, 220), core::dimension2d<s32>(50, 50), L"9", Context, EOI_SEED_3, PaneWindow);
+    addButton(core::position2d<s32>(500, 290), core::dimension2d<s32>(50, 50), L"0", Context, EOI_SEED_0, PaneWindow);
+    addButton(core::position2d<s32>(700, 290), core::dimension2d<s32>(50, 50), L"C", Context, EOI_SEED_C, PaneWindow);
 }
 
 void ObjectStateOptions::serialize()
