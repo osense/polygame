@@ -80,12 +80,12 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         core::position2d<s32> lineStart, lineEnd;
         lineStart.X = screenSize.Width - (75*Context->GUIScale.X);
         lineStart.Y = 25*Context->GUIScale.Y;
-        lineEnd.X = lineL * cos(-Accel.Y*0.1+1.57) + lineStart.X;
-        lineEnd.Y = lineL * sin(-Accel.Y*0.1+1.57) + lineStart.Y;
+        lineEnd.X = lineL * cos(-Accel.X*0.1+1.57) + lineStart.X;
+        lineEnd.Y = lineL * sin(-Accel.X*0.1+1.57) + lineStart.Y;
         Context->Device->getVideoDriver()->draw2DLine(lineStart, lineEnd);
         core::stringc accStr = "Accelerometer\n    ";
-        accStr += "Y: ";
-        accStr += (s32)Accel.Y;
+        accStr += "X: ";
+        accStr += (s32)Accel.X;
         Font->draw(accStr.c_str(), core::rect<s32>(lineStart.X, 10, 50, 20), video::SColor(255, 255, 255, 255));
     }
     else if (msg.Type == EMT_ACC)

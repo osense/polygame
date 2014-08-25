@@ -45,6 +45,14 @@ enum E_SCREEN_SIZE
     ESS_XLARGE
 };
 
+enum E_SCREEN_ROTATION
+{
+    ESR_0 = 0,
+    ESR_90,
+    ESR_180,
+    ESR_270,
+};
+
 
 struct SContext
 {
@@ -63,6 +71,7 @@ struct SContext
     irr::core::vector2df GUIScale;
     irr::core::dimension2du ScreenResolution;
     E_SCREEN_SIZE ScreenSize;
+    E_SCREEN_ROTATION ScreenRotation;
 };
 
 

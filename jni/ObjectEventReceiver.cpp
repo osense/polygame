@@ -125,11 +125,14 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
 #endif
     else if (event.EventType == EET_ACCELEROMETER_EVENT)
     {
-        SMessage msg(this, EMT_ACC);
-        msg.Acc.X = event.AccelerometerEvent.X;
-        msg.Acc.Y = event.AccelerometerEvent.Y;
-        msg.Acc.Z = event.AccelerometerEvent.Z;
+        const f64 canonAcc[] = {event.AccelerometerEvent.X, event.AccelerometerEvent.Y, event.AccelerometerEvent.Z};
+        f64 worldAcc[3];
+        transformAccelInput(canonAcc, worldAcc);
 
+        SMessage msg(this, EMT_ACC);
+        msg.Acc.X = -worldAcc[0] + Context->Sets->AccelXBias;
+        msg.Acc.Y = worldAcc[1];
+        msg.Acc.Z = worldAcc[2];
         broadcastMessage(msg);
         return true;
     }
@@ -143,4 +146,27 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
     }
 
     return false;
+}
+
+void ObjectEventReceiver::transformAccelInput(const f64* canVec, f64* worldVec) const
+{
+    struct AxisSwap
+    {
+        signed char negateX;
+        signed char negateY;
+        signed char xSrc;
+        signed char ySrc;
+    };
+    static const AxisSwap axisSwap[] =
+    {
+        { 1, 1, 0, 1 }, // ROTATION_0
+        {-1, 1, 1, 0 }, // ROTATION_90
+        {-1, -1, 0, 1 },// ROTATION_180
+        { 1, -1, 1, 0 } // ROTATION_270
+    };
+
+    const AxisSwap& as = axisSwap[u32(Context->ScreenRotation)];
+    worldVec[0] = (f32)as.negateX * canVec[as.xSrc];
+    worldVec[1] = (f32)as.negateY * canVec[as.ySrc];
+    worldVec[2] = canVec[2];
 }

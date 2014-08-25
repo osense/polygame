@@ -6,6 +6,14 @@ Settings::Settings(SContext* cont, core::stringc storagePath)
     FilePath = storagePath + "settings.json";
     SavegamePath = storagePath + "savegame.json";
 
+    if (Context->ScreenRotation == ESR_0 || Context->ScreenRotation == ESR_180)
+    {
+        AccelXBias = -1.7;
+    }
+    else
+    {
+        AccelXBias = 0;
+    }
     EffectQuality = video::EPQ_QUARTER;
     Glow = true;
     Antialiasing = false;
@@ -18,6 +26,7 @@ bool Settings::read()
     if (root.get("magic_number", 0).asUInt() != MagicNumber)
         return false;
 
+    AccelXBias = root.get("accel_x_bias", AccelXBias).asDouble();
     EffectQuality = (video::E_POSTPROCESSING_EFFECT_QUALITY)root.get("effectQuality", video::EPQ_QUARTER).asUInt();
     Glow = root.get("glow", false).asBool();
     Antialiasing = root.get("antialiasing", false).asBool();
@@ -30,6 +39,7 @@ void Settings::write() const
 {
     Json::Value root;
     root["magic_number"] = (u32) MagicNumber;
+    root["accel_x_bias"] = AccelXBias;
     root["effectQuality"] = (u32) EffectQuality;
     root["glow"] = Glow;
     root["antialiasing"] = Antialiasing;

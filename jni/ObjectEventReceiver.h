@@ -8,6 +8,7 @@
 
 #include "Object.h"
 #include "ObjectManager.h"
+#include "Settings.h"
 
 using namespace irr;
 
@@ -23,6 +24,7 @@ class ObjectEventReceiver : public Object, public IEventReceiver
         virtual bool OnEvent(const SEvent& event);
 
     private:
+        void transformAccelInput(const f64* canVec, f64* worldVec) const;
 };
 
 #endif // OBJECTEVENTRECEIVER_H

@@ -75,8 +75,52 @@ void ObjectStateInit::onMessage(SMessage msg)
 
             // saved settings
 #ifdef _IRR_ANDROID_PLATFORM_
+            JNIEnv* jni = 0;
+            Context->App->activity->vm->AttachCurrentThread(&jni, NULL);
+            if (jni)
+            {
+                jclass classNativeActivity = jni->FindClass("android/app/NativeActivity");
+                jclass classWindowManager = jni->FindClass("android/view/WindowManager");
+                jclass classDisplay = jni->FindClass("android/view/Display");
+                if (classWindowManager)
+                {
+                    jmethodID idNativeActivity_getWindowManager = jni->GetMethodID(classNativeActivity, "getWindowManager", "()Landroid/view/WindowManager;");
+                    jmethodID idWindowManager_getDefaultDisplay = jni->GetMethodID(classWindowManager, "getDefaultDisplay", "()Landroid/view/Display;");
+                    jmethodID idWindowManager_getRotation = jni->GetMethodID(classDisplay, "getRotation", "()I");
+                    if (idWindowManager_getRotation)
+                    {
+                        jobject windowManager = jni->CallObjectMethod(Context->App->activity->clazz, idNativeActivity_getWindowManager);
+                        if (windowManager)
+                        {
+                            jobject display = jni->CallObjectMethod(windowManager, idWindowManager_getDefaultDisplay);
+                            if (display)
+                            {
+                                int rotation = jni->CallIntMethod(display, idWindowManager_getRotation);
+                                Context->ScreenRotation = E_SCREEN_ROTATION(rotation);
+
+                                if (rotation == 0 || rotation == 2)
+                                {
+                                    debugLog("default screen rotation is PORTRAIT");
+                                }
+                                else
+                                {
+                                    debugLog("default screen rotation is LANDSCAPE");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Context->App->activity->vm->DetachCurrentThread();
+            }
+
+
+
+
             Context->StoragePath = core::stringc(Context->App->activity->internalDataPath) + "/";
 #else
+            Context->ScreenRotation = ESR_90;
+
             Context->StoragePath = core::stringc();
 #endif
 

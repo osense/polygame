@@ -132,10 +132,10 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_ACC)
     {
-        f32 accY = msg.Acc.Y;
-        clamp(accY, -1*(AccCutoff), AccCutoff);
+        f32 acc = msg.Acc.X;
+        clamp(acc, -1*(AccCutoff), AccCutoff);
 
-        AccSamples.push_back(accY);
+        AccSamples.push_back(acc);
 
         f32 total = 0;
         for (u32 i = 0; i < AccSamplesSize; i++)
