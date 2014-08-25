@@ -92,7 +92,6 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_GFX:
             if (State != EOS_GFX)
             {
-                deserialize();
                 create_gfx();
             }
             else if (State == EOS_GFX)
@@ -271,7 +270,7 @@ void ObjectStateOptions::deserialize()
         else
             Context->Sets->Glow = true;
 
-        bool oldEffectQuality = Context->Sets->EffectQuality;
+        video::E_POSTPROCESSING_EFFECT_QUALITY oldEffectQuality = Context->Sets->EffectQuality;
         if (static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_LOW))->isPressed())
             Context->Sets->EffectQuality = video::EPQ_OCTOPUS;
         else if (static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->isPressed())
@@ -286,7 +285,7 @@ void ObjectStateOptions::deserialize()
             Context->Sets->Antialiasing = false;
 
 
-        if (Context->Sets->Glow != oldGlow || oldEffectQuality != Context->Sets->EffectQuality || Context->Sets->Antialiasing != oldFXAA)
+        if ((Context->Sets->Glow != oldGlow) || (oldEffectQuality != Context->Sets->EffectQuality) || (Context->Sets->Antialiasing != oldFXAA))
             Context->Renderer->loadPP(true);
     }
 }
