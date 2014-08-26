@@ -12,7 +12,7 @@
 #include "functions.h"
 
 #include <irrlicht.h>
-#include <random>
+#include "libnoise/perlin.h"
 
 using namespace irr;
 
@@ -52,6 +52,9 @@ private:
     static constexpr u32 OffsetZ = 1;
     static constexpr f32 LineThickness = 0.005;
     static constexpr u32 GenChangeEvery = 50;
+    static constexpr u32 SlopeChangeEvery = 5;
+    static constexpr u32 SlopeChangeEveryOffset = 10;
+    static constexpr u32 NoSlopeWeight = 2;
     static constexpr u32 ColorChangeEvery = 45;
     static constexpr f32 PlayerSize = 0.05;
 
@@ -63,6 +66,7 @@ private:
 
     GridGenerator Generator;
     u32 GenChangeIn;
+    u32 SlopeChangeIn;
 
     ObjectGridCinematicLines* CinLines;
 
@@ -76,7 +80,6 @@ private:
     // approximation mesh
     scene::SMeshBuffer* BufferAppx;
     scene::IMeshSceneNode* BackNode;
-
 
     void regenerate();
     void regenerateAppx();

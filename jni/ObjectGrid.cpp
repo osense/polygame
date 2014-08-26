@@ -5,6 +5,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     CollisionActive(true),
     Generator(Context->Sets->Seed, NumPointsX, NumPointsZ),
     GenChangeIn(GenChangeEvery),
+    SlopeChangeIn(SlopeChangeEvery),
     ColorChangeIn(5),
     ChangingColor(0)
 {
@@ -19,16 +20,12 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     srand(0);
     Generator.setType(EGT_PLAINS);
-    Generator.setSlope(EST_DOWN);
 
     CinLines = new ObjectGridCinematicLines(Context, NumPointsX);
 
 
     // starting color
-    std::mt19937 mt;
-    mt.seed(Context->Sets->Seed);
-    std::uniform_int_distribution<u32> distrib(0, 359);
-    video::SColorf startCol = hueShift(video::SColorf(1, 1, 0), distrib(mt));
+    video::SColorf startCol = hueShift(video::SColorf(1, 1, 0), Generator.getRandomVal(Position.Z) * 180);
     Context->Mtls->GridCB->setNearColor(startCol);
     Context->Mtls->GridCB->setFarColor(startCol);
 
@@ -389,21 +386,39 @@ void ObjectGrid::handleGenUpdate()
     Generator.setDifficulty(Generator.getDifficulty() + 0.5 / GenChangeEvery);
 
     GenChangeIn--;
+    SlopeChangeIn--;
 
     if (GenChangeIn <= 0)
     {
-        Generator.setType(E_GEN_TYPE(rand()%EGT_COUNT));
+        f32 randVal = (Generator.getRandomVal(Position.Z) + 1) / 2 - 0.00001;
+        u32 genChoice = u32(randVal * f32(EGT_COUNT));
+
+        Generator.setType(E_GEN_TYPE(genChoice));
         Generator.setDifficulty(Generator.getDifficulty() - 0.45);
+
         GenChangeIn = GenChangeEvery;
     }
 
-    if (GenChangeIn == int(0.2 * GenChangeEvery))
+    if (SlopeChangeIn <= 0)
     {
-        Generator.setSlope(EST_NONE);
-    }
-    if (GenChangeIn == int(0.6 * GenChangeEvery))
-    {
-        Generator.setSlope(EST_UP);
+         f32 randVal = (Generator.getRandomVal(Position.Z) + 1) / 2 - 0.00001;
+         u32 slopeChoice = u32(randVal * (EST_COUNT + NoSlopeWeight - 1));
+         if (slopeChoice >= EST_COUNT - 1)
+         {
+             slopeChoice = EST_NONE;
+         }
+         else if (slopeChoice == 0)
+         {
+             slopeChoice = EST_UP;
+         }
+         else
+         {
+             slopeChoice = EST_DOWN;
+         }
+
+         Generator.setSlope(E_SLOPE_TYPE(slopeChoice));
+
+         SlopeChangeIn = SlopeChangeEvery + u32(randVal * SlopeChangeEveryOffset);
     }
 }
 
@@ -413,7 +428,7 @@ void ObjectGrid::handleColors()
     if (ColorChangeIn == 0)
     {
         ColorFar = Context->Mtls->GridCB->getFarColor();
-        ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 240);
+        ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 120);
 
         ChangingColor = NumPointsZ;
         ColorChangeIn = ColorChangeEvery;

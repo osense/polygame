@@ -220,7 +220,7 @@ inline video::SColorf hueShift(video::SColorf col, f32 shift)
     while (hsvCol.X >= 360)
         hsvCol.X -= 360;
     while (hsvCol.X < 0)
-        hsvCol += 360;
+        hsvCol.X += 360;
 
     video::SColorf comp = HSVtoRGBf(hsvCol);
     comp.a = a;

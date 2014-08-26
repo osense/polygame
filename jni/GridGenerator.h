@@ -30,7 +30,8 @@ enum E_SLOPE_TYPE
 {
     EST_NONE = 0,
     EST_DOWN,
-    EST_UP
+    EST_UP,
+    EST_COUNT
 };
 
 class GridGenerator
@@ -46,10 +47,13 @@ class GridGenerator
         E_GEN_TYPE getType() const;
 
         void setSlope(E_SLOPE_TYPE type);
+        E_SLOPE_TYPE getSlope() const;
         f32 getHeight(u32 z) const;
 
         void setDifficulty(f32 diff);
         f32 getDifficulty() const;
+
+        f32 getRandomVal(f32 posZ) const;
 
         Json::Value serialize() const;
         void deserialize(Json::Value& root);

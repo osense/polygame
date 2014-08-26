@@ -42,7 +42,7 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         ObjectGrid* grid = static_cast<ObjectGrid*>(Context->ObjManager->getObjectFromName("ObjectGrid"));
         if (grid)
         {
-            dbg += "\nTerrain type: ";
+            dbg += "\nTerrain: ";
             switch (grid->getGenerator().getType())
             {
             case EGT_PLAINS:
@@ -56,6 +56,22 @@ void ObjectDebugInfo::onMessage(SMessage msg)
                 break;
             case EGT_WALLS:
                 dbg += "WALLS";
+                break;
+            default:
+                dbg += "ERROR";
+            }
+
+            dbg += "\nSlope: ";
+            switch (grid->getGenerator().getSlope())
+            {
+            case EST_NONE:
+                dbg += "NONE";
+                break;
+            case EST_UP:
+                dbg += "UP";
+                break;
+            case EST_DOWN:
+                dbg += "DOWN";
                 break;
             default:
                 dbg += "ERROR";

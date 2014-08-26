@@ -17,7 +17,7 @@ GridGenerator::GridGenerator(u32 seed, u32 numPointsX, u32 numPointsZ)
 
     //PerlinN.SetNoiseQuality(noise::QUALITY_BEST);
     PerlinN.SetSeed(seed);
-    PerlinN.SetOctaveCount(1);
+    //PerlinN.SetOctaveCount(1);
 }
 
 GridGenerator::~GridGenerator()
@@ -128,6 +128,11 @@ void GridGenerator::setSlope(E_SLOPE_TYPE type)
     }
 }
 
+E_SLOPE_TYPE GridGenerator::getSlope() const
+{
+    return Slope;
+}
+
 f32 GridGenerator::getHeight(u32 z) const
 {
     return Height[Height.getIndex() + z + 1];
@@ -141,6 +146,13 @@ void GridGenerator::setDifficulty(f32 diff)
 f32 GridGenerator::getDifficulty() const
 {
     return Difficulty;
+}
+
+f32 GridGenerator::getRandomVal(f32 posZ) const
+{
+    constexpr f32 bias = 1.0 / 3.0;
+    posZ += bias;
+    return PerlinN.GetValue(posZ * 3.1415, posZ * 2.7182, posZ * 1.618);
 }
 
 Json::Value GridGenerator::serialize() const
