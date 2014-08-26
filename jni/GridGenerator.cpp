@@ -1,6 +1,6 @@
 #include "GridGenerator.h"
 
-GridGenerator::GridGenerator(u32 numPointsX, u32 numPointsZ)
+GridGenerator::GridGenerator(u32 seed, u32 numPointsX, u32 numPointsZ)
     :Height(numPointsZ)
 {
     NumPointsX = numPointsX;
@@ -16,7 +16,7 @@ GridGenerator::GridGenerator(u32 numPointsX, u32 numPointsZ)
         Height.push_back(0);
 
     //PerlinN.SetNoiseQuality(noise::QUALITY_BEST);
-    PerlinN.SetSeed(0);
+    PerlinN.SetSeed(seed);
     PerlinN.SetOctaveCount(1);
 }
 

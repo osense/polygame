@@ -2,6 +2,7 @@
 #define OBJECTGRID_H
 
 #include "ObjectManager.h"
+#include "Settings.h"
 #include "GridGenerator.h"
 #include "ObjectGridCinematicLines.h"
 #include "SMaterials.h"
@@ -10,9 +11,8 @@
 #include "ShaderCBSolid.h"
 #include "functions.h"
 
-#include <stdlib.h>
 #include <irrlicht.h>
-#include <thread>
+#include <random>
 
 using namespace irr;
 
@@ -52,7 +52,7 @@ private:
     static constexpr u32 OffsetZ = 1;
     static constexpr f32 LineThickness = 0.005;
     static constexpr u32 GenChangeEvery = 50;
-    static constexpr u32 ColorChangeEvery = 35;
+    static constexpr u32 ColorChangeEvery = 45;
     static constexpr f32 PlayerSize = 0.05;
 
     core::vector3df Position;

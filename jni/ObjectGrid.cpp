@@ -3,7 +3,7 @@
 ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     UpdateState(EGUS_NONE),
     CollisionActive(true),
-    Generator(NumPointsX, NumPointsZ),
+    Generator(Context->Sets->Seed, NumPointsX, NumPointsZ),
     GenChangeIn(GenChangeEvery),
     ColorChangeIn(5),
     ChangingColor(0)
@@ -23,8 +23,14 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     CinLines = new ObjectGridCinematicLines(Context, NumPointsX);
 
-    Context->Mtls->GridCB->setNearColor(video::SColorf(1, 1, 0));
-    Context->Mtls->GridCB->setFarColor(video::SColorf(1, 1, 0));
+
+    // starting color
+    std::mt19937 mt;
+    mt.seed(Context->Sets->Seed);
+    std::uniform_int_distribution<u32> distrib(0, 359);
+    video::SColorf startCol = hueShift(video::SColorf(1, 1, 0), distrib(mt));
+    Context->Mtls->GridCB->setNearColor(startCol);
+    Context->Mtls->GridCB->setFarColor(startCol);
 
     Points[10][15] = 2;
     Points[11][15] = 1;
@@ -429,6 +435,12 @@ void ObjectGrid::handleColors()
         callback->setNearColor(near);
         callback->setFarColor(far);
         ChangingColor--;
+
+        if (ChangingColor == 0 && near.toSColor() != far.toSColor())
+        {
+            ColorFar = ColorNext;
+            ChangingColor = NumPointsZ;
+        }
     }
 }
 

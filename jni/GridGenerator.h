@@ -36,7 +36,7 @@ enum E_SLOPE_TYPE
 class GridGenerator
 {
     public:
-        GridGenerator(u32 numPointsX, u32 numPointsZ);
+        GridGenerator(u32 seed, u32 numPointsX, u32 numPointsZ);
         ~GridGenerator();
 
         f32* generate(core::vector3df position, E_GEN_DIRECTION dir);

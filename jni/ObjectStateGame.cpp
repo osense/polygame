@@ -118,6 +118,7 @@ void ObjectStateGame::saveGame()
     else
     {
         root["can_continue"] = true;
+        root["seed"] = Context->Sets->Seed;
 
         SMessage msg(this, EMT_SERIALIZE);
         msg.SData.Root = &root;
@@ -132,6 +133,13 @@ void ObjectStateGame::loadGame()
 {
     debugLog(core::stringc("loading game") + Context->Sets->SavegamePath);
     Json::Value root = readJson(Context, Context->Sets->SavegamePath);
+
+    if (!root["can_continue"].asBool())
+    {
+        return;
+    }
+
+    Context->Sets->Seed = root.get("seed", 0).asUInt();
     SMessage msg(this, EMT_DESERIALIZE);
     msg.SData.Root = &root;
     Context->ObjManager->broadcastMessage(msg);

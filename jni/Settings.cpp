@@ -14,6 +14,7 @@ Settings::Settings(SContext* cont, core::stringc storagePath)
     {
         AccelXBias = 0;
     }
+    Seed = 10;
     EffectQuality = video::EPQ_QUARTER;
     Glow = true;
     Antialiasing = false;
@@ -27,6 +28,7 @@ bool Settings::read()
         return false;
 
     AccelXBias = root.get("accel_x_bias", AccelXBias).asDouble();
+    Seed = root.get("seed", 0).asUInt();
     EffectQuality = (video::E_POSTPROCESSING_EFFECT_QUALITY)root.get("effectQuality", video::EPQ_QUARTER).asUInt();
     Glow = root.get("glow", false).asBool();
     Antialiasing = root.get("antialiasing", false).asBool();
@@ -39,6 +41,7 @@ void Settings::write() const
 {
     Json::Value root;
     root["magic_number"] = (u32) MagicNumber;
+    root["seed"] = Seed;
     root["accel_x_bias"] = AccelXBias;
     root["effectQuality"] = (u32) EffectQuality;
     root["glow"] = Glow;

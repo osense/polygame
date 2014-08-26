@@ -103,10 +103,6 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_PLAYER_FEEDBACK)
     {
-        /*core::vector3df pPos = Camera->getPosition();
-        pPos.Y = msg.PlayerFeedback.Height + 0.4;
-        Camera->setPosition((Camera->getPosition()*2 + pPos) / 3.0);
-        TargetRot.X = msg.PlayerFeedback.GridAngle;*/
         FloorHeight = msg.PlayerFeedback.Height;
         FloorAngle = msg.PlayerFeedback.GridAngle;
     }
@@ -127,6 +123,10 @@ void ObjectPlayer::onMessage(SMessage msg)
             TargetRot.Y = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
             clamp(TargetRot.Y, -1.0, 1.0);
             TargetRot.Y *= MaxAbsRotY;
+        }
+        else if (msg.Input.Type == ETIE_PRESSED_DOWN)
+        {
+            Speed += Acceleration;
         }
 #endif
     }
