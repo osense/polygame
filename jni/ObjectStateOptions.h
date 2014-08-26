@@ -20,23 +20,22 @@ enum E_OPTIONS_STATE
 
 enum E_OPTIONS_ID
 {
+    EOI_SEED_0 = 0,
+    EOI_SEED_1 = 1,
+    EOI_SEED_2 = 2,
+    EOI_SEED_3 = 3,
+    EOI_SEED_4 = 4,
+    EOI_SEED_5 = 5,
+    EOI_SEED_6 = 6,
+    EOI_SEED_7 = 7,
+    EOI_SEED_8 = 8,
+    EOI_SEED_9 = 9,
+    EOI_SEED_C,
+    EOI_SEED_BOX,
+
     EOI_GFX,
     EOI_CONTROLS,
-
     EOI_SEED,
-    EOI_SEED_BOX,
-    EOI_SEED_1,
-    EOI_SEED_2,
-    EOI_SEED_3,
-    EOI_SEED_4,
-    EOI_SEED_5,
-    EOI_SEED_6,
-    EOI_SEED_7,
-    EOI_SEED_8,
-    EOI_SEED_9,
-    EOI_SEED_0,
-    EOI_SEED_C,
-
     EOI_BACK,
     EOI_GLOW_OFF,
     EOI_GLOW_LOW,
@@ -60,6 +59,8 @@ class ObjectStateOptions : public Object
         void create_gfx();
         void create_controls();
         void create_seed();
+
+        void seed_onDigitPressed(u32 digit);
 
         void serialize();
         void deserialize();

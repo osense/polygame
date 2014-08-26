@@ -58,28 +58,24 @@ void ObjectStateOptions::onMessage(SMessage msg)
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(false);
             break;
-
         case EOI_GLOW_LOW:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_OFF))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_LOW))->setPressed(true);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(false);
             break;
-
         case EOI_GLOW_MEDIUM:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_OFF))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_LOW))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(true);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(false);
             break;
-
         case EOI_GLOW_HIGH:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_OFF))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_LOW))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(true);
             break;
-
         case EOI_FXAA_OFF:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(true);
@@ -87,6 +83,23 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_FXAA_ON:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->setPressed(true);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(false);
+            break;
+
+        case EOI_SEED_0:
+        case EOI_SEED_1:
+        case EOI_SEED_2:
+        case EOI_SEED_3:
+        case EOI_SEED_4:
+        case EOI_SEED_5:
+        case EOI_SEED_6:
+        case EOI_SEED_7:
+        case EOI_SEED_8:
+        case EOI_SEED_9:
+            seed_onDigitPressed(u32(callerID));
+            break;
+
+        case EOI_SEED_C:
+            static_cast<gui::IGUIEditBox*>(PaneWindow->getElementFromId(EOI_SEED_BOX))->setText(L"0");
             break;
 
         case EOI_GFX:
@@ -156,7 +169,7 @@ void ObjectStateOptions::create_gfx()
     State = EOS_GFX;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(true);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(false);
-    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
@@ -190,11 +203,13 @@ void ObjectStateOptions::create_controls()
     State = EOS_CONTROLS;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(false);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(true);
-    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(false);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
+
+    serialize();
 }
 
 void ObjectStateOptions::create_seed()
@@ -202,7 +217,7 @@ void ObjectStateOptions::create_seed()
     State = EOS_SEED;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(false);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(false);
-    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOS_SEED))->setPressed(true);
+    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(true);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
@@ -211,21 +226,53 @@ void ObjectStateOptions::create_seed()
     core::rect<s32> boxRect(core::position2d<s32>(140, 100), core::dimension2d<s32>(200, 40));
     scaleGUIRect(boxRect, Context->GUIScale);
     gui::IGUIEditBox* box = Context->Device->getGUIEnvironment()->addEditBox(L"32768", boxRect, true, PaneWindow, EOI_SEED_BOX);
-    box->setOverrideFont(getOverlayFont(Context));
+    box->setOverrideFont(getFont(Context));
     box->setDrawBackground(false);
     box->setTextAlignment(gui::EGUIA_LOWERRIGHT, gui::EGUIA_CENTER);
 
-    addButton(core::position2d<s32>(500, 40), core::dimension2d<s32>(50, 50), L"1", Context, EOI_SEED_1, PaneWindow);
-    addButton(core::position2d<s32>(600, 40), core::dimension2d<s32>(50, 50), L"2", Context, EOI_SEED_2, PaneWindow);
-    addButton(core::position2d<s32>(700, 40), core::dimension2d<s32>(50, 50), L"3", Context, EOI_SEED_3, PaneWindow);
-    addButton(core::position2d<s32>(500, 130), core::dimension2d<s32>(50, 50), L"4", Context, EOI_SEED_1, PaneWindow);
-    addButton(core::position2d<s32>(600, 130), core::dimension2d<s32>(50, 50), L"5", Context, EOI_SEED_2, PaneWindow);
-    addButton(core::position2d<s32>(700, 130), core::dimension2d<s32>(50, 50), L"6", Context, EOI_SEED_3, PaneWindow);
-    addButton(core::position2d<s32>(500, 220), core::dimension2d<s32>(50, 50), L"7", Context, EOI_SEED_1, PaneWindow);
-    addButton(core::position2d<s32>(600, 220), core::dimension2d<s32>(50, 50), L"8", Context, EOI_SEED_2, PaneWindow);
-    addButton(core::position2d<s32>(700, 220), core::dimension2d<s32>(50, 50), L"9", Context, EOI_SEED_3, PaneWindow);
+    addButton(core::position2d<s32>(500, 40), core::dimension2d<s32>(50, 50), L"7", Context, EOI_SEED_7, PaneWindow);
+    addButton(core::position2d<s32>(600, 40), core::dimension2d<s32>(50, 50), L"8", Context, EOI_SEED_8, PaneWindow);
+    addButton(core::position2d<s32>(700, 40), core::dimension2d<s32>(50, 50), L"9", Context, EOI_SEED_9, PaneWindow);
+    addButton(core::position2d<s32>(500, 130), core::dimension2d<s32>(50, 50), L"4", Context, EOI_SEED_4, PaneWindow);
+    addButton(core::position2d<s32>(600, 130), core::dimension2d<s32>(50, 50), L"5", Context, EOI_SEED_5, PaneWindow);
+    addButton(core::position2d<s32>(700, 130), core::dimension2d<s32>(50, 50), L"6", Context, EOI_SEED_6, PaneWindow);
+    addButton(core::position2d<s32>(500, 220), core::dimension2d<s32>(50, 50), L"1", Context, EOI_SEED_1, PaneWindow);
+    addButton(core::position2d<s32>(600, 220), core::dimension2d<s32>(50, 50), L"2", Context, EOI_SEED_2, PaneWindow);
+    addButton(core::position2d<s32>(700, 220), core::dimension2d<s32>(50, 50), L"3", Context, EOI_SEED_3, PaneWindow);
+
     addButton(core::position2d<s32>(500, 290), core::dimension2d<s32>(50, 50), L"0", Context, EOI_SEED_0, PaneWindow);
     addButton(core::position2d<s32>(700, 290), core::dimension2d<s32>(50, 50), L"C", Context, EOI_SEED_C, PaneWindow);
+
+    serialize();
+}
+
+void ObjectStateOptions::seed_onDigitPressed(u32 digit)
+{
+    gui::IGUIEditBox* sBox = static_cast<gui::IGUIEditBox*>(PaneWindow->getElementFromId(EOI_SEED_BOX));
+    core::stringc text = sBox->getText();
+
+    if (text == L"0")
+    {
+        if (digit == 0)
+        {
+            return;
+        }
+        else
+        {
+            text = L"";
+        }
+    }
+
+    text += digit;
+    char* eh;
+    u32 textI = strtol(text.c_str(), &eh, 10);
+    if (textI > MAX_SEED)
+    {
+        text = "";
+        text += MAX_SEED;
+    }
+
+    sBox->setText(core::stringw(text).c_str());
 }
 
 void ObjectStateOptions::serialize()
@@ -258,6 +305,16 @@ void ObjectStateOptions::serialize()
         else
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(true);
     }
+    else if (State == EOS_CONTROLS)
+    {
+
+    }
+    else if (State == EOS_SEED)
+    {
+        core::stringw seedT;
+        seedT += Context->Sets->Seed;
+        static_cast<gui::IGUIEditBox*>(PaneWindow->getElementFromId(EOI_SEED_BOX))->setText(seedT.c_str());
+    }
 }
 
 void ObjectStateOptions::deserialize()
@@ -287,5 +344,15 @@ void ObjectStateOptions::deserialize()
 
         if ((Context->Sets->Glow != oldGlow) || (oldEffectQuality != Context->Sets->EffectQuality) || (Context->Sets->Antialiasing != oldFXAA))
             Context->Renderer->loadPP(true);
+    }
+    else if (State == EOS_CONTROLS)
+    {
+
+    }
+    else if (State == EOS_SEED)
+    {
+        core::stringc seedT = static_cast<gui::IGUIEditBox*>(PaneWindow->getElementFromId(EOI_SEED_BOX))->getText();
+        char* eh;
+        Context->Sets->Seed = strtol(seedT.c_str(), &eh, 10);
     }
 }

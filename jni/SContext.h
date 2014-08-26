@@ -9,6 +9,8 @@
 //#define DEBUG_EFFECTS
 //#define DEBUG_INPUT
 
+#define MAX_SEED 32768
+
 #define GUI_TARGET_X 854
 #define GUI_TARGET_Y 480
 
