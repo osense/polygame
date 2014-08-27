@@ -108,6 +108,11 @@ E_GEN_TYPE GridGenerator::getType() const
 
 void GridGenerator::setSlope(E_SLOPE_TYPE type)
 {
+    if (Slope == type)
+    {
+        return;
+    }
+
     PrevSlope = Slope;
     StepsIntoSlope = 0;
 
@@ -131,6 +136,11 @@ void GridGenerator::setSlope(E_SLOPE_TYPE type)
 E_SLOPE_TYPE GridGenerator::getSlope() const
 {
     return Slope;
+}
+
+u32 GridGenerator::getSlopeChangeInSteps() const
+{
+    return SlopeChangeInSteps;
 }
 
 f32 GridGenerator::getHeight(u32 z) const

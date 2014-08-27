@@ -403,6 +403,7 @@ void ObjectGrid::handleGenUpdate()
     {
          f32 randVal = (Generator.getRandomVal(Position.Z) + 1) / 2 - 0.00001;
          u32 slopeChoice = u32(randVal * (EST_COUNT + NoSlopeWeight - 1));
+         u32 changeInMod = 0;
          if (slopeChoice >= EST_COUNT - 1)
          {
              slopeChoice = EST_NONE;
@@ -410,15 +411,23 @@ void ObjectGrid::handleGenUpdate()
          else if (slopeChoice == 0)
          {
              slopeChoice = EST_UP;
+             if (Generator.getSlope() == EST_DOWN)
+             {
+                 changeInMod = Generator.getSlopeChangeInSteps();
+             }
          }
          else
          {
              slopeChoice = EST_DOWN;
+             if (Generator.getSlope() == EST_UP)
+             {
+                 changeInMod = Generator.getSlopeChangeInSteps();
+             }
          }
 
          Generator.setSlope(E_SLOPE_TYPE(slopeChoice));
 
-         SlopeChangeIn = SlopeChangeEvery + u32(randVal * SlopeChangeEveryOffset);
+         SlopeChangeIn = SlopeChangeEvery + changeInMod + u32(randVal * SlopeChangeEveryOffset);
     }
 }
 

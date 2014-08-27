@@ -52,8 +52,8 @@ private:
     static constexpr u32 OffsetZ = 1;
     static constexpr f32 LineThickness = 0.005;
     static constexpr u32 GenChangeEvery = 50;
-    static constexpr u32 SlopeChangeEvery = 5;
-    static constexpr u32 SlopeChangeEveryOffset = 10;
+    static constexpr u32 SlopeChangeEvery = 7;
+    static constexpr u32 SlopeChangeEveryOffset = 0;
     static constexpr u32 NoSlopeWeight = 2;
     static constexpr u32 ColorChangeEvery = 45;
     static constexpr f32 PlayerSize = 0.05;
