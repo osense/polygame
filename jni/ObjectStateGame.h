@@ -12,6 +12,7 @@
 #include "ObjectSky.h"
 #include "ObjectHUD.h"
 #include "ObjectPlayer.h"
+#include "ObjectTracerRecorder.h"
 #include "EffectFader.h"
 
 enum E_GAME_GUI_ID

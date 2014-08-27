@@ -64,3 +64,17 @@ void ObjectItemSpawner::onMessage(SMessage msg)
         }
     }
 }
+
+void ObjectItemSpawner::spawnTracers() const
+{
+    Json::Value tracers = readJson(Context, Context->StoragePath + TRACERS_FILENAME);
+
+    u32 numTracers = tracers.size();
+    for (u32 i = 0; i <  numTracers; i++)
+    {
+        if (tracers[i]["seed"].asUInt() == Context->Sets->Seed)
+        {
+            new ObjectTracer(Context, tracers[i]);
+        }
+    }
+}

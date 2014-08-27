@@ -10,6 +10,8 @@
 //#define DEBUG_INPUT
 
 #define MAX_SEED 32768
+#define TRACERS_FILENAME "tracers.json"
+#define TRACER_EXT ".tbin"
 
 #define GUI_TARGET_X 854
 #define GUI_TARGET_Y 480

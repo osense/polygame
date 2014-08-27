@@ -2,6 +2,7 @@
 #define FUNCTIONS_H_INCLUDED
 
 #include <irrlicht.h>
+#include <ctime>
 #include "circular_buffer.h"
 #include "SContext.h"
 #include "json/json.h"
@@ -273,12 +274,31 @@ inline void storeVector3df(const core::vector3df& vec, Json::Value& val, const c
     val[name.c_str()] = vecVal;
 }
 
+inline Json::Value storeVector3df(const core::vector3df& vec)
+{
+    Json::Value vecVal;
+    vecVal.append(vec.X);
+    vecVal.append(vec.Y);
+    vecVal.append(vec.Z);
+    return vecVal;
+}
+
 inline core::vector3df parseVector3df(Json::Value& val, const core::stringc name)
 {
     core::vector3df vec;
     vec.X = val[name.c_str()][0].asDouble();
     vec.Y = val[name.c_str()][1].asDouble();
     vec.Z = val[name.c_str()][2].asDouble();
+
+    return vec;
+}
+
+inline core::vector3df parseVector3df(Json::Value& val)
+{
+    core::vector3df vec;
+    vec.X = val[0].asDouble();
+    vec.Y = val[1].asDouble();
+    vec.Z = val[2].asDouble();
 
     return vec;
 }
@@ -322,6 +342,30 @@ inline void deserializeCircularBuffer(circular_buffer<f32>& buff, Json::Value& v
             buff.push_back(val["values"][i].asDouble());
 
     buff.setIndex(val["index"].asUInt());
+}
+
+inline Json::Value serializeDate(std::tm* date)
+{
+    Json::Value d;
+    d["year"] = date->tm_year;
+    d["month"] = date->tm_mon;
+    d["day"] = date->tm_mday;
+    d["hour"] = date->tm_hour;
+    d["minute"] = date->tm_min;
+
+    return d;
+}
+
+inline std::tm deserializeDate(Json::Value& date)
+{
+    std::tm d;
+    d.tm_year = date["year"].asInt();
+    d.tm_mon = date["month"].asInt();
+    d.tm_mday = date["day"].asInt();
+    d.tm_hour = date["hour"].asInt();
+    d.tm_min = date["minute"].asInt();
+
+    return d;
 }
 
 #endif // FUNCTIONS_H_INCLUDED

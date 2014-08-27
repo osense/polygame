@@ -3,10 +3,13 @@
 
 #include "Object.h"
 #include "ObjectGrid.h"
+#include "functions.h"
+#include "json/value.h"
 #include "libnoise/perlin.h"
 
 #include "ObjectItemCube.h"
 #include "ObjectItemPyramid.h"
+#include "ObjectTracer.h"
 
 
 class ObjectItemSpawner : public Object
@@ -16,6 +19,8 @@ class ObjectItemSpawner : public Object
         ~ObjectItemSpawner();
 
         virtual void onMessage(SMessage msg);
+
+        void spawnTracers() const;
 
     private:
         ObjectGrid* Grid;

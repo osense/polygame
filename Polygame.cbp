@@ -93,6 +93,10 @@
 		<Unit filename="jni/ObjectStateMenu.h" />
 		<Unit filename="jni/ObjectStateOptions.cpp" />
 		<Unit filename="jni/ObjectStateOptions.h" />
+		<Unit filename="jni/ObjectTracer.cpp" />
+		<Unit filename="jni/ObjectTracer.h" />
+		<Unit filename="jni/ObjectTracerRecorder.cpp" />
+		<Unit filename="jni/ObjectTracerRecorder.h" />
 		<Unit filename="jni/ObjectUpdater.cpp" />
 		<Unit filename="jni/ObjectUpdater.h" />
 		<Unit filename="jni/SContext.h" />

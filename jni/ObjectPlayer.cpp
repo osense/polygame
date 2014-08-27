@@ -126,7 +126,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         }
         else if (msg.Input.Type == ETIE_PRESSED_DOWN)
         {
-            Speed += Acceleration;
+            Speed += Acceleration * 10;
         }
 #endif
     }
