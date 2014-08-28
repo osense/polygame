@@ -185,6 +185,10 @@ void ObjectStateInit::onMessage(SMessage msg)
                 Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
                                                                                                     new ShaderCBSky());
 
+                Context->Mtls->TracerCB = new ShaderCBTracer(Context);
+                Context->Mtls->Tracer = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/tracer.vert", "shaders/tracer.frag",
+                                                                                                            Context->Mtls->TracerCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+
                 Context->Renderer->init(EET_FADER);
 
                 Context->Mtls->Loaded = true;

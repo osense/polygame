@@ -10,12 +10,6 @@
 #include "ObjectStateMenu.h"
 
 #include "EffectRenderer.h"
-#include "ShaderCBDepth.h"
-#include "ShaderCBGrid.h"
-#include "ShaderCBAlpha.h"
-#include "ShaderCBSolid.h"
-#include "ShaderCBFader.h"
-#include "ShaderCBSky.h"
 
 #include "GeometryGenerator.h"
 #include "ObjectItemCube.h"

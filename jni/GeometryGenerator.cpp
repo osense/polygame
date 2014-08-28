@@ -301,21 +301,23 @@ scene::IMesh* GeometryGenerator::createTracerMesh(f32 length, f32 height, u32 se
     tmpMesh->drop();
 
     video::SColor white(255, 255, 255, 255);
-    core::vector2df null2d(0, 0);
     f32 size = height / 2;
 
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, -length), core::vector3df(0, 1, 0), white, null2d));
-    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, -length), core::vector3df(0, -1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, 0), core::vector3df(0, 1, 0), white, core::vector2df(1, 0)));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, 0), core::vector3df(0, -1, 0), white, core::vector2df(1, 0)));
 
     for (u32  i = 1; i <= segments; i++)
     {
-        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, -length + (f32(i)/segments) * length), core::vector3df(0, 1, 0), white, null2d));
-        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, -length + (f32(i)/segments) * length), core::vector3df(0, -1, 0), white, null2d));
+        f32 posZ = -(f32(i)/segments) * length;
+        core::vector2df texCoord((segments - i)/f32(segments), 0);
+
+        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, posZ), core::vector3df(0, 1, 0), white, texCoord));
+        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, posZ), core::vector3df(0, -1, 0), white, texCoord));
 
         u32 Idx = i * 2;
         u32 prevIdx = (i-1) * 2;
-        buffer->Indices.push_back(prevIdx); buffer->Indices.push_back(prevIdx+1); buffer->Indices.push_back(Idx);
-        buffer->Indices.push_back(prevIdx+1); buffer->Indices.push_back(Idx+1); buffer->Indices.push_back(Idx);
+        buffer->Indices.push_back(prevIdx); buffer->Indices.push_back(Idx); buffer->Indices.push_back(prevIdx+1);
+        buffer->Indices.push_back(Idx); buffer->Indices.push_back(Idx+1); buffer->Indices.push_back(prevIdx+1);
     }
 
     static_cast<scene::SAnimatedMesh*>(mesh)->recalculateBoundingBox();

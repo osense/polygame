@@ -7,6 +7,7 @@
 #include "ShaderCBGrid.h"
 #include "ShaderCBSky.h"
 #include "ShaderCBSolid.h"
+#include "ShaderCBTracer.h"
 
 using namespace irr;
 
@@ -28,6 +29,9 @@ struct SMaterials
 
     video::E_MATERIAL_TYPE Sky;
 
+    video::E_MATERIAL_TYPE Tracer;
+    ShaderCBTracer* TracerCB;
+
     bool Loaded;
 
     void setTransform(f32 t)
@@ -37,6 +41,7 @@ struct SMaterials
             GridCB->setTransform(t);
             AlphaCB->setTransform(t);
             SolidCB->setTransform(t);
+            TracerCB->setTransform(t);
         }
     }
 

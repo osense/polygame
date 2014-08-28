@@ -1,9 +1,8 @@
 #ifndef SHADERCBDOF_H
 #define SHADERCBDOF_H
 
-
 #include <irrlicht.h>
-#include "ShaderCBDepth.h"
+#include "SContext.h"
 
 using namespace irr;
 
