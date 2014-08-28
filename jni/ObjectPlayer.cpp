@@ -169,11 +169,11 @@ void ObjectPlayer::onMessage(SMessage msg)
         playerRoot["floor_angle"] = FloorAngle;
         storeVector3df(TargetRot, playerRoot, "target_rot");
 
-        (*msg.SData.Root)["player"] = playerRoot;
+        (*msg.SData.Root)[Name.c_str()] = playerRoot;
     }
     else if (msg.Type == EMT_DESERIALIZE)
     {
-        Json::Value playerRoot = (*msg.SData.Root)["player"];
+        Json::Value playerRoot = (*msg.SData.Root)[Name.c_str()];
 
         Camera->setPosition(parseVector3df(playerRoot, "pos"));
         Camera->setRotation(parseVector3df(playerRoot, "rot"));

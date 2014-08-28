@@ -45,11 +45,11 @@ void ObjectTracerRecorder::onMessage(SMessage msg)
             root["positions"].append(storeVector3df(it));
         }
 
-        (*msg.SData.Root)["tracer"] = root;
+        (*msg.SData.Root)[Name.c_str()] = root;
     }
     else if (msg.Type == EMT_DESERIALIZE)
     {
-        Json::Value root = (*msg.SData.Root)["tracer"];
+        Json::Value root = (*msg.SData.Root)[Name.c_str()];
 
         u32 pSize = root["size"].asUInt();
         Positions.reserve(pSize);

@@ -170,11 +170,11 @@ void ObjectGrid::onMessage(SMessage msg)
             gridRoot["points"].append(pointsZ);
         }
 
-        (*msg.SData.Root)["grid"] = gridRoot;
+        (*msg.SData.Root)[Name.c_str()] = gridRoot;
     }
     else if (msg.Type == EMT_DESERIALIZE)
     {
-        Json::Value gridRoot = (*msg.SData.Root)["grid"];
+        Json::Value gridRoot = (*msg.SData.Root)[Name.c_str()];
 
         Position = parseVector3df(gridRoot, "pos");
         GenChangeIn = gridRoot["gen_changeIn"].asUInt();

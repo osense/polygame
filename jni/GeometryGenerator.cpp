@@ -288,3 +288,36 @@ scene::IMesh* GeometryGenerator::createPyramidMesh(f32 size, bool filled) const
     static_cast<scene::SAnimatedMesh*>(mesh)->recalculateBoundingBox();
     return mesh;
 }
+
+
+scene::IMesh* GeometryGenerator::createTracerMesh(f32 length, f32 height, u32 segments) const
+{
+    scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
+    scene::SMesh* tmpMesh = new scene::SMesh();
+    scene::SMeshBuffer* buffer = new scene::SMeshBuffer();
+    tmpMesh->addMeshBuffer(buffer);
+    buffer->drop();
+    static_cast<scene::SAnimatedMesh*>(mesh)->addMesh(tmpMesh);
+    tmpMesh->drop();
+
+    video::SColor white(255, 255, 255, 255);
+    core::vector2df null2d(0, 0);
+    f32 size = height / 2;
+
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, -length), core::vector3df(0, 1, 0), white, null2d));
+    buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, -length), core::vector3df(0, -1, 0), white, null2d));
+
+    for (u32  i = 1; i <= segments; i++)
+    {
+        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, -length + (f32(i)/segments) * length), core::vector3df(0, 1, 0), white, null2d));
+        buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, -length + (f32(i)/segments) * length), core::vector3df(0, -1, 0), white, null2d));
+
+        u32 Idx = i * 2;
+        u32 prevIdx = (i-1) * 2;
+        buffer->Indices.push_back(prevIdx); buffer->Indices.push_back(prevIdx+1); buffer->Indices.push_back(Idx);
+        buffer->Indices.push_back(prevIdx+1); buffer->Indices.push_back(Idx+1); buffer->Indices.push_back(Idx);
+    }
+
+    static_cast<scene::SAnimatedMesh*>(mesh)->recalculateBoundingBox();
+    return mesh;
+}

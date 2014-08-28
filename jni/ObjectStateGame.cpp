@@ -11,10 +11,10 @@ ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(co
     Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
     new ObjectGrid(Context);
-    (new ObjectItemSpawner(Context))->spawnTracers();
     new ObjectSky(Context);
     new ObjectHUD(Context);
     new ObjectPlayer(Context);
+    (new ObjectItemSpawner(Context))->spawnTracers();
     new ObjectTracerRecorder(Context);
 
     if (loadSavedGame)
