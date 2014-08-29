@@ -48,6 +48,16 @@ void ObjectTracer::onMessage(SMessage msg)
     {
         f32 nodeZ = PlayerZ + Advance;
 
+        if (Mocking)
+        {
+            nodeZ = Node->getPosition().Z + msg.Update.fDelta * PlayerSpeed;
+            if (nodeZ > PlayerZ + 20)
+            {
+                delete this;
+                return;
+            }
+        }
+
         if (Positions[PositionsIdx+2].Z <= Node->getPosition().Z)
         {
             PositionsIdx++;
@@ -125,5 +135,10 @@ void ObjectTracer::onMessage(SMessage msg)
     else if (msg.Type == EMT_OBJ_POS)
     {
         PlayerZ = msg.Position.Z;
+        PlayerSpeed = msg.Position.Speed;
+    }
+    else if (msg.Type == EMT_PLAYER_CRASHED)
+    {
+        Mocking = true;
     }
 }

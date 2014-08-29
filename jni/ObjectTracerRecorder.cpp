@@ -25,9 +25,10 @@ void ObjectTracerRecorder::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_OBJ_POS)
     {
-        if (Positions.back().Z + RecordEvery <= msg.Position.Z)
+        core::vector3df pPos(msg.Position.X, msg.Position.Y, msg.Position.Z);
+        if ((pPos - Positions.back()).getLength() > RecordEvery)
         {
-            Positions.push_back(core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z));
+            Positions.push_back(pPos);
         }
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)

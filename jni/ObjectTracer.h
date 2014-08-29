@@ -33,7 +33,8 @@ class ObjectTracer : public Object
         u32 PositionsIdx;
         scene::IMeshSceneNode* Node;
         scene::SMeshBuffer* Buffer;
-        f32 PlayerZ = 0;
+        f32 PlayerZ = 0, PlayerSpeed;
+        bool Mocking = false;
         E_TRACER_STATE State = ETS_DEFAULT;
         f32 FadeProgress = 0;
 
