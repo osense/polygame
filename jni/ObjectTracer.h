@@ -32,6 +32,7 @@ class ObjectTracer : public Object
         std::vector<core::vector3df> Positions;
         u32 PositionsIdx;
         scene::IMeshSceneNode* Node;
+        scene::SMeshBuffer* Buffer;
         f32 PlayerZ = 0;
         E_TRACER_STATE State = ETS_DEFAULT;
         f32 FadeProgress = 0;

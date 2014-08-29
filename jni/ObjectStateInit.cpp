@@ -201,21 +201,19 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_MESHES)
         {
-            GeometryGenerator geomGen;
-
-            scene::IAnimatedMesh* line_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createLineMesh(1));
+            scene::IAnimatedMesh* line_mesh = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createLineMesh(1));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("line-mesh", line_mesh);
             line_mesh->drop();
 
-            scene::IAnimatedMesh* cube_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize()));
+            scene::IAnimatedMesh* cube_mesh = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createCubeMesh(ObjectItemCube::getCubeSize()));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh", cube_mesh);
             cube_mesh->drop();
 
-            scene::IAnimatedMesh* cube_mesh_filled = static_cast<scene::IAnimatedMesh*>(geomGen.createCubeMesh(ObjectItemCube::getCubeSize(), true));
+            scene::IAnimatedMesh* cube_mesh_filled = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createCubeMesh(ObjectItemCube::getCubeSize(), true));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("cube-mesh-filled", cube_mesh_filled);
             cube_mesh_filled->drop();
 
-            scene::IAnimatedMesh* pyramid_mesh = static_cast<scene::IAnimatedMesh*>(geomGen.createPyramidMesh(ObjectItemPyramid::getPyramidSize()));
+            scene::IAnimatedMesh* pyramid_mesh = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createPyramidMesh(ObjectItemPyramid::getPyramidSize()));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("pyramid-mesh", pyramid_mesh);
             pyramid_mesh->drop();
 

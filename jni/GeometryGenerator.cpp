@@ -1,6 +1,6 @@
 #include "GeometryGenerator.h"
 
-scene::IMesh* GeometryGenerator::createLineMesh(f32 size) const
+scene::IMesh* GeometryGenerator::createLineMesh(f32 size)
 {
     scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
     scene::SMesh* tmpMesh = new scene::SMesh();
@@ -34,7 +34,7 @@ scene::IMesh* GeometryGenerator::createLineMesh(f32 size) const
     return mesh;
 }
 
-scene::IMesh* GeometryGenerator::createCubeMesh(f32 size, bool filled) const
+scene::IMesh* GeometryGenerator::createCubeMesh(f32 size, bool filled)
 {
     scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
     scene::SMesh* tmpMesh = new scene::SMesh();
@@ -172,7 +172,7 @@ scene::IMesh* GeometryGenerator::createCubeMesh(f32 size, bool filled) const
     return mesh;
 }
 
-scene::IMesh* GeometryGenerator::createPyramidMesh(f32 size, bool filled) const
+scene::IMesh* GeometryGenerator::createPyramidMesh(f32 size, bool filled)
 {
     scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
     scene::SMesh* tmpMesh = new scene::SMesh();
@@ -290,7 +290,7 @@ scene::IMesh* GeometryGenerator::createPyramidMesh(f32 size, bool filled) const
 }
 
 
-scene::IMesh* GeometryGenerator::createTracerMesh(f32 length, f32 height, u32 segments) const
+scene::IMesh* GeometryGenerator::createTracerMesh(f32 length, f32 height, u32 segments)
 {
     scene::IAnimatedMesh* mesh = new scene::SAnimatedMesh;
     scene::SMesh* tmpMesh = new scene::SMesh();

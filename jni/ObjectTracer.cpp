@@ -19,8 +19,10 @@ ObjectTracer::ObjectTracer(SContext* cont, Json::Value& jsonData) : Object(cont)
 
     PositionsIdx = 0;
 
-    GeometryGenerator gGen;
-    Node = Context->Device->getSceneManager()->addMeshSceneNode(gGen.createTracerMesh(Length, Height, Segments), 0, -1, Positions[0]);
+    scene::IMesh* mesh = GeometryGenerator::createTracerMesh(Length, Height, Segments);
+    Buffer = static_cast<scene::SMeshBuffer*>(mesh->getMeshBuffer(0));
+    Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh, 0, -1, Positions[0]);
+    mesh->drop();
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
     Node->setMaterialType(Context->Mtls->Tracer);
     Node->getMaterial(0).AmbientColor = video::SColor(255, 255, 255, 255);
@@ -44,7 +46,7 @@ void ObjectTracer::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
-        f32 newZ = PlayerZ + Advance;
+        f32 nodeZ = PlayerZ + Advance;
 
         if (Positions[PositionsIdx+2].Z <= Node->getPosition().Z)
         {
@@ -67,12 +69,12 @@ void ObjectTracer::onMessage(SMessage msg)
 
         f32 lastZ = Positions.back().Z;
 
-        if (State == ETS_WARNING && lastZ - PanicIn <= newZ)
+        if (State == ETS_WARNING && lastZ - PanicIn <= nodeZ)
         {
             State = ETS_PANIC;
             FadeProgress = 0;
         }
-        else if (State == ETS_DEFAULT && lastZ - WarnIn <= newZ)
+        else if (State == ETS_DEFAULT && lastZ - WarnIn <= nodeZ)
         {
             State = ETS_WARNING;
             FadeProgress = 0;
@@ -96,7 +98,29 @@ void ObjectTracer::onMessage(SMessage msg)
             Node->getMaterial(0).AmbientColor = targetCol.getInterpolated(baseCol, FadeProgress / ColorChangeTime);
         }
 
-        Node->setPosition(interpCR(Positions[PositionsIdx], Positions[PositionsIdx+1], Positions[PositionsIdx+2], Positions[PositionsIdx+3], newZ));
+        core::vector3df newPos = interpCR(Positions[PositionsIdx], Positions[PositionsIdx+1], Positions[PositionsIdx+2], Positions[PositionsIdx+3], nodeZ);
+        Node->setPosition(newPos);
+
+        for (u32  i = 1; i <= Segments; i++)
+        {
+            s32 posIdx = PositionsIdx;
+            f32 posZ = nodeZ - ((f32(i)/Segments) * Length);
+            while (posZ < Positions[posIdx+1].Z)
+            {
+                posIdx--;
+
+                if (posIdx < 0)
+                {
+                    break;
+                }
+            }
+
+            const u32 vertIdx = i * 2;
+            core::vector3df thisPos = interpCR(Positions[posIdx], Positions[posIdx+1], Positions[posIdx+2], Positions[posIdx+3], posZ);
+            Buffer->Vertices[vertIdx].Pos = (thisPos - newPos) + core::vector3df(0, Height/2, 0);
+            Buffer->Vertices[vertIdx+1].Pos = (thisPos - newPos) + core::vector3df(0, -Height/2, 0);
+            Buffer->setDirty();
+        }
     }
     else if (msg.Type == EMT_OBJ_POS)
     {

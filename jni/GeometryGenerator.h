@@ -9,13 +9,13 @@ class GeometryGenerator
 {
     public:
 
-        scene::IMesh* createLineMesh(f32 size) const;
+        static scene::IMesh* createLineMesh(f32 size);
 
-        scene::IMesh* createCubeMesh(f32 size, bool filled = false) const;
+        static scene::IMesh* createCubeMesh(f32 size, bool filled = false);
 
-        scene::IMesh* createPyramidMesh(f32 size, bool filled = false) const;
+        static scene::IMesh* createPyramidMesh(f32 size, bool filled = false);
 
-        scene::IMesh* createTracerMesh(f32 length, f32 height, u32 segments) const;
+        static scene::IMesh* createTracerMesh(f32 length, f32 height, u32 segments);
 };
 
 #endif // GEOMETRYGENERATOR_H
