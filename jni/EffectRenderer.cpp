@@ -81,7 +81,7 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         PP = createIrrPP(Context->Device, Context->Sets->EffectQuality, "shaders/pp/");
 
         core::dimension2d<u32> res(1024, 512);
-        //res = Context->ScreenResolution;
+        res = Context->ScreenResolution;
 
         core::stringc resText;
 

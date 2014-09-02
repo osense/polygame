@@ -43,7 +43,7 @@ class ObjectTracer : public Object
         static constexpr f32 WarnDist = 18;
         static constexpr f32 PanicDist = 4;
         static constexpr f32 ColorChangeTime = 2;
-        static constexpr f32 Length = 1;
+        static constexpr f32 Length = 0.7;
         static constexpr f32 Height = 0.035;
         static constexpr u32 Segments = 10;
 
