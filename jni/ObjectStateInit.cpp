@@ -39,7 +39,6 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
 
 ObjectStateInit::~ObjectStateInit()
 {
-    debugLog("DONE");
     Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -113,8 +112,6 @@ void ObjectStateInit::onMessage(SMessage msg)
 
                 Context->App->activity->vm->DetachCurrentThread();
             }
-
-
 
 
             Context->StoragePath = core::stringc(Context->App->activity->internalDataPath) + "/";
@@ -232,6 +229,7 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_DONE)
         {
+            debugLog("DONE");
             new ObjectStateMenu(Context);
 
             if (Loading)

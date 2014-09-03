@@ -2,6 +2,7 @@
 
 #ifdef _IRR_ANDROID_PLATFORM_
 	#include <android_native_app_glue.h>
+	#include "ObjectWakeLock.h"
 #endif
 
 #include "SContext.h"
@@ -74,6 +75,10 @@ int main(int argc, char *argv[])
     ObjectUpdater* updater = new ObjectUpdater(cont);
 
     cont->Renderer = new EffectRenderer(cont);
+
+#ifdef _IRR_ANDROID_PLATFORM_
+    new ObjectWakeLock(cont);
+#endif // _IRR_ANDROID_PLATFORM_
 
     cont->Sets = 0;
 
