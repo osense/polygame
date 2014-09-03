@@ -87,6 +87,11 @@ void ObjectStateGame::setPaused(bool paused)
 {
     if (paused && !isPaused())
     {
+        if (GameoverWnd)
+        {
+            return;
+        }
+
         Context->TimeScale = 0;
         PauseWnd = addOverlayWindow(Context);
 
@@ -172,11 +177,7 @@ void ObjectStateGame::createGameoverWindow()
     addButton(core::position2d<s32>(363, 350), core::dimension2d<s32>(128, 64),
               L"O.K.", Context, EGGI_EXIT_GAMEOVER, GameoverWnd);
 
-    std::thread ([&] ()
-                 {
-                     std::this_thread::sleep_for(std::chrono::seconds(30));
-                     Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
-                 }).detach();
+    Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
 }
 
 bool ObjectStateGame::isGameover() const

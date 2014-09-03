@@ -27,10 +27,11 @@ ObjectWakeLock::ObjectWakeLock(SContext* cont) : Object(cont)
                 if (PowerManager)
                 {
                     jmethodID idPowerManager_newWakeLock = jni->GetMethodID(classPowerManager, "newWakeLock", "(ILjava/lang/String;)Landroid/os/PowerManager$WakeLock;");
-                    int SCREEN_BRIGHT_WAKE_LOCK = 10;
+                    int SCREEN_BRIGHT_WAKE_LOCK = 0x0000000a;
+                    long int ON_AFTER_RELEASE = 0x20000000;
                     jstring jWakeLockTag = jni->NewStringUTF("com.entity.Polygame.MY_BRIGHT_SCREEN_LOCK_LOL");
 
-                    WakeLock = jni->CallObjectMethod(PowerManager, idPowerManager_newWakeLock, SCREEN_BRIGHT_WAKE_LOCK, jWakeLockTag);
+                    WakeLock = jni->CallObjectMethod(PowerManager, idPowerManager_newWakeLock, SCREEN_BRIGHT_WAKE_LOCK | ON_AFTER_RELEASE, jWakeLockTag);
                     debugLog("constructed wake lock");
 
                     jni->DeleteLocalRef(jWakeLockTag);
