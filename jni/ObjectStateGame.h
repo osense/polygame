@@ -2,6 +2,8 @@
 #define OBJECTSTATEGAME_H
 
 #include <irrlicht.h>
+#include <thread>
+#include <chrono>
 #include "Object.h"
 #include "ObjectManager.h"
 

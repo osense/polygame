@@ -101,6 +101,12 @@
 		<Unit filename="jni/ObjectTracerRecorder.h" />
 		<Unit filename="jni/ObjectUpdater.cpp" />
 		<Unit filename="jni/ObjectUpdater.h" />
+		<Unit filename="jni/ObjectWakeLock.cpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="jni/ObjectWakeLock.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="jni/SContext.h" />
 		<Unit filename="jni/SMaterials.h" />
 		<Unit filename="jni/SMessage.h" />

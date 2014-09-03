@@ -23,6 +23,8 @@ ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(co
     Context->Renderer->setForceFXAAOff(false);
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, loadSavedGame ? 0.25 : 0.5);
+
+    Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_LOCK));
 }
 
 ObjectStateGame::~ObjectStateGame()
@@ -34,8 +36,10 @@ ObjectStateGame::~ObjectStateGame()
     if (GameoverWnd)
         GameoverWnd->remove();
 
-    if (isPaused())
-        setPaused(false);
+    if (PauseWnd)
+        PauseWnd->remove();
+
+    Context->TimeScale = 1;
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -93,6 +97,7 @@ void ObjectStateGame::setPaused(bool paused)
               L"BACK TO MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
 
         Context->Renderer->getFader()->startFadeOut(0.5);
+        Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
     }
     else if (!paused && isPaused())
     {
@@ -100,6 +105,7 @@ void ObjectStateGame::setPaused(bool paused)
         PauseWnd->remove();
         PauseWnd = 0;
         Context->Renderer->getFader()->startFadeInContinuous();
+        Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_LOCK));
     }
 }
 
@@ -165,6 +171,12 @@ void ObjectStateGame::createGameoverWindow()
 
     addButton(core::position2d<s32>(363, 350), core::dimension2d<s32>(128, 64),
               L"O.K.", Context, EGGI_EXIT_GAMEOVER, GameoverWnd);
+
+    std::thread ([&] ()
+                 {
+                     std::this_thread::sleep_for(std::chrono::seconds(30));
+                     Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
+                 }).detach();
 }
 
 bool ObjectStateGame::isGameover() const
