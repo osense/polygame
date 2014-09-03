@@ -1,0 +1,236 @@
+[
+   {
+      "count" : 9,
+      "date" : {
+         "day" : 28,
+         "hour" : 17,
+         "minute" : 46,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 8.052800178527832,
+      "filename" : "1409240807.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 18,
+      "date" : {
+         "day" : 28,
+         "hour" : 17,
+         "minute" : 48,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 17.1969108581543,
+      "filename" : "1409240939.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 70,
+      "date" : {
+         "day" : 28,
+         "hour" : 19,
+         "minute" : 31,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 67.78782653808594,
+      "filename" : "1409247072.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 18,
+      "date" : {
+         "day" : 28,
+         "hour" : 20,
+         "minute" : 18,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 17.21732330322266,
+      "filename" : "1409249915.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 156,
+      "date" : {
+         "day" : 29,
+         "hour" : 8,
+         "minute" : 33,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 156.9322052001953,
+      "filename" : "1409294009.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 469,
+      "date" : {
+         "day" : 29,
+         "hour" : 8,
+         "minute" : 36,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 479.1488952636719,
+      "filename" : "1409294216.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 707,
+      "date" : {
+         "day" : 29,
+         "hour" : 8,
+         "minute" : 42,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 725.906982421875,
+      "filename" : "1409294520.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 600,
+      "date" : {
+         "day" : 29,
+         "hour" : 8,
+         "minute" : 45,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 615.6660766601562,
+      "filename" : "1409294755.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 9,
+      "date" : {
+         "day" : 29,
+         "hour" : 11,
+         "minute" : 19,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 8.071480751037598,
+      "filename" : "1409303945.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 9,
+      "date" : {
+         "day" : 29,
+         "hour" : 11,
+         "minute" : 19,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 8.084545135498047,
+      "filename" : "1409303960.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 9,
+      "date" : {
+         "day" : 29,
+         "hour" : 11,
+         "minute" : 19,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 8.069002151489258,
+      "filename" : "1409303972.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 9,
+      "date" : {
+         "day" : 29,
+         "hour" : 11,
+         "minute" : 20,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 8.048399925231934,
+      "filename" : "1409304030.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 156,
+      "date" : {
+         "day" : 29,
+         "hour" : 12,
+         "minute" : 3,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 156.96484375,
+      "filename" : "1409306588.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 82,
+      "date" : {
+         "day" : 29,
+         "hour" : 12,
+         "minute" : 14,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 54.27573394775391,
+      "filename" : "1409307251.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 182,
+      "date" : {
+         "day" : 29,
+         "hour" : 12,
+         "minute" : 15,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 154.3903198242188,
+      "filename" : "1409307339.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 155,
+      "date" : {
+         "day" : 29,
+         "hour" : 12,
+         "minute" : 17,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 130.7386627197266,
+      "filename" : "1409307431.tbin",
+      "seed" : 11
+   },
+   {
+      "count" : 54,
+      "date" : {
+         "day" : 31,
+         "hour" : 18,
+         "minute" : 51,
+         "month" : 7,
+         "year" : 114
+      },
+      "dist" : 47.55710983276367,
+      "filename" : "1409503911.tbin",
+      "seed" : 1
+   },
+   {
+      "count" : 77,
+      "date" : {
+         "day" : 2,
+         "hour" : 11,
+         "minute" : 30,
+         "month" : 8,
+         "year" : 114
+      },
+      "dist" : 65.16455841064453,
+      "filename" : "1409650251.tbin",
+      "seed" : 1
+   }
+]
