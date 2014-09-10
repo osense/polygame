@@ -17,6 +17,7 @@ ObjectTracer::ObjectTracer(SContext* cont, Json::Value& jsonData) : Object(cont)
     Positions.resize(numPositions);
     inF->read(Positions.data(), sizeof(core::vector3df) * numPositions);
 
+    PlayerPos = core::vector3df(0);
     PositionsIdx = 0;
 
     scene::IMesh* mesh = GeometryGenerator::createTracerMesh(Length, Height, Segments);
@@ -46,19 +47,19 @@ void ObjectTracer::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
-        f32 nodeZ = PlayerZ + Advance;
+        f32 nodeZ = PlayerPos.Z + Advance;
 
         if (Mocking)
         {
             nodeZ = Node->getPosition().Z + msg.Update.fDelta * PlayerSpeed;
-            if (nodeZ > PlayerZ + 20)
+            if (nodeZ > PlayerPos.Z + 20)
             {
                 delete this;
                 return;
             }
         }
 
-        if (Positions[PositionsIdx+2].Z <= Node->getPosition().Z)
+        if (Positions[PositionsIdx+2].Z <= nodeZ)
         {
             PositionsIdx++;
 
@@ -66,6 +67,7 @@ void ObjectTracer::onMessage(SMessage msg)
             {
                 if (State != ETS_CRASHING)
                 {
+                    Positions.push_back(Positions.back() + core::vector3df(0, 0, 1));
                     Positions.push_back(Positions.back() + core::vector3df(0, 0, 1));
                     State = ETS_CRASHING;
                 }
@@ -77,14 +79,16 @@ void ObjectTracer::onMessage(SMessage msg)
             }
         }
 
-        f32 lastZ = Positions.back().Z;
+        core::vector3df targetPos = interpCR(Positions[PositionsIdx], Positions[PositionsIdx+1], Positions[PositionsIdx+2], Positions[PositionsIdx+3], nodeZ);
+        Node->setPosition(targetPos);
 
-        if (State == ETS_WARNING && lastZ - PanicIn <= nodeZ)
+        f32 backZ = Positions.back().Z;
+        if (State == ETS_WARNING && backZ - PanicIn <= nodeZ)
         {
             State = ETS_PANIC;
             FadeProgress = 0;
         }
-        else if (State == ETS_DEFAULT && lastZ - WarnIn <= nodeZ)
+        else if (State == ETS_DEFAULT && backZ - WarnIn <= nodeZ)
         {
             State = ETS_WARNING;
             FadeProgress = 0;
@@ -108,8 +112,6 @@ void ObjectTracer::onMessage(SMessage msg)
             Node->getMaterial(0).AmbientColor = targetCol.getInterpolated(baseCol, FadeProgress / ColorChangeTime);
         }
 
-        core::vector3df newPos = interpCR(Positions[PositionsIdx], Positions[PositionsIdx+1], Positions[PositionsIdx+2], Positions[PositionsIdx+3], nodeZ);
-        Node->setPosition(newPos);
 
         for (u32  i = 1; i <= Segments; i++)
         {
@@ -121,24 +123,27 @@ void ObjectTracer::onMessage(SMessage msg)
 
                 if (posIdx < 0)
                 {
-                    break;
+                    return;
                 }
             }
 
             const u32 vertIdx = i * 2;
             core::vector3df thisPos = interpCR(Positions[posIdx], Positions[posIdx+1], Positions[posIdx+2], Positions[posIdx+3], posZ);
-            Buffer->Vertices[vertIdx].Pos = (thisPos - newPos) + core::vector3df(0, Height/2, 0);
-            Buffer->Vertices[vertIdx+1].Pos = (thisPos - newPos) + core::vector3df(0, -Height/2, 0);
+            const core::vector3df modelPos = thisPos - targetPos;
+            constexpr f32 HeightHalf = Height / 2;
+            Buffer->Vertices[vertIdx].Pos = modelPos + core::vector3df(0, HeightHalf, 0);
+            Buffer->Vertices[vertIdx+1].Pos = modelPos + core::vector3df(0, -HeightHalf, 0);
             Buffer->setDirty();
         }
     }
     else if (msg.Type == EMT_OBJ_POS)
     {
-        PlayerZ = msg.Position.Z;
+        PlayerPos = core::vector3df(msg.Position.X, msg.Position.Y, msg.Position.Z);
         PlayerSpeed = msg.Position.Speed;
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {
         Mocking = true;
+        PlayerSpeed *= 0.6;
     }
 }

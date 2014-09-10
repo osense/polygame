@@ -21,15 +21,15 @@ class ShaderCBTracer : public video::IShaderConstantSetCallBack
 
     private:
         SContext* Context;
-        bool FirstUpdate;
+        bool FirstUpdate = false;
 
         video::SColorf Color;
-        f32 Transform;
+        f32 Transform = 0;
 
-        s32 ColorID;
-        s32 CamFarID;
-        s32 WorldViewProjMatID, WorldViewMatID;
-        s32 TransformID;
+        s32 ColorID = 0;
+        s32 CamFarID = 0;
+        s32 WorldViewProjMatID = 0, WorldViewMatID = 0;
+        s32 TransformID = 0;
 };
 
 #endif // SHADERCBDEPTH_H

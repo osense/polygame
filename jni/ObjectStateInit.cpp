@@ -29,6 +29,7 @@ ObjectStateInit::ObjectStateInit(SContext* cont, bool showLoading) : Object(cont
     LoadingState = EILS_WAIT;
     WaitCounter = 3;
 
+    TexturesLoaded = 0;
     TextureNames.push_back("textures/noise.png");
     TextureNames.push_back("textures/line_v.png");
     TextureNames.push_back("textures/line_h.png");
@@ -192,7 +193,6 @@ void ObjectStateInit::onMessage(SMessage msg)
             }
 
             LoadingState = EILS_MESHES;
-            TexturesLoaded = 0;
             return;
         }
 

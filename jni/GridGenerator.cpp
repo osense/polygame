@@ -9,6 +9,7 @@ GridGenerator::GridGenerator(u32 seed, u32 numPointsX, u32 numPointsZ)
     ArraySize = 0;
     Type = EGT_NONE;
     Slope = EST_NONE;
+    PrevSlope = EST_NONE;
     NextSlope = EST_NONE;
     Difficulty = 0;
 

@@ -40,10 +40,10 @@ class EffectFader
         } State;
 
         bool IncludeGUI;
-        f32 Strength, TargetStrength, StartStrength;
-        f32 FadeTime;
+        f32 Strength = 0, TargetStrength = 1, StartStrength = 0;
+        f32 FadeTime = 0;
 
-        scene::SMeshBuffer* MeshBuffer;
+        scene::SMeshBuffer* MeshBuffer = 0;
 };
 
 #endif // OBJECTFADER_H

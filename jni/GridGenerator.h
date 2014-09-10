@@ -69,7 +69,7 @@ class GridGenerator
         E_GEN_TYPE Type;
         E_SLOPE_TYPE Slope, PrevSlope, NextSlope;
         circular_buffer<f32> Height;
-        u32 StepsIntoSlope;
+        u32 StepsIntoSlope = 0;
 
         noise::Perlin PerlinN;
 

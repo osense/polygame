@@ -13,10 +13,10 @@ class ShaderCBSky : public video::IShaderConstantSetCallBack
         void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 
     private:
-        bool FirstUpdate;
+        bool FirstUpdate = false;
 
-        s32 WorldViewProjMatID;
-        s32 TexID;
+        s32 WorldViewProjMatID = 0;
+        s32 TexID = 0;
 };
 
 #endif // SHADERCBSKY_H

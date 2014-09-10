@@ -17,11 +17,11 @@ class ShaderCBFader : public video::IShaderConstantSetCallBack
         f32 getAlpha() const;
 
     private:
-        bool FirstUpdate;
+        bool FirstUpdate = false;
 
-        f32 Alpha;
+        f32 Alpha = 0;
 
-        s32 AlphaID;
+        s32 AlphaID = 0;
 };
 
 #endif // SHADERCBFADER_H

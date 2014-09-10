@@ -47,7 +47,6 @@ private:
     bool GUIHasEffects;
 
     scene::ISceneManager* Smgr;
-    scene::ICameraSceneNode* Camera;
     video::ITexture* Scene;
 
     bool ForceFXAAOff;

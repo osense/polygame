@@ -148,7 +148,6 @@ void ObjectPlayer::onMessage(SMessage msg)
         Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
 
         Speed = 0;
-        MaxEnergy = Energy;
 
         core::vector3df camPos = Camera->getPosition();
         Camera->setTarget(camPos + core::vector3df(0, 0, 0.001));
@@ -163,8 +162,6 @@ void ObjectPlayer::onMessage(SMessage msg)
         storeVector3df(Camera->getPosition(), playerRoot, "pos");
         storeVector3df(Camera->getRotation(), playerRoot, "rot");
         playerRoot["speed"] = Speed;
-        playerRoot["energy"] = Energy;
-        playerRoot["max_energy"] = MaxEnergy;
         playerRoot["floor_height"] = FloorHeight;
         playerRoot["floor_angle"] = FloorAngle;
         storeVector3df(TargetRot, playerRoot, "target_rot");
@@ -178,8 +175,6 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setPosition(parseVector3df(playerRoot, "pos"));
         Camera->setRotation(parseVector3df(playerRoot, "rot"));
         Speed = playerRoot["speed"].asDouble();
-        Energy = playerRoot["energy"].asDouble();
-        MaxEnergy = playerRoot["max_energy"].asDouble();
         FloorHeight = playerRoot["floor_height"].asDouble();
         FloorAngle = playerRoot["floor_angle"].asDouble();
         TargetRot = parseVector3df(playerRoot, "target_rot");
@@ -213,16 +208,6 @@ f32 ObjectPlayer::getHeight() const
 f32 ObjectPlayer::getDT() const
 {
     return Camera->getPosition().Z;
-}
-
-f32 ObjectPlayer::getEnergy() const
-{
-    return Energy;
-}
-
-f32 ObjectPlayer::getMaxEnergy() const
-{
-    return MaxEnergy;
 }
 
 scene::ICameraSceneNode* ObjectPlayer::getCamera() const

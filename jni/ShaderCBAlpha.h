@@ -24,19 +24,19 @@ class ShaderCBAlpha : public video::IShaderConstantSetCallBack
 
     private:
         SContext* Context;
-        bool FirstUpdate;
+        bool FirstUpdate = false;
 
-        f32 Alpha;
+        f32 Alpha = 1;
         video::SColorf Color, ColorFar;
-        f32 ThicknessBias;
-        f32 Transform;
+        f32 ThicknessBias = 0;
+        f32 Transform = 0;
 
-        s32 CamFarID;
-        s32 WorldViewProjMatID, WorldViewMatID;
-        s32 ColorID, ColorFarID;
-        s32 ThicknessBiasID;
-        s32 TransformID;
-        s32 AlphaID;
+        s32 CamFarID = 0;
+        s32 WorldViewProjMatID = 0, WorldViewMatID = 0;
+        s32 ColorID = 0, ColorFarID = 0;
+        s32 ThicknessBiasID = 0;
+        s32 TransformID = 0;
+        s32 AlphaID = 0;
 };
 
 #endif // CSHADERDEFAULTCALLBACK_H

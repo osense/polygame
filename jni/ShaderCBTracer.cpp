@@ -1,10 +1,9 @@
 #include "ShaderCBTracer.h"
 
 ShaderCBTracer::ShaderCBTracer(SContext* cont)
+	:Context(cont)
 {
-    Context = cont;
-    FirstUpdate = false;
-    Transform = 0;
+
 }
 
 void ShaderCBTracer::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)

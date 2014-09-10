@@ -38,7 +38,6 @@ class ObjectGridCinematicLines : public Object
         };
 
         u32 NumPointsX;
-        f32 OffsetZ;
         core::array<Line> Lines;
 
         static constexpr f32 ExistTime = 3;

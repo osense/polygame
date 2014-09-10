@@ -1,7 +1,6 @@
 #include "ShaderCBSky.h"
 
 ShaderCBSky::ShaderCBSky()
-    :FirstUpdate(false)
 {
 
 }

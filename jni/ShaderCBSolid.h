@@ -23,17 +23,17 @@ class ShaderCBSolid : public video::IShaderConstantSetCallBack
 
     private:
         SContext* Context;
-        bool FirstUpdate;
+        bool FirstUpdate = false;
 
         video::SColorf Color;
-        f32 ThicknessBias;
-        f32 Transform;
+        f32 ThicknessBias = 0;
+        f32 Transform = 0;
 
-        s32 CamFarID;
-        s32 WorldViewProjMatID, WorldViewMatID;
-        s32 ColorID;
-        s32 ThicknessBiasID;
-        s32 TransformID;
+        s32 CamFarID = 0;
+        s32 WorldViewProjMatID = 0, WorldViewMatID = 0;
+        s32 ColorID = 0;
+        s32 ThicknessBiasID = 0;
+        s32 TransformID = 0;
 };
 
 #endif // SHADERCBCUBE_H

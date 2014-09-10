@@ -33,7 +33,8 @@ class ObjectTracer : public Object
         u32 PositionsIdx;
         scene::IMeshSceneNode* Node;
         scene::SMeshBuffer* Buffer;
-        f32 PlayerZ = 0, PlayerSpeed;
+        core::vector3df PlayerPos;
+        f32 PlayerSpeed = 1;
         bool Mocking = false;
         E_TRACER_STATE State = ETS_DEFAULT;
         f32 FadeProgress = 0;
@@ -44,7 +45,7 @@ class ObjectTracer : public Object
         static constexpr f32 PanicDist = 4;
         static constexpr f32 ColorChangeTime = 2;
         static constexpr f32 Length = 0.7;
-        static constexpr f32 Height = 0.035;
+        static constexpr f32 Height = 0.04;
         static constexpr u32 Segments = 10;
 
         static constexpr f32 WarnIn = WarnDist + ColorChangeTime;

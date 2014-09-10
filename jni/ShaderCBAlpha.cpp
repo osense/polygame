@@ -1,11 +1,9 @@
 #include "ShaderCBAlpha.h"
 
 ShaderCBAlpha::ShaderCBAlpha(SContext* cont)
-    :FirstUpdate(false)
+    :Context(cont)
 {
-    Context = cont;
-    Transform = 0;
-    Alpha = 1;
+
 }
 
 void ShaderCBAlpha::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)

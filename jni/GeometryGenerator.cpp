@@ -310,7 +310,7 @@ scene::IMesh* GeometryGenerator::createTracerMesh(f32 length, f32 height, u32 se
     {
         f32 posZ = -(f32(i)/segments) * length;
         core::vector2df texCoord((segments - i)/f32(segments), 0);
-        texCoord *= 0.5;
+        texCoord *= 0.75;
 
         buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, size, posZ), core::vector3df(0, 1, 0), white, texCoord));
         buffer->Vertices.push_back(video::S3DVertex(core::vector3df(0, -size, posZ), core::vector3df(0, -1, 0), white, texCoord));

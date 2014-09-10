@@ -25,7 +25,7 @@ class ObjectItemCube : public ObjectItem
 
     private:
         scene::ISceneNode* Node;
-        f32 EffectCounter;
+        f32 EffectCounter = 0;
 
         static constexpr bool Filled = false;
         static constexpr f32 CubeSize = 0.25;

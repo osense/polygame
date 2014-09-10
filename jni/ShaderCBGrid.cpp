@@ -1,13 +1,10 @@
 #include "ShaderCBGrid.h"
 
 ShaderCBGrid::ShaderCBGrid(SContext* cont)
-    :FirstUpdate(false)
+    :Context(cont)
 {
-    Context = cont;
-
     NearColor = video::SColorf(1, 1, 1);
     FarColor = video::SColorf(1, 1, 1);
-    Transform = 0;
 }
 
 void ShaderCBGrid::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)

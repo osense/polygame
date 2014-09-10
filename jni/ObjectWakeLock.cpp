@@ -12,9 +12,8 @@ ObjectWakeLock::ObjectWakeLock(SContext* cont) : Object(cont)
     if (jni)
     {
         jclass classNativeActivity = jni->FindClass("android/app/NativeActivity");
-        jclass classContext = jni->FindClass("android/content/Context");
         jclass classPowerManager = jni->FindClass("android/os/PowerManager");
-        if (classContext && classPowerManager)
+        if (classPowerManager)
         {
             jmethodID idNativeActivity_getAppContext = jni->GetMethodID(classNativeActivity, "getApplicationContext", "()Landroid/content/Context;");
 

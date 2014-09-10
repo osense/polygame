@@ -21,8 +21,8 @@ class ObjectItemPyramid : public ObjectItem
 
     private:
         scene::ISceneNode* Node;
-        f32 EffectCounter;
-        s32 Negativity;
+        f32 EffectCounter = 0;
+        s32 Negativity = 1;
 
         static constexpr f32 Size = 0.3;
         static constexpr f32 RotSpeed = 60;

@@ -37,24 +37,16 @@ private:
     static constexpr f32 MinSpeed = 1;
     static constexpr f32 MaxSpeed = 5;
     static constexpr f32 MaxRise = 45;
-    static constexpr f32 DefaultMaxEnergy = 3;
     static constexpr f32 DefaultMaxAbsRotY = 85;
-    static constexpr f32 EnergyRegenSpeed = 0.25;
-    static constexpr f32 EnergyRegenCooldown = 1.5;
     static constexpr f32 AccCutoff = 3.0;
     static constexpr u32 AccSamplesSize = 3;
 
     f32 Height = 0.4;
     f32 Speed = MinSpeed;
-    f32 Energy = DefaultMaxEnergy;
-    f32 MaxEnergy = DefaultMaxEnergy;
-    f32 TimeTillRegen;
     f32 FloorHeight = 0, FloorAngle = 0;
     core::vector3df TargetRot = core::vector3df(0);
     core::vector3df RotSpeed = core::vector3df(5, 5, 0);
     f32 MaxAbsRotY = DefaultMaxAbsRotY;
-    bool Accelerating = false;
-    bool Rising = false;
 
     circular_buffer<f32> AccSamples;
 };

@@ -1,8 +1,6 @@
 #include "ShaderCBFader.h"
 
 ShaderCBFader::ShaderCBFader()
-    :FirstUpdate(false),
-    Alpha(0)
 {
 
 }

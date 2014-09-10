@@ -1,11 +1,9 @@
 #include "ShaderCBSolid.h"
 
 ShaderCBSolid::ShaderCBSolid(SContext* cont)
+	:Context(cont)
 {
-    Context = cont;
-    FirstUpdate = false;
     Color = video::SColorf(1.0, 1.0, 1.0);
-    Transform = 0;
 }
 
 void ShaderCBSolid::OnSetConstants(video::IMaterialRendererServices* services, s32 userData)
