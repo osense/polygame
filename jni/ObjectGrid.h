@@ -12,6 +12,7 @@
 #include "functions.h"
 
 #include <irrlicht.h>
+#include <vector>
 #include "libnoise/perlin.h"
 
 using namespace irr;
@@ -74,12 +75,9 @@ private:
     u32 ChangingColor;
     video::SColorf ColorFar, ColorNext;
 
-    // lines geometry
-    scene::SMeshBuffer* Buffer;
-    scene::IMeshSceneNode* Node;
-    // approximation mesh
-    scene::SMeshBuffer* BufferAppx;
-    scene::IMeshSceneNode* BackNode;
+    scene::IMeshSceneNode *Node, *BackNode;
+    //std::vector<>
+    scene::SMeshBuffer *Buffer, *BufferAppx;
 
     void regenerate();
     void regenerateAppx();

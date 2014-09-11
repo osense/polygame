@@ -35,6 +35,9 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Points[12][15] = 1;
 
     Buffer = new scene::SMeshBuffer();
+    Buffer->Vertices.set_used(NumPointsX * NumPointsZ * 6);
+    Buffer->Indices.set_used(NumPointsX * NumPointsZ * 24);
+
     scene::SMesh* mesh = new scene::SMesh();
     mesh->setHardwareMappingHint(scene::EHM_STATIC);
     mesh->addMeshBuffer(Buffer);
@@ -46,6 +49,9 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     mesh->drop();
 
     BufferAppx = new scene::SMeshBuffer();
+    BufferAppx->Vertices.set_used(NumPointsX * NumPointsZ);
+    BufferAppx->Indices.set_used((NumPointsX-1) * (NumPointsZ-1) * 6);
+
     scene::SMesh* backMesh = new scene::SMesh();
     backMesh->setHardwareMappingHint(scene::EHM_STATIC);
     backMesh->addMeshBuffer(BufferAppx);
@@ -56,7 +62,8 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     BackNode->setAutomaticCulling(scene::EAC_OFF);
     backMesh->drop();
 
-    UpdateState = EGUS_GRID;
+    regenerate();
+    regenerateAppx();
 }
 
 ObjectGrid::~ObjectGrid()
@@ -247,8 +254,7 @@ const GridGenerator& ObjectGrid::getGenerator() const
 
 void ObjectGrid::regenerate()
 {
-    Buffer->Vertices.clear();
-    Buffer->Indices.clear();
+    u32 vertC = 0, indC = 0;
 
     video::SColor white(255, 255, 255, 255);
     core::vector2df null2d(0);
@@ -266,45 +272,45 @@ void ObjectGrid::regenerate()
             pointVec.X = x - center.X;
             pointVec.Y = Points[z][x];
 
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
-            Buffer->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
+            //const u32
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
 
             if (x > 0)
             {
-                const u32 vertC = Buffer->Vertices.size();
                 //Y quad
-                Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-10);
-                Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(vertC-9); Buffer->Indices.push_back(vertC-10);
+                Buffer->Indices[indC++] = (vertC-4); Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (vertC-10);
+                Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (vertC-9); Buffer->Indices[indC++] = (vertC-10);
                 //Z quad
-                Buffer->Indices.push_back(vertC-2); Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-8);
-                Buffer->Indices.push_back(vertC-1); Buffer->Indices.push_back(vertC-7); Buffer->Indices.push_back(vertC-8);
+                Buffer->Indices[indC++] = (vertC-2); Buffer->Indices[indC++] = (vertC-1); Buffer->Indices[indC++] = (vertC-8);
+                Buffer->Indices[indC++] = (vertC-1); Buffer->Indices[indC++] = (vertC-7); Buffer->Indices[indC++] = (vertC-8);
             }
             if (z > 0)
             {
-                const u32 vertC = Buffer->Vertices.size();
                 const u32 prevYVertC = ((z - 1) * NumPointsX + x) * 6;
                 //X quad
-                Buffer->Indices.push_back(vertC-5); Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC+1);
-                Buffer->Indices.push_back(vertC-6); Buffer->Indices.push_back(prevYVertC); Buffer->Indices.push_back(prevYVertC+1);
+                Buffer->Indices[indC++] = (vertC-5); Buffer->Indices[indC++] = (vertC-6); Buffer->Indices[indC++] = (prevYVertC+1);
+                Buffer->Indices[indC++] = (vertC-6); Buffer->Indices[indC++] = (prevYVertC); Buffer->Indices[indC++] = (prevYVertC+1);
                 //Y quad
-                Buffer->Indices.push_back(vertC-4); Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+2);
-                Buffer->Indices.push_back(vertC-3); Buffer->Indices.push_back(prevYVertC+3); Buffer->Indices.push_back(prevYVertC+2);
+                Buffer->Indices[indC++] = (vertC-4); Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (prevYVertC+2);
+                Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (prevYVertC+3); Buffer->Indices[indC++] = (prevYVertC+2);
             }
         }
     }
 
+    Buffer->Vertices.set_used(vertC);
+    Buffer->Indices.set_used(indC);
     Buffer->setDirty();
     Node->setPosition(Position);
 }
 
 void ObjectGrid::regenerateAppx()
 {
-    BufferAppx->Vertices.clear();
-    BufferAppx->Indices.clear();
+    u32 vertC = 0, indC = 0;
 
     video::SColor white(255, 255, 255, 255);
     core::vector2df null2d(0);
@@ -322,7 +328,7 @@ void ObjectGrid::regenerateAppx()
             pointVec.X = x - center.X;
             pointVec.Y = Points[z][x];
 
-            BufferAppx->Vertices.push_back(video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+            BufferAppx->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
 
             if (x > 0 && z > 0)
             {
@@ -331,18 +337,20 @@ void ObjectGrid::regenerateAppx()
 
                 if (Points[z][x] + Points[z-1][x-1] > Points[z-1][x] + Points[z][x-1])
                 {
-                    BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(vertC-1);
-                    BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(prevYVertC);
+                    BufferAppx->Indices[indC++] = (vertC); BufferAppx->Indices[indC++] = (prevYVertC); BufferAppx->Indices[indC++] = (vertC-1);
+                    BufferAppx->Indices[indC++] = (prevYVertC-1); BufferAppx->Indices[indC++] = (vertC-1); BufferAppx->Indices[indC++] = (prevYVertC);
                 }
                 else
                 {
-                    BufferAppx->Indices.push_back(vertC); BufferAppx->Indices.push_back(prevYVertC); BufferAppx->Indices.push_back(prevYVertC-1);
-                    BufferAppx->Indices.push_back(prevYVertC-1); BufferAppx->Indices.push_back(vertC-1); BufferAppx->Indices.push_back(vertC);
+                    BufferAppx->Indices[indC++] = (vertC); BufferAppx->Indices[indC++] = (prevYVertC); BufferAppx->Indices[indC++] = (prevYVertC-1);
+                    BufferAppx->Indices[indC++] = (prevYVertC-1); BufferAppx->Indices[indC++] = (vertC-1); BufferAppx->Indices[indC++] = (vertC);
                 }
             }
         }
     }
 
+    BufferAppx->Vertices.set_used(vertC);
+    BufferAppx->Indices.set_used(indC);
     BufferAppx->setDirty();
     BackNode->setPosition(Position);
 }
