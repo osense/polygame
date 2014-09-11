@@ -3,8 +3,10 @@
 
 #include "Object.h"
 #include "ObjectManager.h"
+#include "GeometryGenerator.h"
 #include "SMaterials.h"
 #include <irrlicht.h>
+#include <vector>
 #include <stdlib.h>
 
 using namespace irr;
@@ -23,27 +25,37 @@ class ObjectGridCinematicLines : public Object
         u32 getLineCount() const;
 
     private:
-        struct Line
+        struct LineGroup
         {
-            scene::IMeshSceneNode* node;
-            core::vector3df dirV;
-            core::vector3df rotV;
-            f32 ttl;
+        	struct Line
+        	{
+        		core::vector3df dirV;
+        		core::vector3df rotV;
+        		f32 ttl;
+        		bool dead;
 
-            Line(scene::IMeshSceneNode* n, core::vector3df d, core::vector3df r, f32 t)
-                :node(n), dirV(d), rotV(r), ttl(t)
-            {
+        		Line(core::vector3df d, core::vector3df r, f32 t)
+            		:dirV(d), rotV(r), ttl(t), dead(false)
+        		{
 
-            }
+        		}
+        	};
+
+        	std::vector<Line> Lines;
+            scene::IMeshSceneNode* Node;
+            f32 TimeSinceUpdate;
         };
 
+
         u32 NumPointsX;
-        core::array<Line> Lines;
+        std::vector<LineGroup> LGroups;
+        u32 LGroupUpdateIdx = 0;
+        scene::IMesh* LineMesh;
+
 
         static constexpr f32 ExistTime = 3;
         static constexpr f32 ExistTimeOffset = 2;
         static constexpr f32 FadeTime = 1;
-        static constexpr f32 FadeAfterTime = ExistTime - FadeTime;
 
         static constexpr f32 MinDirVelocity = 0.75;
         static constexpr f32 DirVelocityOffset = 0.5;
