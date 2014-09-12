@@ -9,6 +9,7 @@
 
 #include "ObjectManager.h"
 #include "ObjectUpdater.h"
+#include "ObjectUpdaterThreaded.h"
 #include "ObjectEventReceiver.h"
 #include "EffectRenderer.h"
 
@@ -73,6 +74,7 @@ int main(int argc, char *argv[])
     new ObjectEventReceiver(cont);
 
     ObjectUpdater* updater = new ObjectUpdater(cont);
+    ObjectUpdaterThreaded* updaterT = new ObjectUpdaterThreaded(cont);
 
     cont->Renderer = new EffectRenderer(cont);
 
@@ -108,6 +110,7 @@ int main(int argc, char *argv[])
     }
 
     cont->ObjManager->clear();
+    updaterT->stop();
     cont->ObjManager->clear(true);
     delete cont->ObjManager;
     delete cont->Mtls;

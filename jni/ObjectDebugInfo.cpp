@@ -85,6 +85,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         if (gridLines)
         {
             dbg += "\nCin. lines: ";
+            dbg += gridLines->getGroupCount();
+            dbg += " / ";
             dbg += gridLines->getLineCount();
         }
 

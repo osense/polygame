@@ -6,7 +6,7 @@ ObjectGridCinematicLines::ObjectGridCinematicLines(SContext* cont, u32 numPtsX) 
     Name = "ObjectGridCinematicLines";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
 
-    Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
+    Context->ObjManager->getObjectFromName("ObjectUpdaterThreaded")->registerObserver(this);
 
     LineMesh = GeometryGenerator::createLineMesh(1);
 }
@@ -21,7 +21,7 @@ ObjectGridCinematicLines::~ObjectGridCinematicLines()
 
 	delete LineMesh;
 
-    Context->ObjManager->getObjectFromName("ObjectUpdater")->unregisterObserver(this);
+    Context->ObjManager->getObjectFromName("ObjectUpdaterThreaded")->unregisterObserver(this);
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -30,73 +30,17 @@ void ObjectGridCinematicLines::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
-        if (LGroups.size() == 0)
-        {
-        	return;
-        }
-
-        for (u32 i = 0; i < LGroups.size(); i++)
-        {
-        	LGroups[i].TimeSinceUpdate += msg.Update.fDelta;
-        }
-
-        auto thisGroup = &LGroups[LGroupUpdateIdx];
-        auto deadGroup = true;
-        auto buffer = static_cast<scene::SMeshBuffer*>(thisGroup->Node->getMesh()->getMeshBuffer(0));
-        const f32 fadeStep = (thisGroup->TimeSinceUpdate / FadeTime);
-
-        for (u32 i = 0; i < thisGroup->Lines.size(); i++)
-        {
-        	if (thisGroup->Lines[i].dead)
-        	{
-        		continue;
-        	}
-        	deadGroup = false;
-
-        	thisGroup->Lines[i].ttl -= thisGroup->TimeSinceUpdate;
-
-        	const u32 vertIdx = i * 8;
-        	for (u32 j = 0; j < 8; j++)
-        	{
-        		buffer->Vertices[vertIdx + j].Pos += thisGroup->Lines[i].dirV * thisGroup->TimeSinceUpdate;
-        	}
-
-        	if (thisGroup->Lines[i].ttl <= FadeTime)
-        	{
-        		s32 newAlpha = buffer->Vertices[vertIdx].Color.getAlpha() - s32(255 * fadeStep);
-        		if (newAlpha < 0)
-        		{
-        			newAlpha = 0;
-        			thisGroup->Lines[i].dead = true;
-        		}
-
-        		for (u32 j = 0; j < 8; j++)
-        		{
-        			buffer->Vertices[vertIdx + j].Color.setAlpha(newAlpha);
-        		}
-        	}
-        }
-
-        if (deadGroup)
-        {
-        	thisGroup->Node->remove();
-        	LGroups.erase(LGroups.begin() + LGroupUpdateIdx);
-        }
-        else
-        {
-        	thisGroup->TimeSinceUpdate = 0;
-        	LGroupUpdateIdx++;
-        }
-
-        if (LGroupUpdateIdx >= LGroups.size())
-        {
-        	LGroupUpdateIdx = 0;
-        }
+    	for (std::vector<LineGroup>::iterator it = LGroups.begin(); it != LGroups.end(); it++)
+    	{
+    		updateLineGroup(*it, msg.Update.fDelta);
+    	}
     }
 }
 
 void ObjectGridCinematicLines::spawn(core::vector3df pos, video::SColorf col, video::SColorf farcol, f32* last, f32* prev)
 {
+	cleanDeadGroups();
+
 	scene::ISceneManager* smgr = Context->Device->getSceneManager();
 	scene::SMeshBuffer* lineBuffer = static_cast<scene::SMeshBuffer*>(LineMesh->getMeshBuffer(0));
 
@@ -133,8 +77,65 @@ void ObjectGridCinematicLines::spawn(core::vector3df pos, video::SColorf col, vi
         newLg.Lines.push_back(LineGroup::Line(dir, rot, ExistTime + (((rand()%100)/100.0) * ExistTimeOffset)));
     }
 
-    newLg.TimeSinceUpdate = 0;
     LGroups.push_back(newLg);
+}
+
+void ObjectGridCinematicLines::updateLineGroup(LineGroup& group, f32 fDelta)
+{
+	group.Dead = true;
+	auto buffer = static_cast<scene::SMeshBuffer*>(group.Node->getMesh()->getMeshBuffer(0));
+	const f32 fadeStep = fDelta / FadeTime;
+
+	for (u32 i = 0; i < group.Lines.size(); i++)
+	{
+		if (group.Lines[i].dead)
+		{
+			continue;
+		}
+		group.Dead = false;
+
+		group.Lines[i].ttl -= fDelta;
+
+		const u32 vertIdx = i * 8;
+		for (u32 j = 0; j < 8; j++)
+		{
+			buffer->Vertices[vertIdx + j].Pos += group.Lines[i].dirV * fDelta;
+		}
+
+		if (group.Lines[i].ttl <= FadeTime)
+		{
+			s32 newAlpha = buffer->Vertices[vertIdx].Color.getAlpha() - s32(255 * fadeStep);
+			if (newAlpha < 0)
+			{
+				newAlpha = 0;
+				group.Lines[i].dead = true;
+			}
+
+			for (u32 j = 0; j < 8; j++)
+			{
+				buffer->Vertices[vertIdx + j].Color.setAlpha(newAlpha);
+			}
+		}
+	}
+
+	if (group.Dead)
+	{
+		group.Node->setVisible(false);
+	}
+}
+
+void ObjectGridCinematicLines::cleanDeadGroups()
+{
+	for (auto it = LGroups.begin(); it != LGroups.end(); it++)
+	{
+		if (it->Dead)
+		{
+			it->Node->remove();
+			LGroups.erase(it);
+
+			it = LGroups.begin();
+		}
+	}
 }
 
 u32 ObjectGridCinematicLines::getLineCount() const
@@ -146,4 +147,9 @@ u32 ObjectGridCinematicLines::getLineCount() const
     }
 
     return c;
+}
+
+u32 ObjectGridCinematicLines::getGroupCount() const
+{
+	return LGroups.size();
 }

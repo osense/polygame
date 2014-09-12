@@ -24,6 +24,8 @@ class ObjectGridCinematicLines : public Object
 
         u32 getLineCount() const;
 
+        u32 getGroupCount() const;
+
     private:
         struct LineGroup
         {
@@ -43,13 +45,15 @@ class ObjectGridCinematicLines : public Object
 
         	std::vector<Line> Lines;
             scene::IMeshSceneNode* Node;
-            f32 TimeSinceUpdate;
+            bool Dead;
         };
+
+        void updateLineGroup(LineGroup& group, f32 fDelta);
+        void cleanDeadGroups();
 
 
         u32 NumPointsX;
         std::vector<LineGroup> LGroups;
-        u32 LGroupUpdateIdx = 0;
         scene::IMesh* LineMesh;
 
 
