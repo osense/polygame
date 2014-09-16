@@ -7,6 +7,7 @@
 #include "SMaterials.h"
 #include <irrlicht.h>
 #include <vector>
+#include <mutex>
 #include <stdlib.h>
 
 using namespace irr;
@@ -54,6 +55,7 @@ class ObjectGridCinematicLines : public Object
 
         u32 NumPointsX;
         std::vector<LineGroup> LGroups;
+        std::mutex UpdateMutex;
         scene::IMesh* LineMeshZ;
         scene::IMesh* LineMeshX;
 

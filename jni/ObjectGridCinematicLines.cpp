@@ -32,6 +32,8 @@ void ObjectGridCinematicLines::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_UPDATE)
     {
+    	std::lock_guard<std::mutex> lock(UpdateMutex);
+
     	for (std::vector<LineGroup>::iterator it = LGroups.begin(); it != LGroups.end(); it++)
     	{
     		updateLineGroup(*it, msg.Update.fDelta);
@@ -143,6 +145,8 @@ void ObjectGridCinematicLines::updateLineGroup(LineGroup& group, f32 fDelta)
 
 void ObjectGridCinematicLines::cleanDeadGroups()
 {
+	std::lock_guard<std::mutex> lock(UpdateMutex);
+
 	for (auto it = LGroups.begin(); it != LGroups.end(); it++)
 	{
 		if (it->Dead)

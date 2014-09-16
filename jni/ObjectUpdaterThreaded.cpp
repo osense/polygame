@@ -40,21 +40,26 @@ void ObjectUpdaterThreaded::stop()
 
 void ObjectUpdaterThreaded::updateFunc()
 {
-	constexpr f32 targetSecs = 1.0 / TargetFPS;
+	constexpr std::chrono::duration<double> targetSecs(1.0 / TargetFPS);
 	std::chrono::duration<double> fDelta(0);
 
 	while (Running)
 	{
 		auto start = std::chrono::system_clock::now();
 
-		SMessage msg(this, EMT_UPDATE);
-		msg.Update.Delta = fDelta.count() * 1000;
-		msg.Update.fDelta = fDelta.count();
-		broadcastMessage(msg);
+		if (Context->TimeScale > 0)
+		{
+			double scaledDelta = fDelta.count() * Context->TimeScale;
+			SMessage msg(this, EMT_UPDATE);
+			msg.Update.Delta = scaledDelta * 1000;
+			msg.Update.fDelta = scaledDelta;
+			broadcastMessage(msg);
+		}
+
 
 		std::chrono::duration<double> execTime = std::chrono::system_clock::now() - start;
 
-		std::this_thread::sleep_for(std::chrono::duration<double>(targetSecs) - execTime);
+		std::this_thread::sleep_for(targetSecs - execTime);
 		fDelta = std::chrono::system_clock::now() - start;
 
 #ifdef DEBUG_UPDATES_THREADED
