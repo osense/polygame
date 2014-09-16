@@ -84,10 +84,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         ObjectGridCinematicLines* gridLines = static_cast<ObjectGridCinematicLines*>(Context->ObjManager->getObjectFromName("ObjectGridCinematicLines"));
         if (gridLines)
         {
-            dbg += "\nCin. lines: ";
+            dbg += "\nCin. line groups: ";
             dbg += gridLines->getGroupCount();
-            dbg += " / ";
-            dbg += gridLines->getLineCount();
         }
 
         Font->draw(dbg.c_str(), core::rect<s32>(10, 10, 400, 200), video::SColor(255, 255, 255, 255));

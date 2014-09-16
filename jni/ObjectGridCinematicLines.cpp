@@ -43,6 +43,7 @@ void ObjectGridCinematicLines::onMessage(SMessage msg)
 
 void ObjectGridCinematicLines::spawn(core::vector3df pos, video::SColorf col, video::SColorf farcol, f32* last, f32* prev)
 {
+	std::lock_guard<std::mutex> lock(UpdateMutex);
 	cleanDeadGroups();
 
 	scene::ISceneManager* smgr = Context->Device->getSceneManager();
@@ -145,8 +146,6 @@ void ObjectGridCinematicLines::updateLineGroup(LineGroup& group, f32 fDelta)
 
 void ObjectGridCinematicLines::cleanDeadGroups()
 {
-	std::lock_guard<std::mutex> lock(UpdateMutex);
-
 	for (auto it = LGroups.begin(); it != LGroups.end(); it++)
 	{
 		if (it->Dead)
@@ -157,17 +156,6 @@ void ObjectGridCinematicLines::cleanDeadGroups()
 			it = LGroups.begin();
 		}
 	}
-}
-
-u32 ObjectGridCinematicLines::getLineCount() const
-{
-    u32 c = 0;
-    for (u32 i = 0; i < LGroups.size(); i++)
-    {
-    	c += LGroups[i].Lines.size();
-    }
-
-    return c;
 }
 
 u32 ObjectGridCinematicLines::getGroupCount() const
