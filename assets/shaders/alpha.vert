@@ -5,7 +5,6 @@ attribute vec4 inVertexColor;
 uniform mat4 WorldViewProjMat;
 uniform mat4 WorldViewMat;
 uniform float CamFar;
-uniform float Alpha;
 uniform vec3 Color, ColorFar;
 uniform float ThicknessBias;
 uniform float Transform;
@@ -18,7 +17,7 @@ void main()
     float depth = length(Vertex) / CamFar;
     float alpha = min(1.0, 8.0 - 10.0*depth);
 
-    col = vec4(mix(Color, ColorFar, depth), Alpha) * inVertexColor.a;
+    col = vec4(mix(Color, ColorFar, depth), alpha) * inVertexColor.a;
 
     vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * (0.08 + ThicknessBias)), 1.0);
     clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform * 2.0;

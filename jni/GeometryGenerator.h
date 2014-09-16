@@ -9,7 +9,9 @@ class GeometryGenerator
 {
     public:
 
-        static scene::IMesh* createLineMesh(f32 size);
+        static scene::IMesh* createLineMeshZ(f32 size);
+
+        static scene::IMesh* createLineMeshX(f32 size);
 
         static scene::IMesh* createCubeMesh(f32 size, bool filled = false);
 

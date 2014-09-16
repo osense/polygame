@@ -32,11 +32,11 @@ class ObjectGridCinematicLines : public Object
         	struct Line
         	{
         		core::vector3df dirV;
-        		core::vector3df rotV;
+        		f32 rotV;
         		f32 ttl;
         		bool dead;
 
-        		Line(core::vector3df d, core::vector3df r, f32 t)
+        		Line(core::vector3df d, f32 r, f32 t)
             		:dirV(d), rotV(r), ttl(t), dead(false)
         		{
 
@@ -54,7 +54,8 @@ class ObjectGridCinematicLines : public Object
 
         u32 NumPointsX;
         std::vector<LineGroup> LGroups;
-        scene::IMesh* LineMesh;
+        scene::IMesh* LineMeshZ;
+        scene::IMesh* LineMeshX;
 
 
         static constexpr f32 ExistTime = 3;
@@ -63,7 +64,7 @@ class ObjectGridCinematicLines : public Object
 
         static constexpr f32 MinDirVelocity = 0.75;
         static constexpr f32 DirVelocityOffset = 0.5;
-        static constexpr f32 MinRotVelocity = -5;
+        static constexpr f32 MinRotVelocity = -2;
         static constexpr f32 RotVelocityOffset = 10;
 };
 

@@ -26,7 +26,6 @@ class ShaderCBAlpha : public video::IShaderConstantSetCallBack
         SContext* Context;
         bool FirstUpdate = false;
 
-        f32 Alpha = 1;
         video::SColorf Color, ColorFar;
         f32 ThicknessBias = 0;
         f32 Transform = 0;
@@ -36,7 +35,6 @@ class ShaderCBAlpha : public video::IShaderConstantSetCallBack
         s32 ColorID = 0, ColorFarID = 0;
         s32 ThicknessBiasID = 0;
         s32 TransformID = 0;
-        s32 AlphaID = 0;
 };
 
 #endif // CSHADERDEFAULTCALLBACK_H

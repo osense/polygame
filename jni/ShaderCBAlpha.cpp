@@ -13,7 +13,6 @@ void ShaderCBAlpha::OnSetConstants(video::IMaterialRendererServices* services, s
         CamFarID = services->getVertexShaderConstantID("CamFar");
         WorldViewProjMatID = services->getVertexShaderConstantID("WorldViewProjMat");
         WorldViewMatID = services->getVertexShaderConstantID("WorldViewMat");
-        AlphaID = services->getVertexShaderConstantID("Alpha");
         ColorID = services->getVertexShaderConstantID("Color");
         ColorFarID = services->getVertexShaderConstantID("ColorFar");
         ThicknessBiasID = services->getVertexShaderConstantID("ThicknessBias");
@@ -34,8 +33,6 @@ void ShaderCBAlpha::OnSetConstants(video::IMaterialRendererServices* services, s
     f32 farDist = Context->Device->getSceneManager()->getActiveCamera()->getFarValue();
     services->setVertexShaderConstant(CamFarID, &farDist, 1);
 
-    services->setVertexShaderConstant(AlphaID, &Alpha, 1);
-
     services->setVertexShaderConstant(ColorID, reinterpret_cast<f32*>(&Color), 3);
     services->setVertexShaderConstant(ColorFarID, reinterpret_cast<f32*>(&ColorFar), 3);
 
@@ -46,7 +43,6 @@ void ShaderCBAlpha::OnSetConstants(video::IMaterialRendererServices* services, s
 
 void ShaderCBAlpha::OnSetMaterial (const video::SMaterial &material)
 {
-    Alpha = 1 - material.MaterialTypeParam;
     Color = video::SColorf(material.AmbientColor);
     ColorFar = video::SColorf(material.DiffuseColor);
     ThicknessBias = material.Thickness - 1;

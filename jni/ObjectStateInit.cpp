@@ -198,7 +198,7 @@ void ObjectStateInit::onMessage(SMessage msg)
 
         else if (LoadingState == EILS_MESHES)
         {
-            scene::IAnimatedMesh* line_mesh = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createLineMesh(1));
+            scene::IAnimatedMesh* line_mesh = static_cast<scene::IAnimatedMesh*>(GeometryGenerator::createLineMeshZ(1));
             Context->Device->getSceneManager()->getMeshCache()->addMesh("line-mesh", line_mesh);
             line_mesh->drop();
 
