@@ -13,7 +13,6 @@ using namespace irr;
 
 enum E_EFFECT_TYPE
 {
-    EET_FXAA = 0,
     EET_GLOW,
     EET_FADER
 };
@@ -33,10 +32,6 @@ public:
 
     void loadPP(bool reload = false);
 
-    void setForceFXAAOff(bool force);
-
-    //core::dimension2du getScreenSize() const;
-
     EffectFader* getFader() const;
 
     video::irrPP* PP;
@@ -44,15 +39,12 @@ public:
 private:
     SContext* Context;
     bool Active;
-    bool GUIHasEffects;
 
     scene::ISceneManager* Smgr;
+    video::IVideoDriver* Video;
     video::ITexture* Scene;
 
-    bool ForceFXAAOff;
-    video::CPostProcessingEffect* FXAA;
     video::CPostProcessingEffectChain* Glow;
-
     EffectFader* Fader;
 };
 

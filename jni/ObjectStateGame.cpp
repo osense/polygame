@@ -20,7 +20,6 @@ ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(co
     if (loadSavedGame)
         loadGame();
 
-    Context->Renderer->setForceFXAAOff(false);
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, loadSavedGame ? 0.25 : 0.5);
 

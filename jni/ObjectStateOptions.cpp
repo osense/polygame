@@ -76,14 +76,6 @@ void ObjectStateOptions::onMessage(SMessage msg)
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(true);
             break;
-        case EOI_FXAA_OFF:
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->setPressed(false);
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(true);
-            break;
-        case EOI_FXAA_ON:
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->setPressed(true);
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(false);
-            break;
 
         case EOI_SEED_0:
         case EOI_SEED_1:
@@ -182,10 +174,10 @@ void ObjectStateOptions::create_gfx()
     addButton(core::position2d<s32>(720, 42), core::dimension2d<s32>(128, 40), L"HIGH", Context, EOI_GLOW_HIGH, PaneWindow)->setIsPushButton(true);
 
 
-    addText(core::position2d<s32>(0, 160), core::dimension2d<s32>(270, 40), L"ANTI", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addText(core::position2d<s32>(0, 190), core::dimension2d<s32>(270, 40), L"ALIASING", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addButton(core::position2d<s32>(290, 177), core::dimension2d<s32>(128, 40), L"OFF", Context, EOI_FXAA_OFF, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(420, 177), core::dimension2d<s32>(128, 40), L"ON", Context, EOI_FXAA_ON, PaneWindow)->setIsPushButton(true);
+    addText(core::position2d<s32>(0, 160), core::dimension2d<s32>(270, 40), L"PLACE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addText(core::position2d<s32>(0, 190), core::dimension2d<s32>(270, 40), L"HOLDER", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addButton(core::position2d<s32>(290, 177), core::dimension2d<s32>(128, 40), L"OFF", Context, -1, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(420, 177), core::dimension2d<s32>(128, 40), L"ON", Context, -1, PaneWindow)->setIsPushButton(true);
 
     serialize();
 
@@ -298,12 +290,6 @@ void ObjectStateOptions::serialize()
                 break;
             }
         }
-
-
-        if (Context->Sets->Antialiasing)
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->setPressed(true);
-        else
-            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_OFF))->setPressed(true);
     }
     else if (State == EOS_CONTROLS)
     {
@@ -335,14 +321,8 @@ void ObjectStateOptions::deserialize()
         else if (static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->isPressed())
             Context->Sets->EffectQuality = video::EPQ_HALF;
 
-        bool oldFXAA = Context->Sets->Antialiasing;
-        if (static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_FXAA_ON))->isPressed())
-            Context->Sets->Antialiasing = true;
-        else
-            Context->Sets->Antialiasing = false;
 
-
-        if ((Context->Sets->Glow != oldGlow) || (oldEffectQuality != Context->Sets->EffectQuality) || (Context->Sets->Antialiasing != oldFXAA))
+        if ((Context->Sets->Glow != oldGlow) || (oldEffectQuality != Context->Sets->EffectQuality))
             Context->Renderer->loadPP(true);
     }
     else if (State == EOS_CONTROLS)

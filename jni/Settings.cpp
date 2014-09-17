@@ -17,7 +17,6 @@ Settings::Settings(SContext* cont, core::stringc storagePath)
     Seed = 10;
     EffectQuality = video::EPQ_QUARTER;
     Glow = true;
-    Antialiasing = false;
 }
 
 bool Settings::read()
@@ -31,7 +30,6 @@ bool Settings::read()
     Seed = root.get("seed", 0).asUInt();
     EffectQuality = (video::E_POSTPROCESSING_EFFECT_QUALITY)root.get("effectQuality", video::EPQ_QUARTER).asUInt();
     Glow = root.get("glow", false).asBool();
-    Antialiasing = root.get("antialiasing", false).asBool();
 
     Context->Device->getLogger()->log("Loaded settings", FilePath.c_str());
     return true;
@@ -45,7 +43,6 @@ void Settings::write() const
     root["accel_x_bias"] = AccelXBias;
     root["effectQuality"] = (u32) EffectQuality;
     root["glow"] = Glow;
-    root["antialiasing"] = Antialiasing;
 
     writeJson(Context, root, FilePath);
 

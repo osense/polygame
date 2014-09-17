@@ -40,9 +40,7 @@ enum E_OPTIONS_ID
     EOI_GLOW_OFF,
     EOI_GLOW_LOW,
     EOI_GLOW_MEDIUM,
-    EOI_GLOW_HIGH,
-    EOI_FXAA_OFF,
-    EOI_FXAA_ON
+    EOI_GLOW_HIGH
 };
 
 class ObjectStateOptions : public Object

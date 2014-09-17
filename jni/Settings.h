@@ -20,7 +20,6 @@ public:
     u32 Seed;
     video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality;
     bool Glow;
-    bool Antialiasing;
     core::stringc SavegamePath;
 
 private:
