@@ -45,33 +45,33 @@ enum E_OPTIONS_ID
 
 class ObjectStateOptions : public Object
 {
-    public:
-        ObjectStateOptions(SContext* cont);
+public:
+    ObjectStateOptions(SContext* cont);
 
-        virtual ~ObjectStateOptions();
+    virtual ~ObjectStateOptions();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        void create_gui();
-        void create_gfx();
-        void create_controls();
-        void create_seed();
+private:
+    void create_gui();
+    void create_gfx();
+    void create_controls();
+    void create_seed();
 
-        void seed_onDigitPressed(u32 digit);
+    void seed_onDigitPressed(u32 digit);
 
-        void serialize();
-        void deserialize();
+    void serialize();
+    void deserialize();
 
-        E_OPTIONS_STATE State;
-        gui::IGUIWindow* MainWindow, *PaneWindow;
-        scene::ICameraSceneNode* Camera;
+    E_OPTIONS_STATE State;
+    gui::IGUIWindow* MainWindow, *PaneWindow;
+    scene::ICameraSceneNode* Camera;
 
-        video::ITexture* HLineSegment, *VLineSegment;
-        core::array<core::position2d< s32 > > LinePositions;
-        core::array<core::rect< s32 > > LineRects;
-        core::array<core::position2d< s32 > > GfxLinePositions;
-        core::array<core::rect< s32 > > GfxLineRects;
+    video::ITexture* HLineSegment, *VLineSegment;
+    core::array<core::position2d< s32 > > LinePositions;
+    core::array<core::rect< s32 > > LineRects;
+    core::array<core::position2d< s32 > > GfxLinePositions;
+    core::array<core::rect< s32 > > GfxLineRects;
 
 
 };

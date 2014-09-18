@@ -9,18 +9,18 @@
 
 class ObjectWakeLock : public Object
 {
-    public:
-        ObjectWakeLock(SContext* cont);
+public:
+    ObjectWakeLock(SContext* cont);
 
-        virtual ~ObjectWakeLock();
+    virtual ~ObjectWakeLock();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        jobject WakeLock;
-        bool Active = false;
+private:
+    jobject WakeLock;
+    bool Active = false;
 
-        void setLocked(bool locked);
+    void setLocked(bool locked);
 };
 
 #endif // OBJECTWAKELOCK_H

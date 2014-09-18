@@ -7,16 +7,16 @@ using namespace irr;
 
 class ShaderCBSky : public video::IShaderConstantSetCallBack
 {
-    public:
-        ShaderCBSky();
+public:
+    ShaderCBSky();
 
-        void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
+    void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 
-    private:
-        bool FirstUpdate = false;
+private:
+    bool FirstUpdate = false;
 
-        s32 WorldViewProjMatID = 0;
-        s32 TexID = 0;
+    s32 WorldViewProjMatID = 0;
+    s32 TexID = 0;
 };
 
 #endif // SHADERCBSKY_H

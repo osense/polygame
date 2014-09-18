@@ -13,13 +13,13 @@
 
 class ObjectUpdater : public Object
 {
-    public:
-        ObjectUpdater(SContext* cont);
-        virtual ~ObjectUpdater();
+public:
+    ObjectUpdater(SContext* cont);
+    virtual ~ObjectUpdater();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-        void broadcastUpdate(irr::u32 tDelta);
+    void broadcastUpdate(irr::u32 tDelta);
 };
 
 #endif // GAMEOBJECTUPDATER_H

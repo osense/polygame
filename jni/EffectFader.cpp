@@ -20,8 +20,12 @@ void EffectFader::init()
     MeshBuffer->Vertices.push_back(video::S3DVertex(core::vector3df(1.0, 1.0, 0.0), core::vector3df(0.0, 0.0, 1.0), video::SColor(255,255,255,255), core::vector2df(1.0, 1.0)));
     MeshBuffer->Vertices.push_back(video::S3DVertex(core::vector3df(1.0, -1.0, 0.0), core::vector3df(0.0, 0.0, 1.0), video::SColor(255,255,255,255), core::vector2df(1.0, 0.0)));
     MeshBuffer->Vertices.push_back(video::S3DVertex(core::vector3df(-1.0, -1.0, 0.0), core::vector3df(0.0, 0.0, 1.0), video::SColor(255,255,255,255), core::vector2df(0.0, 0.0)));
-    MeshBuffer->Indices.push_back(0); MeshBuffer->Indices.push_back(1); MeshBuffer->Indices.push_back(2);
-    MeshBuffer->Indices.push_back(3); MeshBuffer->Indices.push_back(0); MeshBuffer->Indices.push_back(2);
+    MeshBuffer->Indices.push_back(0);
+    MeshBuffer->Indices.push_back(1);
+    MeshBuffer->Indices.push_back(2);
+    MeshBuffer->Indices.push_back(3);
+    MeshBuffer->Indices.push_back(0);
+    MeshBuffer->Indices.push_back(2);
     MeshBuffer->recalculateBoundingBox();
 
     MeshBuffer->getMaterial().MaterialType = Context->Mtls->Fader;

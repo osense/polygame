@@ -14,24 +14,24 @@
 
 class ObjectItemSpawner : public Object
 {
-    public:
-        ObjectItemSpawner(SContext* cont);
-        ~ObjectItemSpawner();
+public:
+    ObjectItemSpawner(SContext* cont);
+    ~ObjectItemSpawner();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-        void spawnTracers() const;
+    void spawnTracers() const;
 
-    private:
-        ObjectGrid* Grid;
-        noise::Perlin PerlinN;
+private:
+    ObjectGrid* Grid;
+    noise::Perlin PerlinN;
 
-        u32 SpawnMinX;
-        u32 SpawnMaxX;
+    u32 SpawnMinX;
+    u32 SpawnMaxX;
 
-        const f32 SpawnChance = 0.005;
-        const f32 SpawnHillLimit = 0.2;
-        const f32 SpawnItemHeight = 0.4;
+    const f32 SpawnChance = 0.005;
+    const f32 SpawnHillLimit = 0.2;
+    const f32 SpawnItemHeight = 0.4;
 };
 
 #endif // OBJECTITEMSPAWNER_H

@@ -7,21 +7,21 @@ using namespace irr;
 
 class ShaderCBFader : public video::IShaderConstantSetCallBack
 {
-    public:
-        ShaderCBFader();
+public:
+    ShaderCBFader();
 
-        void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
+    void OnSetConstants(video::IMaterialRendererServices* services, s32 userData);
 
-        void setAlpha(f32 alph);
+    void setAlpha(f32 alph);
 
-        f32 getAlpha() const;
+    f32 getAlpha() const;
 
-    private:
-        bool FirstUpdate = false;
+private:
+    bool FirstUpdate = false;
 
-        f32 Alpha = 0;
+    f32 Alpha = 0;
 
-        s32 AlphaID = 0;
+    s32 AlphaID = 0;
 };
 
 #endif // SHADERCBFADER_H

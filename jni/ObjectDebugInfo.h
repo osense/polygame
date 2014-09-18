@@ -18,21 +18,21 @@ using namespace gui;
 
 class ObjectDebugInfo : public Object
 {
-    public:
-        ObjectDebugInfo(SContext* cont);
-        virtual ~ObjectDebugInfo();
+public:
+    ObjectDebugInfo(SContext* cont);
+    virtual ~ObjectDebugInfo();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        IGUIFont* Font;
+private:
+    IGUIFont* Font;
 
-        core::vector3d<f64> Accel;
+    core::vector3d<f64> Accel;
 
-        ObjectPlayer* Player;
-        scene::ICameraSceneNode* FPSCam;
+    ObjectPlayer* Player;
+    scene::ICameraSceneNode* FPSCam;
 
-        u32 ObjectCount;
+    u32 ObjectCount;
 };
 
 //#endif // DEBUG_INFO

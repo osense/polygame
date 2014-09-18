@@ -20,7 +20,7 @@ EffectRenderer::~EffectRenderer()
 
 void EffectRenderer::drawAll(u32 timeDelta)
 {
-	if (isActive())
+    if (isActive())
     {
         Video->setRenderTarget(PP->getRTT1());
         Smgr->drawAll();
@@ -29,25 +29,25 @@ void EffectRenderer::drawAll(u32 timeDelta)
         Smgr->drawAll();
 
         if (Fader->isActive() && !Fader->getIncludeGUI())
-        	Fader->draw(timeDelta / 1000.0);
+            Fader->draw(timeDelta / 1000.0);
 
         Context->Device->getGUIEnvironment()->drawAll();
         PP->render(PP->getRTT1());
 
         if (Fader->isActive() && Fader->getIncludeGUI())
-        	Fader->draw(timeDelta / 1000.0);
+            Fader->draw(timeDelta / 1000.0);
     }
     else
     {
         Smgr->drawAll();
 
         if (Fader->isActive() && !Fader->getIncludeGUI())
-        	Fader->draw(timeDelta / 1000.0);
+            Fader->draw(timeDelta / 1000.0);
 
         Context->Device->getGUIEnvironment()->drawAll();
 
         if (Fader->isActive() && Fader->getIncludeGUI())
-        	Fader->draw(timeDelta / 1000.0);
+            Fader->draw(timeDelta / 1000.0);
     }
 }
 

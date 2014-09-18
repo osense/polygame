@@ -6,7 +6,7 @@
 class Object;
 namespace Json
 {
-    class Value;
+class Value;
 }
 
 enum E_MESSAGE_TYPE

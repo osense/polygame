@@ -283,21 +283,37 @@ void ObjectGrid::regenerate()
             if (x > 0)
             {
                 //Y quad
-                Buffer->Indices[indC++] = (vertC-4); Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (vertC-10);
-                Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (vertC-9); Buffer->Indices[indC++] = (vertC-10);
+                Buffer->Indices[indC++] = (vertC-4);
+                Buffer->Indices[indC++] = (vertC-3);
+                Buffer->Indices[indC++] = (vertC-10);
+                Buffer->Indices[indC++] = (vertC-3);
+                Buffer->Indices[indC++] = (vertC-9);
+                Buffer->Indices[indC++] = (vertC-10);
                 //Z quad
-                Buffer->Indices[indC++] = (vertC-2); Buffer->Indices[indC++] = (vertC-1); Buffer->Indices[indC++] = (vertC-8);
-                Buffer->Indices[indC++] = (vertC-1); Buffer->Indices[indC++] = (vertC-7); Buffer->Indices[indC++] = (vertC-8);
+                Buffer->Indices[indC++] = (vertC-2);
+                Buffer->Indices[indC++] = (vertC-1);
+                Buffer->Indices[indC++] = (vertC-8);
+                Buffer->Indices[indC++] = (vertC-1);
+                Buffer->Indices[indC++] = (vertC-7);
+                Buffer->Indices[indC++] = (vertC-8);
             }
             if (z > 0)
             {
                 const u32 prevYVertC = ((z - 1) * NumPointsX + x) * 6;
                 //X quad
-                Buffer->Indices[indC++] = (vertC-5); Buffer->Indices[indC++] = (vertC-6); Buffer->Indices[indC++] = (prevYVertC+1);
-                Buffer->Indices[indC++] = (vertC-6); Buffer->Indices[indC++] = (prevYVertC); Buffer->Indices[indC++] = (prevYVertC+1);
+                Buffer->Indices[indC++] = (vertC-5);
+                Buffer->Indices[indC++] = (vertC-6);
+                Buffer->Indices[indC++] = (prevYVertC+1);
+                Buffer->Indices[indC++] = (vertC-6);
+                Buffer->Indices[indC++] = (prevYVertC);
+                Buffer->Indices[indC++] = (prevYVertC+1);
                 //Y quad
-                Buffer->Indices[indC++] = (vertC-4); Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (prevYVertC+2);
-                Buffer->Indices[indC++] = (vertC-3); Buffer->Indices[indC++] = (prevYVertC+3); Buffer->Indices[indC++] = (prevYVertC+2);
+                Buffer->Indices[indC++] = (vertC-4);
+                Buffer->Indices[indC++] = (vertC-3);
+                Buffer->Indices[indC++] = (prevYVertC+2);
+                Buffer->Indices[indC++] = (vertC-3);
+                Buffer->Indices[indC++] = (prevYVertC+3);
+                Buffer->Indices[indC++] = (prevYVertC+2);
             }
         }
     }
@@ -337,13 +353,21 @@ void ObjectGrid::regenerateAppx()
 
                 if (Points[z][x] + Points[z-1][x-1] > Points[z-1][x] + Points[z][x-1])
                 {
-                    BufferAppx->Indices[indC++] = (vertC); BufferAppx->Indices[indC++] = (prevYVertC); BufferAppx->Indices[indC++] = (vertC-1);
-                    BufferAppx->Indices[indC++] = (prevYVertC-1); BufferAppx->Indices[indC++] = (vertC-1); BufferAppx->Indices[indC++] = (prevYVertC);
+                    BufferAppx->Indices[indC++] = (vertC);
+                    BufferAppx->Indices[indC++] = (prevYVertC);
+                    BufferAppx->Indices[indC++] = (vertC-1);
+                    BufferAppx->Indices[indC++] = (prevYVertC-1);
+                    BufferAppx->Indices[indC++] = (vertC-1);
+                    BufferAppx->Indices[indC++] = (prevYVertC);
                 }
                 else
                 {
-                    BufferAppx->Indices[indC++] = (vertC); BufferAppx->Indices[indC++] = (prevYVertC); BufferAppx->Indices[indC++] = (prevYVertC-1);
-                    BufferAppx->Indices[indC++] = (prevYVertC-1); BufferAppx->Indices[indC++] = (vertC-1); BufferAppx->Indices[indC++] = (vertC);
+                    BufferAppx->Indices[indC++] = (vertC);
+                    BufferAppx->Indices[indC++] = (prevYVertC);
+                    BufferAppx->Indices[indC++] = (prevYVertC-1);
+                    BufferAppx->Indices[indC++] = (prevYVertC-1);
+                    BufferAppx->Indices[indC++] = (vertC-1);
+                    BufferAppx->Indices[indC++] = (vertC);
                 }
             }
         }
@@ -409,33 +433,33 @@ void ObjectGrid::handleGenUpdate()
 
     if (SlopeChangeIn <= 0)
     {
-         f32 randVal = (Generator.getRandomVal(Position.Z) + 1) / 2 - 0.00001;
-         u32 slopeChoice = u32(randVal * (EST_COUNT + NoSlopeWeight - 1));
-         u32 changeInMod = 0;
-         if (slopeChoice >= EST_COUNT - 1)
-         {
-             slopeChoice = EST_NONE;
-         }
-         else if (slopeChoice == 0)
-         {
-             slopeChoice = EST_UP;
-             if (Generator.getSlope() == EST_DOWN)
-             {
-                 changeInMod = Generator.getSlopeChangeInSteps();
-             }
-         }
-         else
-         {
-             slopeChoice = EST_DOWN;
-             if (Generator.getSlope() == EST_UP)
-             {
-                 changeInMod = Generator.getSlopeChangeInSteps();
-             }
-         }
+        f32 randVal = (Generator.getRandomVal(Position.Z) + 1) / 2 - 0.00001;
+        u32 slopeChoice = u32(randVal * (EST_COUNT + NoSlopeWeight - 1));
+        u32 changeInMod = 0;
+        if (slopeChoice >= EST_COUNT - 1)
+        {
+            slopeChoice = EST_NONE;
+        }
+        else if (slopeChoice == 0)
+        {
+            slopeChoice = EST_UP;
+            if (Generator.getSlope() == EST_DOWN)
+            {
+                changeInMod = Generator.getSlopeChangeInSteps();
+            }
+        }
+        else
+        {
+            slopeChoice = EST_DOWN;
+            if (Generator.getSlope() == EST_UP)
+            {
+                changeInMod = Generator.getSlopeChangeInSteps();
+            }
+        }
 
-         Generator.setSlope(E_SLOPE_TYPE(slopeChoice));
+        Generator.setSlope(E_SLOPE_TYPE(slopeChoice));
 
-         SlopeChangeIn = SlopeChangeEvery + changeInMod + u32(randVal * SlopeChangeEveryOffset);
+        SlopeChangeIn = SlopeChangeEvery + changeInMod + u32(randVal * SlopeChangeEveryOffset);
     }
 }
 

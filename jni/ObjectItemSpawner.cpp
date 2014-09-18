@@ -47,9 +47,9 @@ void ObjectItemSpawner::onMessage(SMessage msg)
 
             // perlin checks out, but what about the terrain?
             if (Grid->getHillHeight(x, coordZ) > SpawnHillLimit ||
-                Grid->getHillHeight(x + 1, coordZ) > SpawnHillLimit ||
-                Grid->getHillHeight(x, coordZ - 1) > SpawnHillLimit ||
-                Grid->getHillHeight(x + 1, coordZ - 1) > SpawnHillLimit)
+                    Grid->getHillHeight(x + 1, coordZ) > SpawnHillLimit ||
+                    Grid->getHillHeight(x, coordZ - 1) > SpawnHillLimit ||
+                    Grid->getHillHeight(x + 1, coordZ - 1) > SpawnHillLimit)
                 continue;
 
             core::vector3df itemPos(gridPos);

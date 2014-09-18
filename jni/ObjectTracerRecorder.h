@@ -15,18 +15,18 @@ using namespace irr;
 
 class ObjectTracerRecorder : public Object
 {
-    public:
-        ObjectTracerRecorder(SContext* cont);
-        virtual ~ObjectTracerRecorder();
+public:
+    ObjectTracerRecorder(SContext* cont);
+    virtual ~ObjectTracerRecorder();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        std::vector<core::vector3df> Positions;
+private:
+    std::vector<core::vector3df> Positions;
 
-        void writeToStorage() const;
+    void writeToStorage() const;
 
-        static constexpr f32 RecordEvery = 1;
+    static constexpr f32 RecordEvery = 1;
 };
 
 #endif // OBJECTTRACERRECORDER_H

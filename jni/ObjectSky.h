@@ -12,17 +12,17 @@ using namespace irr;
 
 class ObjectSky : public Object
 {
-    public:
+public:
 
-        ObjectSky(SContext* cont);
-        ~ObjectSky();
-        virtual void onMessage(SMessage msg);
+    ObjectSky(SContext* cont);
+    ~ObjectSky();
+    virtual void onMessage(SMessage msg);
 
-    private:
-        scene::ISceneNode* SkyNode;
-        f32 CurrentRotSpeed;
+private:
+    scene::ISceneNode* SkyNode;
+    f32 CurrentRotSpeed;
 
-        static constexpr f32 RotSpeed = 0.0003;
+    static constexpr f32 RotSpeed = 0.0003;
 };
 
 #endif // OBJECTSKY_H

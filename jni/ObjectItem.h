@@ -13,11 +13,11 @@ enum E_ITEM_STATE
 
 class ObjectItem : public Object
 {
-    public:
-        ObjectItem(SContext* cont);
+public:
+    ObjectItem(SContext* cont);
 
-    protected:
-        E_ITEM_STATE State;
+protected:
+    E_ITEM_STATE State;
 };
 
 #endif // OBJECTITEM_H

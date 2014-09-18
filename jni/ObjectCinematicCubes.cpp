@@ -36,8 +36,8 @@ void ObjectCinematicCubes::onMessage(SMessage msg)
             core::vector3df endP(0);
             while ((endP - startP).getLength() < depth * AspectRatio * 0.5)
             {
-               startP = getRandomPointOnCircle(depth * AspectRatio);
-               endP = getRandomPointOnCircle(depth * AspectRatio);
+                startP = getRandomPointOnCircle(depth * AspectRatio);
+                endP = getRandomPointOnCircle(depth * AspectRatio);
             }
             startP.Z = endP.Z = depth;
             scene::ISceneNodeAnimator* flyA = smgr->createFlyStraightAnimator(startP, endP, ((TravelTime - TravelTimeRandomOffset) + rand() % (TravelTimeRandomOffset * 2)) * (1 - 1/depth));

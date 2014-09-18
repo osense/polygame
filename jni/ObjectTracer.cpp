@@ -38,7 +38,7 @@ ObjectTracer::~ObjectTracer()
         pl->unregisterObserver(this);
     }
 
-    Node->remove();
+    Context->Device->getSceneManager()->addToDeletionQueue(Node);
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }

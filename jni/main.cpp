@@ -1,8 +1,8 @@
 #include <irrlicht.h>
 
 #ifdef _IRR_ANDROID_PLATFORM_
-	#include <android_native_app_glue.h>
-	#include "ObjectWakeLock.h"
+#include <android_native_app_glue.h>
+#include "ObjectWakeLock.h"
 #endif
 
 #include "SContext.h"
@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     IrrlichtDevice* dev = 0;
 
 #ifdef _IRR_ANDROID_PLATFORM_
-	//Make sure glue isn't stripped.
-	app_dummy();
+    //Make sure glue isn't stripped.
+    app_dummy();
 
     SIrrlichtCreationParameters param;
     param.DriverType = video::EDT_OGLES2;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     delete cont->Mtls;
     delete cont;
 #ifndef _IRR_ANDROID_PLATFORM_
-	return 0;
+    return 0;
 #endif
 }
 

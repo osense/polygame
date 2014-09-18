@@ -166,26 +166,26 @@ void ObjectStateInit::onMessage(SMessage msg)
 
                 Context->Mtls->GridCB = new ShaderCBGrid(Context);
                 Context->Mtls->Grid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/grid.vert", "shaders/grid.frag",
-                                                                                                        Context->Mtls->GridCB);
+                                      Context->Mtls->GridCB);
 
                 Context->Mtls->AlphaCB = new ShaderCBAlpha(Context);
                 Context->Mtls->Alpha = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/alpha.vert", "shaders/alpha.frag",
-                                                                                                            Context->Mtls->AlphaCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                                       Context->Mtls->AlphaCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
                 Context->Mtls->SolidCB = new ShaderCBSolid(Context);
                 Context->Mtls->Solid = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/solid.vert", "shaders/solid.frag",
-                                                                                                            Context->Mtls->SolidCB);
+                                       Context->Mtls->SolidCB);
 
                 Context->Mtls->FaderCB = new ShaderCBFader();
                 Context->Mtls->Fader = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/fader.vert", "shaders/fader.frag",
-                                                                                                            Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                                       Context->Mtls->FaderCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
                 Context->Mtls->Sky = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/sky.vert", "shaders/sky.frag",
-                                                                                                    new ShaderCBSky());
+                                     new ShaderCBSky());
 
                 Context->Mtls->TracerCB = new ShaderCBTracer(Context);
                 Context->Mtls->Tracer = (video::E_MATERIAL_TYPE) gpu->addHighLevelShaderMaterialFromFiles("shaders/tracer.vert", "shaders/tracer.frag",
-                                                                                                            Context->Mtls->TracerCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+                                        Context->Mtls->TracerCB, video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
                 Context->Renderer->init(EET_FADER);
 

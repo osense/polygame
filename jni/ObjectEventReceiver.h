@@ -14,17 +14,17 @@ using namespace irr;
 
 class ObjectEventReceiver : public Object, public IEventReceiver
 {
-    public:
-        ObjectEventReceiver(SContext* cont);
-        virtual ~ObjectEventReceiver();
+public:
+    ObjectEventReceiver(SContext* cont);
+    virtual ~ObjectEventReceiver();
 
-        virtual void onMessage(SMessage msg);
-        virtual void debugLog(core::stringc text) const;
+    virtual void onMessage(SMessage msg);
+    virtual void debugLog(core::stringc text) const;
 
-        virtual bool OnEvent(const SEvent& event);
+    virtual bool OnEvent(const SEvent& event);
 
-    private:
-        void transformAccelInput(const f64* canVec, f64* worldVec) const;
+private:
+    void transformAccelInput(const f64* canVec, f64* worldVec) const;
 };
 
 #endif // OBJECTEVENTRECEIVER_H

@@ -139,19 +139,19 @@ inline s32 signum(f32 val)
 
 inline vector3df interpCR(vector3df p0, vector3df p1, vector3df p2, vector3df p3, f32 posZ)
 {
-   vector3df a0, a1, a2, a3;
-   f32 t = (posZ - p1.Z) / (p2.Z - p1.Z);
-   f32 t2 = t * t;
-   /*a0 = y3 - y2 - y0 + y1;
-   a1 = y0 - y1 - a0;
-   a2 = y2 - y0;
-   a3 = y1;*/
-   a0 = -0.5*p0 + 1.5*p1 - 1.5*p2 + 0.5*p3;
-   a1 = p0 - 2.5*p1 + 2*p2 - 0.5*p3;
-   a2 = -0.5*p0 + 0.5*p2;
-   a3 = p1;
+    vector3df a0, a1, a2, a3;
+    f32 t = (posZ - p1.Z) / (p2.Z - p1.Z);
+    f32 t2 = t * t;
+    /*a0 = y3 - y2 - y0 + y1;
+    a1 = y0 - y1 - a0;
+    a2 = y2 - y0;
+    a3 = y1;*/
+    a0 = -0.5*p0 + 1.5*p1 - 1.5*p2 + 0.5*p3;
+    a1 = p0 - 2.5*p1 + 2*p2 - 0.5*p3;
+    a2 = -0.5*p0 + 0.5*p2;
+    a3 = p1;
 
-   return (a0*t*t2 + a1*t2 + a2*t + a3);
+    return (a0*t*t2 + a1*t2 + a2*t + a3);
 }
 
 /** Converts an RGB color to it's HSV representation
@@ -348,7 +348,7 @@ inline Json::Value serializeCircularBuffer(const circular_buffer<f32>& buff)
     root["index"] = buff.getIndex();
 
     for (u32 i = 0; i < buff.getSize(); i++)
-            root["values"].append(buff[i]);
+        root["values"].append(buff[i]);
 
     return root;
 }
@@ -356,7 +356,7 @@ inline Json::Value serializeCircularBuffer(const circular_buffer<f32>& buff)
 inline void deserializeCircularBuffer(circular_buffer<f32>& buff, Json::Value& val)
 {
     for (u32 i = 0; i < buff.getSize(); i++)
-            buff.push_back(val["values"][i].asDouble());
+        buff.push_back(val["values"][i].asDouble());
 
     buff.setIndex(val["index"].asUInt());
 }

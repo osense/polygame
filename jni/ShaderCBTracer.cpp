@@ -1,7 +1,7 @@
 #include "ShaderCBTracer.h"
 
 ShaderCBTracer::ShaderCBTracer(SContext* cont)
-	:Context(cont)
+    :Context(cont)
 {
 
 }

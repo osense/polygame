@@ -95,10 +95,10 @@ void ObjectStateGame::setPaused(bool paused)
         PauseWnd = addOverlayWindow(Context);
 
         addText(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 64),
-              L"PAUSE", Context, PauseWnd);
+                L"PAUSE", Context, PauseWnd);
 
         addButton(core::position2d<s32>(252, 300), core::dimension2d<s32>(350, 64),
-              L"BACK TO MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
+                  L"BACK TO MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
 
         Context->Renderer->getFader()->startFadeOut(0.5);
         Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
@@ -163,7 +163,7 @@ void ObjectStateGame::createGameoverWindow()
     gui::IGUIEnvironment* gui = Context->Device->getGUIEnvironment();
 
     addText(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 128),
-              L"GAME OVER", Context, GameoverWnd);
+            L"GAME OVER", Context, GameoverWnd);
 
     core::rect<s32> dtTextPos(0, 250, 854, 280);
     scaleGUIRect(dtTextPos, Context->GUIScale);

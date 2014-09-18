@@ -1,7 +1,7 @@
 #include "ShaderCBSolid.h"
 
 ShaderCBSolid::ShaderCBSolid(SContext* cont)
-	:Context(cont)
+    :Context(cont)
 {
     Color = video::SColorf(1.0, 1.0, 1.0);
 }

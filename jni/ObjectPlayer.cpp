@@ -75,7 +75,7 @@ void ObjectPlayer::onMessage(SMessage msg)
                     Energy = MaxEnergy;
             }*/
 
-            TargetRot.X = ((Camera->getPosition().Y - (FloorHeight + Height)) / Height) * MaxRise;
+        TargetRot.X = ((Camera->getPosition().Y - (FloorHeight + Height)) / Height) * MaxRise;
         //}
 
         core::vector3df rotDiff = TargetRot - Camera->getRotation();
@@ -88,10 +88,10 @@ void ObjectPlayer::onMessage(SMessage msg)
         Camera->setPosition(newPos);
         Camera->setTarget(Camera->getPosition() + dir);
 
-        #ifdef DEBUG_PLAYER
+#ifdef DEBUG_PLAYER
         DebugCamera->setPosition(Camera->getPosition() + core::vector3df(1.5, 1, 0));
         DebugCamera->setTarget(Camera->getPosition());
-        #endif // DEBUG_PLAYER
+#endif // DEBUG_PLAYER
 
         SMessage msg(this, EMT_OBJ_POS);
         core::vector3df camPos = Camera->getPosition();
@@ -152,8 +152,8 @@ void ObjectPlayer::onMessage(SMessage msg)
         core::vector3df camPos = Camera->getPosition();
         Camera->setTarget(camPos + core::vector3df(0, 0, 0.001));
         Camera->addAnimator(Context->Device->getSceneManager()->createFlyStraightAnimator(Camera->getPosition(),
-                                                                                        Camera->getPosition() + core::vector3df(0, 0.3, -1),
-                                                                                        600));
+                            Camera->getPosition() + core::vector3df(0, 0.3, -1),
+                            600));
     }
     else if (msg.Type == EMT_SERIALIZE)
     {

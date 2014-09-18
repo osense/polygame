@@ -30,18 +30,18 @@ using namespace core;
 
 class ObjectStateMenu : public Object
 {
-    public:
-        ObjectStateMenu(SContext* cont);
-        virtual ~ObjectStateMenu();
+public:
+    ObjectStateMenu(SContext* cont);
+    virtual ~ObjectStateMenu();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        void create_menu();
-        void create_options();
+private:
+    void create_menu();
+    void create_options();
 
-        scene::ICameraSceneNode* Camera;
-        gui::IGUIWindow* Window;
+    scene::ICameraSceneNode* Camera;
+    gui::IGUIWindow* Window;
 };
 
 #endif // GAMESTATEMENU_H

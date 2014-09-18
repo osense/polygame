@@ -9,17 +9,17 @@
 
 class ObjectHUD : public Object
 {
-    public:
-        ObjectHUD(SContext* cont);
-        virtual ~ObjectHUD();
+public:
+    ObjectHUD(SContext* cont);
+    virtual ~ObjectHUD();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        video::SColor HUDColor;
+private:
+    video::SColor HUDColor;
 
-        gui::IGUIStaticText* DistTravelledText;
-        f32 DT = 0;
+    gui::IGUIStaticText* DistTravelledText;
+    f32 DT = 0;
 };
 
 #endif // OBJECTHUD_H

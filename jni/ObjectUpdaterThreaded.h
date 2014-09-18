@@ -11,21 +11,21 @@ class ObjectUpdaterThreaded : public Object
 {
 public:
 
-	ObjectUpdaterThreaded(SContext* cont);
+    ObjectUpdaterThreaded(SContext* cont);
 
-	virtual ~ObjectUpdaterThreaded();
+    virtual ~ObjectUpdaterThreaded();
 
-	void onMessage(SMessage msg);
+    void onMessage(SMessage msg);
 
-	void stop();
+    void stop();
 
 private:
-	void updateFunc();
+    void updateFunc();
 
-	std::thread Thread;
-	std::atomic<bool> Running;
+    std::thread Thread;
+    std::atomic<bool> Running;
 
-	static constexpr u32 TargetFPS = 60;
+    static constexpr u32 TargetFPS = 60;
 };
 
 #endif /* OBJECTUPDATERTHREADED_H_ */

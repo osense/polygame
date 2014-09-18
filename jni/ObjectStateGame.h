@@ -27,23 +27,23 @@ using namespace irr;
 
 class ObjectStateGame : public Object
 {
-    public:
-        ObjectStateGame(SContext* cont, bool loadSavedGame = false);
-        virtual ~ObjectStateGame();
+public:
+    ObjectStateGame(SContext* cont, bool loadSavedGame = false);
+    virtual ~ObjectStateGame();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        gui::IGUIWindow* PauseWnd;
-        void setPaused(bool paused);
-        bool isPaused() const;
+private:
+    gui::IGUIWindow* PauseWnd;
+    void setPaused(bool paused);
+    bool isPaused() const;
 
-        void saveGame();
-        void loadGame();
+    void saveGame();
+    void loadGame();
 
-        gui::IGUIWindow* GameoverWnd;
-        void createGameoverWindow();
-        bool isGameover() const;
+    gui::IGUIWindow* GameoverWnd;
+    void createGameoverWindow();
+    bool isGameover() const;
 };
 
 #endif // OBJECTSTATEGAME_H

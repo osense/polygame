@@ -28,10 +28,10 @@ ObjectStateMenu::ObjectStateMenu(SContext* cont) : Object(cont)
     Context->Renderer->getFader()->startFadeIn();
 
     std::thread ([&] ()
-                {
-                    if (readJson(Context, Context->Sets->SavegamePath)["can_continue"].asBool())
-                        Window->getElementFromId(EGI_CONTINUE)->setEnabled(true);
-                }).detach();
+    {
+        if (readJson(Context, Context->Sets->SavegamePath)["can_continue"].asBool())
+            Window->getElementFromId(EGI_CONTINUE)->setEnabled(true);
+    }).detach();
 }
 
 ObjectStateMenu::~ObjectStateMenu()

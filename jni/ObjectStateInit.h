@@ -32,21 +32,21 @@ using namespace irr;
 
 class ObjectStateInit : public Object
 {
-    public:
-        ObjectStateInit(SContext* cont, bool showLoading = true);
+public:
+    ObjectStateInit(SContext* cont, bool showLoading = true);
 
-        ~ObjectStateInit();
+    ~ObjectStateInit();
 
-        virtual void onMessage(SMessage msg);
+    virtual void onMessage(SMessage msg);
 
-    private:
-        E_INIT_LOADING_STATE LoadingState;
-        u32 WaitCounter;
+private:
+    E_INIT_LOADING_STATE LoadingState;
+    u32 WaitCounter;
 
-        u32 TexturesLoaded;
-        core::array<core::stringc> TextureNames;
+    u32 TexturesLoaded;
+    core::array<core::stringc> TextureNames;
 
-        gui::IGUIStaticText* Loading;
+    gui::IGUIStaticText* Loading;
 };
 
 #endif // OBJECTSTATEINIT_H
