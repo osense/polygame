@@ -21,6 +21,7 @@ void main()
 
     vec4 clipPos = WorldViewProjMat * vec4(inVertexPosition + inVertexNormal * (depth * (0.08 + ThicknessBias)), 1.0);
     clipPos.y += (1.0 - cos(clipPos.x / 3.14)) * Transform * 2.0;
+    clipPos.y += (1.0 - cos(clipPos.z / 6.28)) * Transform * 4.0;
     gl_Position = clipPos;
 }
 
