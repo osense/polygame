@@ -10,7 +10,10 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
 #ifdef _IRR_ANDROID_PLATFORM_
-    Context->Device->activateAccelerometer(0.02);
+    if (!Context->Sets->TouchController)
+    {
+        Context->Device->activateAccelerometer(0.02);
+    }
 #endif
 
     Camera = Context->Device->getSceneManager()->addCameraSceneNode();
@@ -37,7 +40,11 @@ ObjectPlayer::~ObjectPlayer()
 
     Camera->remove();
 
-    Context->Device->deactivateAccelerometer();
+    if (!Context->Sets->TouchController)
+    {
+        Context->Device->deactivateAccelerometer();
+    }
+    
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
@@ -108,27 +115,27 @@ void ObjectPlayer::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_INPUT)
     {
-        /*if (msg.Input.Type == ETIE_PRESSED_DOWN)
-            Rising = true;
-        else if (msg.Input.Type == ETIE_LEFT_UP)
+        if (Context->Sets->TouchController)
         {
-            Rising = false;
-            TimeTillRegen = EnergyRegenCooldown;
-        }*/
-
-#ifdef DEBUG_GLES
-        if (msg.Input.Type == ETIE_MOVED)
-        {
-            const u32 screenXHalf = Context->Device->getVideoDriver()->getScreenSize().Width / 2;
-            TargetRot.Y = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
-            clamp(TargetRot.Y, -1.0, 1.0);
-            TargetRot.Y *= MaxAbsRotY;
+            if (msg.Input.Type == irr::ETIE_PRESSED_DOWN)
+            {
+                Touched = true;
+            }
+            else if (msg.Input.Type == irr::ETIE_LEFT_UP)
+            {
+                Touched = false;
+                TargetRot.Y = 0;
+                return;
+            }
+            
+            if (Touched)
+            {
+                const u32 screenXHalf = Context->ScreenResolution.Width / 2;
+                TargetRot.Y = (float(msg.Input.X) - float(screenXHalf)) / screenXHalf;
+                clamp(TargetRot.Y, -1.0, 1.0);
+                TargetRot.Y *= MaxAbsRotY;
+            }
         }
-        else if (msg.Input.Type == ETIE_PRESSED_DOWN)
-        {
-            Speed += Acceleration * 10;
-        }
-#endif
     }
     else if (msg.Type == EMT_ACC)
     {

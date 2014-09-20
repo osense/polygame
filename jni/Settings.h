@@ -17,6 +17,7 @@ public:
 
 
     f64 AccelXBias;
+    bool TouchController;
     u32 Seed;
     video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality;
     bool Glow;

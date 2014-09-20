@@ -49,6 +49,7 @@ private:
     f32 MaxAbsRotY = DefaultMaxAbsRotY;
 
     circular_buffer<f32> AccSamples;
+    bool Touched = false;
 };
 
 #endif // OBJECTPLAYER_H

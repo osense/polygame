@@ -76,6 +76,16 @@ void ObjectStateOptions::onMessage(SMessage msg)
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_MEDIUM))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_GLOW_HIGH))->setPressed(true);
             break;
+            
+        case EOI_CONTROLS_TILT:
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->setPressed(false);
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(true);
+            break;
+            
+        case EOI_CONTROLS_TOUCH:
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->setPressed(true);
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(false);
+            break;
 
         case EOI_SEED_0:
         case EOI_SEED_1:
@@ -202,6 +212,10 @@ void ObjectStateOptions::create_controls()
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
+    
+    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(400, 40), L"CONTROLLER", Context, PaneWindow);
+    addButton(core::position2d<s32>(450, 44), core::dimension2d<s32>(128, 40), L"TILT", Context, EOI_CONTROLS_TILT, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(600, 44), core::dimension2d<s32>(128, 40), L"TOUCH", Context, EOI_CONTROLS_TOUCH, PaneWindow)->setIsPushButton(true);
 
     serialize();
 }
@@ -295,7 +309,14 @@ void ObjectStateOptions::serialize()
     }
     else if (State == EOS_CONTROLS)
     {
-
+        if (Context->Sets->TouchController)
+        {
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->setPressed(true);
+        }
+        else
+        {
+            static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(true);
+        }
     }
     else if (State == EOS_SEED)
     {
@@ -329,7 +350,14 @@ void ObjectStateOptions::deserialize()
     }
     else if (State == EOS_CONTROLS)
     {
-
+        if (static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->isPressed())
+        {
+            Context->Sets->TouchController = true;
+        }
+        else
+        {
+            Context->Sets->TouchController = false;
+        }
     }
     else if (State == EOS_SEED)
     {
