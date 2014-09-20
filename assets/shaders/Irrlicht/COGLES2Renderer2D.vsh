@@ -15,8 +15,8 @@ varying vec4 vVertexColor;
 
 void main()
 {
-	gl_Position = inVertexPosition;
-	gl_PointSize = uThickness;
-	vTextureCoord = inTexCoord0;
-	vVertexColor = inVertexColor.bgra;
+    gl_Position = inVertexPosition;
+    gl_PointSize = uThickness;
+    vTextureCoord = inTexCoord0;
+    vVertexColor = inVertexColor.bgra;
 }

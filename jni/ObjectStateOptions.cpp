@@ -183,7 +183,9 @@ void ObjectStateOptions::create_gfx()
 
     // prepare stuff for the vertical line
     VLineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_v.png");
-    for (s32 i = PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y; i < PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y; i += VLineSegment->getSize().Height-2)
+    s32 lineStart = PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y;
+    s32 lineEnd = PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y - 30 * Context->GUIScale.Y;
+    for (s32 i = lineStart; i < lineEnd; i += VLineSegment->getSize().Height - 2)
     {
         GfxLinePositions.push_back(core::position2d<s32>(280*Context->GUIScale.X, i));
         GfxLineRects.push_back(core::rect<s32>(core::vector2d<s32>(0, 0), VLineSegment->getSize()));
