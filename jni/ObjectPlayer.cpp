@@ -9,18 +9,17 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Context->ObjManager->getObjectFromName("ObjectUpdater")->registerObserver(this);
     Context->ObjManager->getObjectFromName("ObjectEventReceiver")->registerObserver(this);
 
-#ifdef _IRR_ANDROID_PLATFORM_
     if (!Context->Sets->TouchController)
     {
         Context->Device->activateAccelerometer(0.02);
     }
-#endif
 
     Camera = Context->Device->getSceneManager()->addCameraSceneNode();
     Camera->setFarValue(20);
     Camera->setNearValue(0.05);
     Camera->setPosition(core::vector3df(0, 0.4, 0));
 
+    AccCutoff = Context->Sets->AccelCutoff;
     for (u32 i = 0 ; i < AccSamplesSize; i++)
         AccSamples.push_back(0);
 

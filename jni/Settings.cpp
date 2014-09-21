@@ -14,6 +14,7 @@ Settings::Settings(SContext* cont, core::stringc storagePath)
     {
         AccelXBias = 0;
     }
+    AccelCutoff = 3.0;
     TouchController = false;
     Seed = 10;
     EffectQuality = video::EPQ_QUARTER;

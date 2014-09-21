@@ -23,6 +23,11 @@ ObjectStateOptions::~ObjectStateOptions()
     Object* updater = Context->ObjManager->getObjectFromName("ObjectUpdater");
     if (updater)
         updater->unregisterObserver(this);
+    
+    if (Context->Device->isAccelerometerActive())
+    {
+        Context->Device->deactivateAccelerometer();
+    }
 
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
@@ -33,8 +38,8 @@ void ObjectStateOptions::onMessage(SMessage msg)
     {
         Context->Device->getVideoDriver()->draw2DImageBatch(HLineSegment, LinePositions, LineRects, 0, video::SColor(255, 255, 255, 255), true);
 
-        if (State == EOS_GFX)
-            Context->Device->getVideoDriver()->draw2DImageBatch(VLineSegment, GfxLinePositions, GfxLineRects, 0, video::SColor(255, 255, 255, 255), true);
+        if (VertLineVisible)
+            Context->Device->getVideoDriver()->draw2DImageBatch(VLineSegment, VertLinePositions, VertLineRects, 0, video::SColor(255, 255, 255, 255), true);
     }
     else if (msg.Type == EMT_GUI)
     {
@@ -80,11 +85,13 @@ void ObjectStateOptions::onMessage(SMessage msg)
         case EOI_CONTROLS_TILT:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->setPressed(false);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(true);
+            controls_onTiltSelected();
             break;
             
         case EOI_CONTROLS_TOUCH:
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TOUCH))->setPressed(true);
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(false);
+            controls_onTouchSelected();
             break;
 
         case EOI_SEED_0:
@@ -142,6 +149,27 @@ void ObjectStateOptions::onMessage(SMessage msg)
 
         deserialize();
     }
+    else if (msg.Type == EMT_ACC)
+    {
+        if (State == EOS_CONTROLS)
+        {
+            gui::IGUIElement* bar = PaneWindow->getElementFromId(EOI_CONTROLS_CALIBRATE_BAR);
+            if (!bar)
+                return;
+            
+            gui::IGUIElement* dot = bar->getElementFromId(EOI_CONTROLS_CALIBRATE_BAR_DOT);
+            
+            f32 acc = msg.Acc.X;
+            const f32 accCutoff = Context->Sets->AccelCutoff;
+            clamp(acc, -1 * (accCutoff), accCutoff);
+            acc = (acc + accCutoff) / (2 * accCutoff);
+            
+            const u32 size = bar->getAbsoluteClippingRect().getWidth() - dot->getAbsoluteClippingRect().getWidth();
+            
+            core::position2di dotPos(s32(acc * f32(size)), 1);
+            dot->setRelativePosition(dotPos);
+        }
+    }
 }
 
 
@@ -161,6 +189,18 @@ void ObjectStateOptions::create_gui()
         LinePositions.push_back(core::position2d<s32>(i, 70*Context->GUIScale.Y));
         LineRects.push_back(core::rect<s32>(core::vector2d<s32>(0, 0), HLineSegment->getSize()));
     }
+    
+    // prepare stuff for the vertical line
+    PaneWindow = addOverlayWindow(Context, 0.8, 1);
+    VLineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_v.png");
+    s32 lineStart = PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y;
+    s32 lineEnd = PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y - 30 * Context->GUIScale.Y;
+    for (s32 i = lineStart; i < lineEnd; i += VLineSegment->getSize().Height - 2)
+    {
+        VertLinePositions.push_back(core::position2d<s32>(280*Context->GUIScale.X, i));
+        VertLineRects.push_back(core::rect<s32>(core::vector2d<s32>(0, 0), VLineSegment->getSize()));
+    }
+    PaneWindow->remove();
 
     PaneWindow = 0;
     create_gfx();
@@ -189,17 +229,8 @@ void ObjectStateOptions::create_gfx()
     addButton(core::position2d<s32>(290, 177), core::dimension2d<s32>(128, 40), L"OFF", Context, -1, PaneWindow)->setIsPushButton(true);
     addButton(core::position2d<s32>(420, 177), core::dimension2d<s32>(128, 40), L"ON", Context, -1, PaneWindow)->setIsPushButton(true);
 
+    setVertLineVisible(true);
     serialize();
-
-    // prepare stuff for the vertical line
-    VLineSegment = Context->Device->getVideoDriver()->getTexture("textures/line_v.png");
-    s32 lineStart = PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y;
-    s32 lineEnd = PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y - 30 * Context->GUIScale.Y;
-    for (s32 i = lineStart; i < lineEnd; i += VLineSegment->getSize().Height - 2)
-    {
-        GfxLinePositions.push_back(core::position2d<s32>(280*Context->GUIScale.X, i));
-        GfxLineRects.push_back(core::rect<s32>(core::vector2d<s32>(0, 0), VLineSegment->getSize()));
-    }
 }
 
 void ObjectStateOptions::create_controls()
@@ -213,10 +244,20 @@ void ObjectStateOptions::create_controls()
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
     
-    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(400, 40), L"CONTROLLER", Context, PaneWindow);
-    addButton(core::position2d<s32>(450, 44), core::dimension2d<s32>(128, 40), L"TILT", Context, EOI_CONTROLS_TILT, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(600, 44), core::dimension2d<s32>(128, 40), L"TOUCH", Context, EOI_CONTROLS_TOUCH, PaneWindow)->setIsPushButton(true);
+    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(270, 40), L"TYPE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addButton(core::position2d<s32>(290, 44), core::dimension2d<s32>(128, 40), L"TILT", Context, EOI_CONTROLS_TILT, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(420, 44), core::dimension2d<s32>(128, 40), L"TOUCH", Context, EOI_CONTROLS_TOUCH, PaneWindow)->setIsPushButton(true);
+    
+    if (Context->Sets->TouchController)
+    {
+        controls_onTouchSelected();
+    }
+    else
+    {
+        controls_onTiltSelected();
+    }
 
+    setVertLineVisible(true);
     serialize();
 }
 
@@ -251,7 +292,41 @@ void ObjectStateOptions::create_seed()
     addButton(core::position2d<s32>(500, 290), core::dimension2d<s32>(50, 50), L"0", Context, EOI_SEED_0, PaneWindow);
     addButton(core::position2d<s32>(700, 290), core::dimension2d<s32>(50, 50), L"C", Context, EOI_SEED_C, PaneWindow);
 
+    setVertLineVisible(false);
     serialize();
+}
+
+void ObjectStateOptions::controls_onTiltSelected()
+{
+    if (!Context->Device->isAccelerometerActive())
+    {
+        Context->Device->activateAccelerometer();
+    }
+    
+    core::rect<s32> boxRect(core::position2d<s32>(310, 190), core::dimension2d<s32>(525, 40));
+    scaleGUIRect(boxRect, Context->GUIScale);
+    gui::IGUIEditBox* box = Context->Device->getGUIEnvironment()->addEditBox(L"", boxRect, true, PaneWindow, EOI_CONTROLS_CALIBRATE_BAR);
+    box->setOverrideFont(getFont(Context));
+    box->setDrawBackground(false);
+    box->setTextAlignment(gui::EGUIA_LOWERRIGHT, gui::EGUIA_CENTER);
+    
+    gui::IGUIElement* dot = addText(core::position2d<s32>(0, 1), core::dimension2d<s32>(40, 40), L"#", Context, box);
+    dot->setID(EOI_CONTROLS_CALIBRATE_BAR_DOT);
+    
+    addButton(core::position2d<s32>(610, 250), core::dimension2d<s32>(256, 40), L"CALIBRATE", Context, EOI_CONTROLS_CALIBRATE, PaneWindow);
+}
+
+void ObjectStateOptions::controls_onTouchSelected()
+{
+    gui::IGUIElement* elem = 0;
+    
+    elem = PaneWindow->getElementFromId(EOI_CONTROLS_CALIBRATE);
+    if (elem)
+        elem->remove();
+    
+    elem = PaneWindow->getElementFromId(EOI_CONTROLS_CALIBRATE_BAR);
+    if (elem)
+        elem->remove();
 }
 
 void ObjectStateOptions::seed_onDigitPressed(u32 digit)
@@ -281,6 +356,11 @@ void ObjectStateOptions::seed_onDigitPressed(u32 digit)
     }
 
     sBox->setText(core::stringw(text).c_str());
+}
+
+void ObjectStateOptions::setVertLineVisible(bool vis)
+{
+    VertLineVisible = vis;
 }
 
 void ObjectStateOptions::serialize()

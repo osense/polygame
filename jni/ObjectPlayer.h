@@ -38,7 +38,7 @@ private:
     static constexpr f32 MaxSpeed = 5;
     static constexpr f32 MaxRise = 45;
     static constexpr f32 DefaultMaxAbsRotY = 85;
-    static constexpr f32 AccCutoff = 3.0;
+    f32 AccCutoff = 3.0;
     static constexpr u32 AccSamplesSize = 3;
 
     f32 Height = 0.4;

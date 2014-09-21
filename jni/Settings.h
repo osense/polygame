@@ -17,6 +17,7 @@ public:
 
 
     f64 AccelXBias;
+    f32 AccelCutoff;
     bool TouchController;
     u32 Seed;
     video::E_POSTPROCESSING_EFFECT_QUALITY EffectQuality;

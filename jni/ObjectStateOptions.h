@@ -37,6 +37,9 @@ enum E_OPTIONS_ID
     EOI_CONTROLS,
     EOI_CONTROLS_TILT,
     EOI_CONTROLS_TOUCH,
+    EOI_CONTROLS_CALIBRATE,
+    EOI_CONTROLS_CALIBRATE_BAR,
+    EOI_CONTROLS_CALIBRATE_BAR_DOT,
     EOI_SEED,
     EOI_BACK,
     EOI_GLOW_OFF,
@@ -60,8 +63,11 @@ private:
     void create_controls();
     void create_seed();
 
+    void controls_onTiltSelected();
+    void controls_onTouchSelected();
     void seed_onDigitPressed(u32 digit);
 
+    void setVertLineVisible(bool vis);
     void serialize();
     void deserialize();
 
@@ -72,8 +78,9 @@ private:
     video::ITexture* HLineSegment, *VLineSegment;
     core::array<core::position2d< s32 > > LinePositions;
     core::array<core::rect< s32 > > LineRects;
-    core::array<core::position2d< s32 > > GfxLinePositions;
-    core::array<core::rect< s32 > > GfxLineRects;
+    bool VertLineVisible = false;
+    core::array<core::position2d< s32 > > VertLinePositions;
+    core::array<core::rect< s32 > > VertLineRects;
 
 
 };
