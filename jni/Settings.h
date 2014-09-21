@@ -10,12 +10,15 @@ using namespace irr;
 class Settings
 {
 public:
-    Settings(SContext* cont, core::stringc storagePath);
+    Settings(SContext* cont);
+    
+    void setStoragePath(core::stringc path);
 
     bool read();
     void write() const;
 
 
+    u32 AccelSamples;
     f64 AccelXBias;
     f32 AccelCutoff;
     bool TouchController;

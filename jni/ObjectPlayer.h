@@ -39,7 +39,6 @@ private:
     static constexpr f32 MaxRise = 45;
     static constexpr f32 DefaultMaxAbsRotY = 85;
     f32 AccCutoff = 3.0;
-    static constexpr u32 AccSamplesSize = 3;
 
     f32 Height = 0.4;
     f32 Speed = MinSpeed;
@@ -48,7 +47,6 @@ private:
     core::vector3df RotSpeed = core::vector3df(5, 5, 0);
     f32 MaxAbsRotY = DefaultMaxAbsRotY;
 
-    circular_buffer<f32> AccSamples;
     bool Touched = false;
 };
 

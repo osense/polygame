@@ -1,7 +1,6 @@
 #include "ObjectPlayer.h"
 
-ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
-    AccSamples(AccSamplesSize)
+ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont)
 {
     Name = "ObjectPlayer";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -20,8 +19,6 @@ ObjectPlayer::ObjectPlayer(SContext* cont) : Object(cont),
     Camera->setPosition(core::vector3df(0, 0.4, 0));
 
     AccCutoff = Context->Sets->AccelCutoff;
-    for (u32 i = 0 ; i < AccSamplesSize; i++)
-        AccSamples.push_back(0);
 
 #ifdef DEBUG_PLAYER
     DebugCamera = Context->Device->getSceneManager()->addCameraSceneNode();
@@ -141,13 +138,7 @@ void ObjectPlayer::onMessage(SMessage msg)
         f32 acc = msg.Acc.X;
         clamp(acc, -1*(AccCutoff), AccCutoff);
 
-        AccSamples.push_back(acc);
-
-        f32 total = 0;
-        for (u32 i = 0; i < AccSamplesSize; i++)
-            total += AccSamples[i];
-
-        TargetRot.Y = (total/AccSamplesSize) * (1.0 / AccCutoff) * MaxAbsRotY;
+        TargetRot.Y = acc * (1.0 / AccCutoff) * MaxAbsRotY;
     }
     else if (msg.Type == EMT_PLAYER_CRASHED)
     {

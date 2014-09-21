@@ -9,6 +9,7 @@
 #include "Object.h"
 #include "ObjectManager.h"
 #include "Settings.h"
+#include "circular_buffer.h"
 
 using namespace irr;
 
@@ -25,6 +26,8 @@ public:
 
 private:
     void transformAccelInput(const f64* canVec, f64* worldVec) const;
+    
+    circular_buffer<core::vector3df> AccelSamples;
 };
 
 #endif // OBJECTEVENTRECEIVER_H

@@ -122,7 +122,11 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->StoragePath = core::stringc();
 #endif
 
-            Context->Sets = new Settings(Context, Context->StoragePath);
+            Context->Sets->setStoragePath(Context->StoragePath);
+            if (Context->ScreenRotation == ESR_0 || Context->ScreenRotation == ESR_180)
+            {
+                Context->Sets->AccelXBias = -1.7;
+            }
 
             if (!Context->Sets->read())
             {

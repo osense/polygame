@@ -70,6 +70,9 @@ int main(int argc, char *argv[])
 
     cont->Mtls = new SMaterials;
     cont->Mtls->Loaded = false;
+    
+    cont->Sets = new Settings(cont);
+    cont->TimeScale = 1;
 
     new ObjectEventReceiver(cont);
 
@@ -81,10 +84,6 @@ int main(int argc, char *argv[])
 #ifdef _IRR_ANDROID_PLATFORM_
     new ObjectWakeLock(cont);
 #endif // _IRR_ANDROID_PLATFORM_
-
-    cont->Sets = 0;
-
-    cont->TimeScale = 1;
 
     dev->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 

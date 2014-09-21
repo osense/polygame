@@ -1,24 +1,22 @@
 #include "Settings.h"
 
-Settings::Settings(SContext* cont, core::stringc storagePath)
+Settings::Settings(SContext* cont)
 {
     Context = cont;
-    FilePath = storagePath + "settings.json";
-    SavegamePath = storagePath + "savegame.json";
 
-    if (Context->ScreenRotation == ESR_0 || Context->ScreenRotation == ESR_180)
-    {
-        AccelXBias = -1.7;
-    }
-    else
-    {
-        AccelXBias = 0;
-    }
+    AccelSamples = 4;
+    AccelXBias = 0;
     AccelCutoff = 3.0;
     TouchController = false;
     Seed = 10;
     EffectQuality = video::EPQ_QUARTER;
     Glow = true;
+}
+
+void Settings::setStoragePath(core::stringc path)
+{
+    FilePath = path + "settings.json";
+    SavegamePath = path + "savegame.json";
 }
 
 bool Settings::read()

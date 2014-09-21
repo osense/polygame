@@ -1,6 +1,7 @@
 #include "ObjectEventReceiver.h"
 
-ObjectEventReceiver::ObjectEventReceiver(SContext* cont) : Object(cont)
+ObjectEventReceiver::ObjectEventReceiver(SContext* cont) : Object(cont),
+    AccelSamples(Context->Sets->AccelSamples)
 {
     Name = "ObjectEventReceiver";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -128,11 +129,19 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
         const f64 canonAcc[] = {event.AccelerometerEvent.X, event.AccelerometerEvent.Y, event.AccelerometerEvent.Z};
         f64 worldAcc[3];
         transformAccelInput(canonAcc, worldAcc);
+        
+        AccelSamples.push_back(core::vector3df(-worldAcc[0] + Context->Sets->AccelXBias, worldAcc[1], worldAcc[2]));
+
+        core::vector3df total(0);
+        for (u32 i = 0; i < AccelSamples.getSize(); i++)
+            total += AccelSamples[i];
+        
+        total /= AccelSamples.getSize();
 
         SMessage msg(this, EMT_ACC);
-        msg.Acc.X = -worldAcc[0] + Context->Sets->AccelXBias;
-        msg.Acc.Y = worldAcc[1];
-        msg.Acc.Z = worldAcc[2];
+        msg.Acc.X = total.X;
+        msg.Acc.Y = total.Y;
+        msg.Acc.Z = total.Z;
         broadcastMessage(msg);
         return true;
     }
