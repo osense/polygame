@@ -30,6 +30,8 @@ void ObjectDebugInfo::onMessage(SMessage msg)
         dbg += Context->Device->getVideoDriver()->getPrimitiveCountDrawn();
         dbg += "\nItems: ";
         dbg += ObjectCount;
+        dbg += "\nAccelBias: ";
+        dbg += Context->Sets->AccelXBias;
 
         if (Player)
         {

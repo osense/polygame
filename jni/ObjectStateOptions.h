@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "ObjectManager.h"
 #include "ObjectStateInit.h"
+#include "ObjectStateOptionsCalibration.h"
 #include "EffectRenderer.h"
 #include "functions.h"
 #include <irrlicht.h>

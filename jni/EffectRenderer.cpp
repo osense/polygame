@@ -31,8 +31,8 @@ void EffectRenderer::drawAll(u32 timeDelta)
         if (Fader->isActive() && !Fader->getIncludeGUI())
             Fader->draw(timeDelta / 1000.0);
 
-        Context->Device->getGUIEnvironment()->drawAll();
         PP->render(PP->getRTT1());
+        Context->Device->getGUIEnvironment()->drawAll();
 
         if (Fader->isActive() && Fader->getIncludeGUI())
             Fader->draw(timeDelta / 1000.0);

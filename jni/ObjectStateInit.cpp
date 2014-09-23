@@ -143,6 +143,11 @@ void ObjectStateInit::onMessage(SMessage msg)
             getOverlayFont(Context);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_BUTTON_TEXT, video::SColor(255, 255, 255, 255));
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_GRAY_TEXT, video::SColor(255, 50, 50, 50));
+            video::SColor wndColour(200, 0, 0, 0);
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_FACE, wndColour);
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_SHADOW, wndColour);
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_HIGH_LIGHT, wndColour);
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_DARK_SHADOW, wndColour);
             Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_X, 0);
             Context->Device->getGUIEnvironment()->getSkin()->setSize(gui::EGDS_BUTTON_PRESSED_TEXT_OFFSET_Y, 0);
 

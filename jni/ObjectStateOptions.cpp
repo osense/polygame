@@ -93,6 +93,10 @@ void ObjectStateOptions::onMessage(SMessage msg)
             static_cast<gui::IGUIButton*>(PaneWindow->getElementFromId(EOI_CONTROLS_TILT))->setPressed(false);
             controls_onTouchSelected();
             break;
+            
+        case EOI_CONTROLS_CALIBRATE:
+            new ObjectStateOptionsCalibration(Context);
+            break;
 
         case EOI_SEED_0:
         case EOI_SEED_1:
