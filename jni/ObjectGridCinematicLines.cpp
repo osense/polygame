@@ -1,7 +1,8 @@
 #include "ObjectGridCinematicLines.h"
 
 ObjectGridCinematicLines::ObjectGridCinematicLines(SContext* cont, u32 numPtsX) : Object(cont),
-    NumPointsX(numPtsX)
+    NumPointsX(numPtsX),
+    Dead(false)
 {
     Name = "ObjectGridCinematicLines";
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_SPAWNED));
@@ -14,6 +15,9 @@ ObjectGridCinematicLines::ObjectGridCinematicLines(SContext* cont, u32 numPtsX) 
 
 ObjectGridCinematicLines::~ObjectGridCinematicLines()
 {
+    std::lock_guard<std::mutex> lock(UpdateMutex);
+    Dead = true;
+    
     while(LGroups.size() > 0)
     {
         LGroups[0].Node->remove();
@@ -33,6 +37,8 @@ void ObjectGridCinematicLines::onMessage(SMessage msg)
     if (msg.Type == EMT_UPDATE)
     {
         std::lock_guard<std::mutex> lock(UpdateMutex);
+        if (Dead)
+            return;
 
         for (std::vector<LineGroup>::iterator it = LGroups.begin(); it != LGroups.end(); it++)
         {

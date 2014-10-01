@@ -8,6 +8,7 @@
 #include <irrlicht.h>
 #include <vector>
 #include <mutex>
+#include <atomic>
 #include <stdlib.h>
 
 using namespace irr;
@@ -56,6 +57,7 @@ private:
     u32 NumPointsX;
     std::vector<LineGroup> LGroups;
     std::mutex UpdateMutex;
+    std::atomic<bool> Dead;
     scene::IMesh* LineMeshZ;
     scene::IMesh* LineMeshX;
 
