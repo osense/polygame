@@ -8,6 +8,7 @@
 #include "ObjectStateOptionsCalibration.h"
 #include "EffectRenderer.h"
 #include "functions.h"
+#include "IGUIElementLine.h"
 #include <irrlicht.h>
 
 using namespace irr;
@@ -68,7 +69,6 @@ private:
     void controls_onTouchSelected();
     void seed_onDigitPressed(u32 digit);
 
-    void setVertLineVisible(bool vis);
     void serialize();
     void deserialize();
 
@@ -76,12 +76,7 @@ private:
     gui::IGUIWindow* MainWindow, *PaneWindow;
     scene::ICameraSceneNode* Camera;
 
-    video::ITexture* HLineSegment, *VLineSegment;
-    core::array<core::position2d< s32 > > LinePositions;
-    core::array<core::rect< s32 > > LineRects;
-    bool VertLineVisible = false;
-    core::array<core::position2d< s32 > > VertLinePositions;
-    core::array<core::rect< s32 > > VertLineRects;
+    IGUIElementLine* HorizontalLine, *VerticalLine;
 
 
 };
