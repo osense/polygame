@@ -52,10 +52,14 @@ void ObjectStateGame::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_GUI)
     {
+        bool exiting = false;
+
         if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
         {
             if (!GameoverWnd)
                 setPaused(!isPaused());
+            else
+                exiting = true;
         }
 
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
@@ -65,9 +69,14 @@ void ObjectStateGame::onMessage(SMessage msg)
         {
         case EGGI_EXIT_BACK:
         case EGGI_EXIT_GAMEOVER:
+            exiting = true;
+        }
+
+        if (exiting)
+        {
             saveGame();
             Context->ObjManager->clear();
-            new ObjectStateInit(Context, false);
+            Context->State = new ObjectStateInit(Context, false);
             delete this;
             return;
         }

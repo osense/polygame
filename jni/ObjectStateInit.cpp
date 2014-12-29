@@ -79,10 +79,10 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->App->activity->vm->AttachCurrentThread(&jni, NULL);
             if (jni)
             {
-                jclass classNativeActivity = jni->FindClass("android/app/NativeActivity");
+                jclass classNativeActivity = jni->FindClass("android/app/NativeActivity"); //com/osense/Polygame/MyActivity
                 jclass classWindowManager = jni->FindClass("android/view/WindowManager");
                 jclass classDisplay = jni->FindClass("android/view/Display");
-                if (classWindowManager)
+                if (classNativeActivity)
                 {
                     jmethodID idNativeActivity_getWindowManager = jni->GetMethodID(classNativeActivity, "getWindowManager", "()Landroid/view/WindowManager;");
                     jmethodID idWindowManager_getDefaultDisplay = jni->GetMethodID(classWindowManager, "getDefaultDisplay", "()Landroid/view/Display;");
@@ -142,7 +142,7 @@ void ObjectStateInit::onMessage(SMessage msg)
             Context->Device->getGUIEnvironment()->getSkin()->setFont(getFont(Context));
             getOverlayFont(Context);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_BUTTON_TEXT, video::SColor(255, 255, 255, 255));
-            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_GRAY_TEXT, video::SColor(255, 50, 50, 50));
+            Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_GRAY_TEXT, video::SColor(255, 75, 75, 75));
             video::SColor wndColour(200, 0, 0, 0);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_FACE, wndColour);
             Context->Device->getGUIEnvironment()->getSkin()->setColor(gui::EGDC_3D_SHADOW, wndColour);
@@ -239,7 +239,7 @@ void ObjectStateInit::onMessage(SMessage msg)
         else if (LoadingState == EILS_DONE)
         {
             debugLog("DONE");
-            new ObjectStateMenu(Context);
+            Context->State = new ObjectStateMenu(Context);
 
             if (Loading)
                 Loading->remove();

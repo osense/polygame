@@ -40,7 +40,7 @@ ObjectPlayer::~ObjectPlayer()
     {
         Context->Device->deactivateAccelerometer();
     }
-    
+
     Context->ObjManager->broadcastMessage(SMessage(this, EMT_OBJ_DIED));
 }
 
@@ -123,7 +123,7 @@ void ObjectPlayer::onMessage(SMessage msg)
                 TargetRot.Y = 0;
                 return;
             }
-            
+
             if (Touched)
             {
                 const u32 screenXHalf = Context->ScreenResolution.Width / 2;
@@ -131,6 +131,10 @@ void ObjectPlayer::onMessage(SMessage msg)
                 clamp(TargetRot.Y, -1.0, 1.0);
                 TargetRot.Y *= MaxAbsRotY;
             }
+        }
+        else if (msg.Input.Type == irr::ETIE_LEFT_UP)
+        {
+            //hideNavBar(Context);
         }
     }
     else if (msg.Type == EMT_ACC)

@@ -2,7 +2,6 @@
 
 #ifdef _IRR_ANDROID_PLATFORM_
 #include <android_native_app_glue.h>
-#include "ObjectWakeLock.h"
 #endif
 
 #include "SContext.h"
@@ -70,7 +69,7 @@ int main(int argc, char *argv[])
 
     cont->Mtls = new SMaterials;
     cont->Mtls->Loaded = false;
-    
+
     cont->Sets = new Settings(cont);
     cont->TimeScale = 1;
 
@@ -81,14 +80,10 @@ int main(int argc, char *argv[])
 
     cont->Renderer = new EffectRenderer(cont);
 
-#ifdef _IRR_ANDROID_PLATFORM_
-    new ObjectWakeLock(cont);
-#endif // _IRR_ANDROID_PLATFORM_
-
     dev->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
 
-    new ObjectStateInit(cont);
+    cont->State = new ObjectStateInit(cont);
 
 
     ITimer* timer = dev->getTimer();

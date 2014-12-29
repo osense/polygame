@@ -4,6 +4,7 @@
 #include <irrlicht.h>
 #ifdef _IRR_ANDROID_PLATFORM_
 #include <android_native_app_glue.h>
+#include "functions.h"
 #endif // _IRR_ANDROID_PLATFORM_
 
 #include "Object.h"
@@ -26,7 +27,7 @@ public:
 
 private:
     void transformAccelInput(const f64* canVec, f64* worldVec) const;
-    
+
     circular_buffer<core::vector3df> AccelSamples;
 };
 
