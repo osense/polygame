@@ -22,9 +22,4 @@ public class MyActivity extends NativeActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
-
-    @SuppressWarnings("unused")
-    public void hideNavBar() {
-        getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
 }

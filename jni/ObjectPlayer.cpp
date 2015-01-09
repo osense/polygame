@@ -132,10 +132,6 @@ void ObjectPlayer::onMessage(SMessage msg)
                 TargetRot.Y *= MaxAbsRotY;
             }
         }
-        else if (msg.Input.Type == irr::ETIE_LEFT_UP)
-        {
-            //hideNavBar(Context);
-        }
     }
     else if (msg.Type == EMT_ACC)
     {

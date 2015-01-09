@@ -22,8 +22,6 @@ ObjectStateGame::ObjectStateGame(SContext* cont, bool loadSavedGame) : Object(co
 
     Context->Renderer->getFader()->setIncludeGUI(false);
     Context->Renderer->getFader()->startFadeIn(1.0, loadSavedGame ? 0.25 : 0.5);
-
-    Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_LOCK));
 }
 
 ObjectStateGame::~ObjectStateGame()
@@ -70,6 +68,8 @@ void ObjectStateGame::onMessage(SMessage msg)
         case EGGI_EXIT_BACK:
         case EGGI_EXIT_GAMEOVER:
             exiting = true;
+        case EGGI_RESUME:
+            setPaused(false);
         }
 
         if (exiting)
@@ -106,11 +106,12 @@ void ObjectStateGame::setPaused(bool paused)
         addText(core::position2d<s32>(299, 50), core::dimension2d<s32>(256, 64),
                 L"PAUSE", Context, PauseWnd);
 
-        addButton(core::position2d<s32>(252, 300), core::dimension2d<s32>(350, 64),
-                  L"BACK TO MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
+        addButton(core::position2d<s32>(252, 286), core::dimension2d<s32>(350, 64),
+                  L"CONTINUE", Context, EGGI_RESUME, PauseWnd);
+        addButton(core::position2d<s32>(252, 350), core::dimension2d<s32>(350, 64),
+                  L"MAIN MENU", Context, EGGI_EXIT_BACK, PauseWnd);
 
         Context->Renderer->getFader()->startFadeOut(0.5);
-        Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
     }
     else if (!paused && isPaused())
     {
@@ -118,7 +119,6 @@ void ObjectStateGame::setPaused(bool paused)
         PauseWnd->remove();
         PauseWnd = 0;
         Context->Renderer->getFader()->startFadeInContinuous();
-        Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_LOCK));
     }
 }
 
@@ -184,8 +184,6 @@ void ObjectStateGame::createGameoverWindow()
 
     addButton(core::position2d<s32>(363, 350), core::dimension2d<s32>(128, 64),
               L"O.K.", Context, EGGI_EXIT_GAMEOVER, GameoverWnd);
-
-    Context->ObjManager->broadcastMessage(SMessage(this, EMT_WAKE_UNLOCK));
 }
 
 bool ObjectStateGame::isGameover() const

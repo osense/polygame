@@ -38,7 +38,6 @@ public:
 
 private:
     void create_menu();
-    void create_options();
 
     scene::ICameraSceneNode* Camera;
     gui::IGUIWindow* Window;

@@ -174,16 +174,16 @@ void ObjectStateOptions::create_gui()
 {
     MainWindow = addOverlayWindow(Context);
 
-    addButton(core::position2d<s32>(720, 27), core::dimension2d<s32>(100, 40), L"GFX", Context, EOI_GFX, MainWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(470, 27), core::dimension2d<s32>(270, 40), L"CONTROLS", Context, EOI_CONTROLS, MainWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(370, 27), core::dimension2d<s32>(120, 40), L"SEED", Context, EOI_SEED, MainWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(480, 27), core::dimension2d<s32>(180, 40), L"GFX", Context, EOI_GFX, MainWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(220, 27), core::dimension2d<s32>(300, 40), L"CONTROLS", Context, EOI_CONTROLS, MainWindow)->setIsPushButton(true);
+    //addButton(core::position2d<s32>(370, 27), core::dimension2d<s32>(120, 40), L"SEED", Context, EOI_SEED, MainWindow)->setIsPushButton(true);
     addButton(core::position2d<s32>(30, 27), core::dimension2d<s32>(128, 40), L"BACK", Context, EOI_BACK, MainWindow);
 
     core::rect<s32> hlRect = core::rect<s32>(30*Context->GUIScale.X, 70*Context->GUIScale.Y, MainWindow->getAbsoluteClippingRect().LowerRightCorner.X - 30*Context->GUIScale.X, 70*Context->GUIScale.Y);
     HorizontalLine = new IGUIElementLine(Context->Device->getGUIEnvironment(), MainWindow, -1, hlRect, Context->Device->getVideoDriver()->getTexture("textures/line_h.png"));
 
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
-    core::rect<s32> vRect = core::rect<s32>(280*Context->GUIScale.X, PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y, 280*Context->GUIScale.X, PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y - 30 * Context->GUIScale.Y);
+    core::rect<s32> vRect = core::rect<s32>(230*Context->GUIScale.X, PaneWindow->getAbsoluteClippingRect().UpperLeftCorner.Y, 280*Context->GUIScale.X, PaneWindow->getAbsoluteClippingRect().LowerRightCorner.Y - 30 * Context->GUIScale.Y);
     VerticalLine = new IGUIElementLine(Context->Device->getGUIEnvironment(), MainWindow, -1, vRect, Context->Device->getVideoDriver()->getTexture("textures/line_v.png"), true);
     VerticalLine->setVisible(false);
     PaneWindow->remove();
@@ -197,23 +197,23 @@ void ObjectStateOptions::create_gfx()
     State = EOS_GFX;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(true);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(false);
-    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
+    //static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
 
-    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(270, 40), L"GLOW", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addButton(core::position2d<s32>(290, 42), core::dimension2d<s32>(128, 40), L"OFF", Context, EOI_GLOW_OFF, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(420, 42), core::dimension2d<s32>(128, 40), L"LOW", Context, EOI_GLOW_LOW, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(555, 42), core::dimension2d<s32>(160, 40), L"MEDIUM", Context, EOI_GLOW_MEDIUM, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(720, 42), core::dimension2d<s32>(128, 40), L"HIGH", Context, EOI_GLOW_HIGH, PaneWindow)->setIsPushButton(true);
+    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(220, 40), L"GLOW", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addButton(core::position2d<s32>(240, 42), core::dimension2d<s32>(128, 40), L"OFF", Context, EOI_GLOW_OFF, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(360, 42), core::dimension2d<s32>(128, 40), L"LOW", Context, EOI_GLOW_LOW, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(480, 42), core::dimension2d<s32>(180, 40), L"MEDIUM", Context, EOI_GLOW_MEDIUM, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(650, 42), core::dimension2d<s32>(128, 40), L"HIGH", Context, EOI_GLOW_HIGH, PaneWindow)->setIsPushButton(true);
 
 
-    addText(core::position2d<s32>(0, 160), core::dimension2d<s32>(270, 40), L"PLACE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addText(core::position2d<s32>(0, 190), core::dimension2d<s32>(270, 40), L"HOLDER", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addButton(core::position2d<s32>(290, 177), core::dimension2d<s32>(128, 40), L"OFF", Context, -1, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(420, 177), core::dimension2d<s32>(128, 40), L"ON", Context, -1, PaneWindow)->setIsPushButton(true);
+    addText(core::position2d<s32>(0, 160), core::dimension2d<s32>(220, 40), L"PLACE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addText(core::position2d<s32>(0, 190), core::dimension2d<s32>(220, 40), L"HOLDER", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addButton(core::position2d<s32>(240, 177), core::dimension2d<s32>(128, 40), L"OFF", Context, -1, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(360, 177), core::dimension2d<s32>(128, 40), L"ON", Context, -1, PaneWindow)->setIsPushButton(true);
 
     VerticalLine->setVisible(true);
     serialize();

@@ -1,4 +1,4 @@
-~/dev/android-ndk-r10d/ndk-build
+~/dev/android-ndk-r10d/ndk-build -j 2
 if [ $? -ne 0 ]; then
 	echo "Build failed, aborting..."
 	exit -1;

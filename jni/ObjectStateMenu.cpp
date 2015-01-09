@@ -93,8 +93,8 @@ void ObjectStateMenu::create_menu()
     addButton(position2d<s32>(299, 200), dimension2d<s32>(256, 64),
               L"NEW GAME", Context, EGI_NEWGAME, Window);
 
-    addButton(position2d<s32>(615, 320), dimension2d<s32>(256, 64),
+    addButton(position2d<s32>(0, 320), dimension2d<s32>(256, 64),
               L"OPTIONS", Context, EGI_OPTIONS, Window);
-    addButton(position2d<s32>(700, 380), dimension2d<s32>(128, 64),
+    addButton(position2d<s32>(0, 384), dimension2d<s32>(175, 64),
               L"EXIT", Context, EGI_EXIT, Window);
 }

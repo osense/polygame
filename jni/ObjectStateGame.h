@@ -20,7 +20,8 @@
 enum E_GAME_GUI_ID
 {
     EGGI_EXIT_GAMEOVER = 0,
-    EGGI_EXIT_BACK
+    EGGI_EXIT_BACK,
+    EGGI_RESUME
 };
 
 using namespace irr;

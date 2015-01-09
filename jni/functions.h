@@ -389,24 +389,4 @@ inline std::tm deserializeDate(Json::Value& date)
     return d;
 }
 
-
-#ifdef _IRR_ANDROID_PLATFORM_
-inline void hideNavBar(SContext* cont)
-{
-    JNIEnv* jni = 0;
-    cont->App->activity->vm->AttachCurrentThread(&jni, NULL);
-    if (jni)
-    {
-        jmethodID hideID = jni->GetMethodID(jni->FindClass("com/osense/polygame/MyActivity"), "hideNavBar", "()V");
-        jni->CallVoidMethod(cont->App->activity->clazz, hideID);
-
-        cont->App->activity->vm->DetachCurrentThread();
-    }
-    else
-    {
-        cont->Device->getLogger()->log("failed to hide navbar (couldn't attach to JNI)");
-    }
-}
-#endif // _IRR_ANDROID_PLATFORM_
-
 #endif // FUNCTIONS_H_INCLUDED
