@@ -224,15 +224,15 @@ void ObjectStateOptions::create_controls()
     State = EOS_CONTROLS;
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_GFX))->setPressed(false);
     static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_CONTROLS))->setPressed(true);
-    static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
+    //static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(false);
     if (PaneWindow)
         PaneWindow->remove();
     PaneWindow = addOverlayWindow(Context, 0.8, 1);
     MainWindow->addChild(PaneWindow);
 
-    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(270, 40), L"TYPE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
-    addButton(core::position2d<s32>(290, 44), core::dimension2d<s32>(128, 40), L"TILT", Context, EOI_CONTROLS_TILT, PaneWindow)->setIsPushButton(true);
-    addButton(core::position2d<s32>(420, 44), core::dimension2d<s32>(128, 40), L"TOUCH", Context, EOI_CONTROLS_TOUCH, PaneWindow)->setIsPushButton(true);
+    addText(core::position2d<s32>(0, 40), core::dimension2d<s32>(220, 40), L"TYPE", Context, PaneWindow, gui::EGUIA_LOWERRIGHT);
+    addButton(core::position2d<s32>(240, 44), core::dimension2d<s32>(128, 40), L"TILT", Context, EOI_CONTROLS_TILT, PaneWindow)->setIsPushButton(true);
+    addButton(core::position2d<s32>(360, 44), core::dimension2d<s32>(128, 40), L"TOUCH", Context, EOI_CONTROLS_TOUCH, PaneWindow)->setIsPushButton(true);
 
     if (Context->Sets->TouchController)
     {
@@ -289,17 +289,18 @@ void ObjectStateOptions::controls_onTiltSelected()
         Context->Device->activateAccelerometer();
     }
 
-    core::rect<s32> boxRect(core::position2d<s32>(310, 190), core::dimension2d<s32>(525, 40));
+    core::rect<s32> boxRect(core::position2d<s32>(260, 190), core::dimension2d<s32>(525, 40));
     scaleGUIRect(boxRect, Context->GUIScale);
     gui::IGUIEditBox* box = Context->Device->getGUIEnvironment()->addEditBox(L"", boxRect, true, PaneWindow, EOI_CONTROLS_CALIBRATE_BAR);
     box->setOverrideFont(getFont(Context));
     box->setDrawBackground(false);
     box->setTextAlignment(gui::EGUIA_LOWERRIGHT, gui::EGUIA_CENTER);
 
+
     gui::IGUIElement* dot = addText(core::position2d<s32>(0, 1), core::dimension2d<s32>(40, 40), L"#", Context, box);
     dot->setID(EOI_CONTROLS_CALIBRATE_BAR_DOT);
 
-    addButton(core::position2d<s32>(610, 250), core::dimension2d<s32>(256, 40), L"CALIBRATE", Context, EOI_CONTROLS_CALIBRATE, PaneWindow);
+    addButton(core::position2d<s32>(240, 280), core::dimension2d<s32>(260, 40), L"CALIBRATE", Context, EOI_CONTROLS_CALIBRATE, PaneWindow);
 }
 
 void ObjectStateOptions::controls_onTouchSelected()
