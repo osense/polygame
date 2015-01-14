@@ -1,9 +1,6 @@
 TARGET := Polygame
 
-EXCLUDE := jni/ObjectWakeLock.cpp
-
 SOURCES := $(wildcard jni/*.cpp) $(wildcard jni/*/*.cpp)
-SOURCES := $(filter-out $(EXCLUDE), $(SOURCES))
 OBJS := $(patsubst jni/%.cpp,obj/%.o,$(SOURCES))
 
 IRRLICHT := ../irrlicht-ogl-es
