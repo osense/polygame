@@ -6,7 +6,7 @@
 //#define DEBUG_UPDATES_THREADED
 //#define DEBUG_PLAYER
 #define DEBUG_OBJS
-//#define DEBUG_GRID
+#define DEBUG_GRID
 //#define DEBUG_EFFECTS
 //#define DEBUG_INPUT
 

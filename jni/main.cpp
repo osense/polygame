@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 
     dev->setWindowCaption(L"Polygame Desktop GLES Debug Build    " __DATE__ " " __TIME__);
     dev->getFileSystem()->changeWorkingDirectoryTo(dev->getFileSystem()->getAbsolutePath("assets/"));
+    setbuf(stdout,NULL);
 #endif
 
     SContext* cont = new SContext();

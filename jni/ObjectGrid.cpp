@@ -26,8 +26,8 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
 
     // starting color
     video::SColorf startCol = hueShift(video::SColorf(1, 1, 0), Generator.getRandomVal(Position.Z) * 180);
-    Context->Mtls->GridCB->setNearColor(startCol);
-    Context->Mtls->GridCB->setFarColor(startCol);
+    ColorNear = startCol;
+    ColorFar = startCol;
 
     Points[10][15] = 2;
     Points[11][15] = 1;
@@ -44,7 +44,7 @@ ObjectGrid::ObjectGrid(SContext* cont) : Object(cont),
     Buffer->drop();
     Node = Context->Device->getSceneManager()->addMeshSceneNode(mesh);
     Node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-    Node->setMaterialType(Context->Mtls->Grid);
+    Node->setMaterialType(Context->Mtls->Solid);
     Node->setAutomaticCulling(scene::EAC_OFF);
     mesh->drop();
 
@@ -159,11 +159,10 @@ void ObjectGrid::onMessage(SMessage msg)
         gridRoot["color_changeIn"] = ColorChangeIn;
         gridRoot["color_changeing"] = ChangingColor;
         gridRoot["color_far"] = serializeSColorf(ColorFar);
-        gridRoot["color_next"] = serializeSColorf(ColorNext);
-        video::SColorf realNear = Context->Mtls->GridCB->getNearColor();
-        gridRoot["color_real_near"] = serializeSColorf(realNear);
-        video::SColorf realFar = Context->Mtls->GridCB->getFarColor();
-        gridRoot["color_real_far"] = serializeSColorf(realFar);
+        gridRoot["color_far_t"] = serializeSColorf(ColorFarTarget);
+        gridRoot["color_far_o"] = serializeSColorf(ColorFarOld);
+        gridRoot["color_near"] = serializeSColorf(ColorNear);
+        gridRoot["color_near_o"] = serializeSColorf(ColorNearOld);
 
         for (u32 z = 0; z < NumPointsZ; z++)
         {
@@ -190,9 +189,10 @@ void ObjectGrid::onMessage(SMessage msg)
         ColorChangeIn = gridRoot["color_changeIn"].asDouble();
         ChangingColor = gridRoot["color_changeing"].asDouble();
         ColorFar = deserializeSColorf(gridRoot["color_far"]);
-        ColorNext = deserializeSColorf(gridRoot["color_next"]);
-        Context->Mtls->GridCB->setNearColor(deserializeSColorf(gridRoot["color_real_near"]));
-        Context->Mtls->GridCB->setFarColor(deserializeSColorf(gridRoot["color_real_far"]));
+        ColorFarTarget = deserializeSColorf(gridRoot["color_far_t"]);
+        ColorFarOld = deserializeSColorf(gridRoot["color_far_o"]);
+        ColorNear = deserializeSColorf(gridRoot["color_near"]);
+        ColorNearOld = deserializeSColorf(gridRoot["color_near_o"]);
 
         for (u32 z = 0; z < NumPointsZ; z++)
         {
@@ -204,6 +204,11 @@ void ObjectGrid::onMessage(SMessage msg)
 
         UpdateState = EGUS_GRID;
     }
+}
+
+void ObjectGrid::setColorMode(E_GRID_COLORMODE mode)
+{
+    Colormode = mode;
 }
 
 void ObjectGrid::setCollision(bool active)
@@ -256,16 +261,16 @@ void ObjectGrid::regenerate()
 {
     u32 vertC = 0, indC = 0;
 
-    video::SColor white(255, 255, 255, 255);
-    core::vector2df null2d(0);
+    const core::vector2df null2d(0);
 
-    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
+    const core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
 
     core::vector3df pointVec(0, Points[0][0], 0);
 
     for (u32 z = 0; z < NumPointsZ; z++)
     {
         pointVec.Z = z - center.Z;
+        const video::SColor color = getGridColor(z).toSColor();
 
         for (u32 x = 0; x < NumPointsX; x++)
         {
@@ -273,12 +278,12 @@ void ObjectGrid::regenerate()
             pointVec.Y = Points[z][x];
 
             //const u32
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(1, 0, 0), white, null2d));
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), white, null2d));
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 1, 0), white, null2d));
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, 1), white, null2d));
-            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, -1), white, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(1, 0, 0), color, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(-1, 0, 0), color, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 1, 0), color, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), color, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, 1), color, null2d));
+            Buffer->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, 0, -1), color, null2d));
 
             if (x > 0)
             {
@@ -328,23 +333,23 @@ void ObjectGrid::regenerateAppx()
 {
     u32 vertC = 0, indC = 0;
 
-    video::SColor white(255, 255, 255, 255);
-    core::vector2df null2d(0);
+    const core::vector2df null2d(0);
 
-    core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
+    const core::vector3df center(NumPointsX/2.0, 0, OffsetZ);
 
     core::vector3df pointVec(0, Points[0][0], 0);
 
     for (u32 z = 0; z < NumPointsZ; z++)
     {
         pointVec.Z = z - center.Z;
+        const video::SColor color = getBackColor(z).toSColor();
 
         for (u32 x = 0; x < NumPointsX; x++)
         {
             pointVec.X = x - center.X;
             pointVec.Y = Points[z][x];
 
-            BufferAppx->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), white, null2d));
+            BufferAppx->Vertices[vertC++] = (video::S3DVertex(pointVec, core::vector3df(0, -1, 0), color, null2d));
 
             if (x > 0 && z > 0)
             {
@@ -468,8 +473,9 @@ void ObjectGrid::handleColors()
     ColorChangeIn--;
     if (ColorChangeIn == 0)
     {
-        ColorFar = Context->Mtls->GridCB->getFarColor();
-        ColorNext = hueShift(Context->Mtls->GridCB->getFarColor(), 120);
+        ColorNearOld = ColorNear;
+        ColorFarOld = ColorFar;
+        ColorFarTarget = hueShift(ColorFar, 120);
 
         ChangingColor = NumPointsZ;
         ColorChangeIn = ColorChangeEvery;
@@ -480,23 +486,37 @@ void ObjectGrid::handleColors()
     }
     if (ChangingColor > 0)
     {
-        ShaderCBGrid* callback = Context->Mtls->GridCB;
-
-        video::SColorf near = callback->getNearColor();
-        video::SColorf far = callback->getFarColor();
-
-        near = ColorFar.getInterpolated(near, 1.0 / (NumPointsZ-(NumPointsZ-ChangingColor)));
-        far = ColorNext.getInterpolated(far, 1.0 / (NumPointsZ-(NumPointsZ-ChangingColor)));
-
-        callback->setNearColor(near);
-        callback->setFarColor(far);
+        ColorNear = ColorFarOld.getInterpolated(ColorNearOld, (NumPointsZ - ChangingColor) / f32(NumPointsZ));
+        ColorFar = ColorFarTarget.getInterpolated(ColorFarOld, (NumPointsZ - ChangingColor) / f32(NumPointsZ));
         ChangingColor--;
 
-        if (ChangingColor == 0 && near.toSColor() != far.toSColor())
+        /*if (ChangingColor == 0 && near.toSColor() != far.toSColor())
         {
             ColorFar = ColorNext;
             ChangingColor = NumPointsZ;
-        }
+        }*/
+    }
+}
+
+const inline video::SColorf ObjectGrid::getGridColor(u32 z)
+{
+    switch(Colormode)
+    {
+        case EGC_CLASSIC:
+            return ColorFar.getInterpolated(ColorNear, f32(z) / NumPointsZ);
+        default:
+            return video::SColorf();
+    }
+}
+
+const inline video::SColorf ObjectGrid::getBackColor(u32 z)
+{
+    switch(Colormode)
+    {
+        case EGC_CLASSIC:
+            return video::SColorf(0, 0, 0, 1);
+        default:
+            return video::SColorf();
     }
 }
 

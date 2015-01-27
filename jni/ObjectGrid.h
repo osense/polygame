@@ -26,12 +26,19 @@ enum E_GRID_UPDATE_STATE
     EGUS_NONE
 };
 
+enum E_GRID_COLORMODE
+{
+    EGC_CLASSIC = 0
+};
+
 class ObjectGrid : public Object
 {
 public:
     ObjectGrid(SContext* cont);
     ~ObjectGrid();
     virtual void onMessage(SMessage msg);
+
+    void setColorMode(E_GRID_COLORMODE mode);
 
     void setCollision(bool active);
     bool getCollision() const;
@@ -48,17 +55,17 @@ public:
 
 private:
     static constexpr u32 NumPointsZ = 18;
-    static constexpr u32 NumPointsX = NumPointsZ * 2;//(16.0 / 9.0);
-    // how much is the mesh offseted from it's origin
-    static constexpr u32 OffsetZ = 1;
+    static constexpr u32 NumPointsX = NumPointsZ * 2;
+    static constexpr u32 OffsetZ = 1; // how much is the mesh offseted from it's origin
     static constexpr f32 LineThickness = 0.005;
     static constexpr u32 GenChangeEvery = 50;
     static constexpr u32 SlopeChangeEvery = 7;
-    static constexpr u32 SlopeChangeEveryOffset = 0;
-    static constexpr u32 NoSlopeWeight = 2;
+    static constexpr u32 SlopeChangeEveryOffset = 0; // random offset for slope change
+    static constexpr u32 NoSlopeWeight = 2; // probability of no-slope vs. slope
     static constexpr u32 ColorChangeEvery = 45;
-    static constexpr f32 PlayerSize = 0.05;
+    static constexpr f32 PlayerSize = 0.05; // needed for collision handling
 
+    E_GRID_COLORMODE Colormode = EGC_CLASSIC;
     core::vector3df Position;
     E_GRID_UPDATE_STATE UpdateState;
     f32 Points[NumPointsZ][NumPointsX];
@@ -73,7 +80,7 @@ private:
 
     u32 ColorChangeIn;
     u32 ChangingColor;
-    video::SColorf ColorFar, ColorNext;
+    video::SColorf ColorNear, ColorNearOld, ColorFar, ColorFarTarget, ColorFarOld;
 
     scene::IMeshSceneNode *Node, *BackNode;
     //std::vector<>
@@ -86,9 +93,12 @@ private:
     void addMinusX();
 
     void handleGenUpdate();
-    void handleColors();
-    bool handleCollision(core::vector3df pPos, core::vector3df diffV);
 
+    void handleColors();
+    const inline video::SColorf getGridColor(u32 z);
+    const inline video::SColorf getBackColor(u32 z);
+
+    bool handleCollision(core::vector3df pPos, core::vector3df diffV);
 };
 
 #endif // OBJECTGRID_H

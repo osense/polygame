@@ -33,8 +33,8 @@ private:
     video::SColorf NearColor, FarColor;
     f32 Transform = 0;
 
-    s32 CamFarID = 0;
-    s32 WorldViewProjMatID = 0, WorldViewMatID = 0;
+    s32 CamFarID = 0, CamPosID = 0;
+    s32 WorldViewProjMatID = 0, ViewProjMatID = 0, WorldViewMatID = 0, WorldMatID = 0, ViewMatID = 0, ProjMatID = 0;
     s32 NearColorID = 0, FarColorID = 0;
     s32 TransformID = 0;
 };
