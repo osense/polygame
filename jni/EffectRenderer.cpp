@@ -93,8 +93,8 @@ void EffectRenderer::init(E_EFFECT_TYPE type)
         }
         else
         {
-            Glow->createEffect(video::EPE_BLUR_V_LOW);
-            Glow->createEffect(video::EPE_BLUR_H_LOW);
+            Glow->createEffect(video::EPE_BLUR_V_LOW, video::EMT_TRANSPARENT_ADD_COLOR);
+            Glow->createEffect(video::EPE_BLUR_H_LOW, video::EMT_TRANSPARENT_ADD_COLOR);
         }
 
 

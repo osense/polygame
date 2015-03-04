@@ -43,23 +43,22 @@ ObjectStateGame::~ObjectStateGame()
 
 void ObjectStateGame::onMessage(SMessage msg)
 {
+    bool exiting = false;
+    
     if (msg.Type == EMT_PLAYER_CRASHED)
     {
         debugLog("player crashed (lol n00b)");
         createGameoverWindow();
     }
+    else if (msg.Type == EMT_KEY && msg.Key.Code == irr::KEY_ANDROID_BACK)
+    {
+        if (!GameoverWnd)
+            setPaused(!isPaused());
+        else
+            exiting = true;
+    }
     else if (msg.Type == EMT_GUI)
     {
-        bool exiting = false;
-
-        if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
-        {
-            if (!GameoverWnd)
-                setPaused(!isPaused());
-            else
-                exiting = true;
-        }
-
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
             return;
 
@@ -71,16 +70,18 @@ void ObjectStateGame::onMessage(SMessage msg)
         case EGGI_RESUME:
             setPaused(false);
         }
-
-        if (exiting)
-        {
-            saveGame();
-            Context->ObjManager->clear();
-            Context->State = new ObjectStateInit(Context, false);
-            delete this;
-            return;
-        }
     }
+    
+    if (exiting)
+    {
+        saveGame();
+        Context->ObjManager->clear();
+        Context->State = new ObjectStateInit(Context, false);
+        delete this;
+        return;
+    }
+    
+    
 #ifdef _IRR_ANDROID_PLATFORM_
     else if (msg.Type == EMT_APPCOMMAND && msg.AppCommand.Cmd == APP_CMD_SAVE_STATE)
     {

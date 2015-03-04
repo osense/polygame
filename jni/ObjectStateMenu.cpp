@@ -50,12 +50,6 @@ void ObjectStateMenu::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_GUI)
     {
-        if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
-        {
-            Context->Device->closeDevice();
-            return;
-        }
-
         s32 callerID = msg.GUI.Caller->getID();
         if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
             return;
@@ -80,6 +74,14 @@ void ObjectStateMenu::onMessage(SMessage msg)
         case EGI_EXIT:
             Context->Device->closeDevice();
             break;
+        }
+    }
+    else if (msg.Type == EMT_KEY)
+    {
+        if (msg.Key.Code == irr::KEY_ANDROID_BACK)
+        {
+            Context->Device->closeDevice();
+            return;
         }
     }
 }

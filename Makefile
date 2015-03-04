@@ -3,7 +3,7 @@ TARGET := Polygame
 SOURCES := $(wildcard jni/*.cpp) $(wildcard jni/*/*.cpp)
 OBJS := $(patsubst jni/%.cpp,obj/%.o,$(SOURCES))
 
-IRRLICHT := ../irrlicht-ogl-es
+IRRLICHT := ../irrlicht
 
 
 USERCPPFLAGS := -I../irrpp/include -DDEBUG_GLES -g -Wall -ffast-math -std=c++11

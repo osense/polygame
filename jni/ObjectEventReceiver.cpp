@@ -112,8 +112,7 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
 
         if (event.KeyInput.Key == KEY_ESCAPE && event.KeyInput.PressedDown == false)
         {
-            msg.Type = EMT_GUI;
-            msg.GUI.EventType = gui::EGET_BACKBUTTON_PRESSED;
+            msg.Key.Code = irr::KEY_ANDROID_BACK;
         }
         else
         {

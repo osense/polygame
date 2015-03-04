@@ -34,19 +34,21 @@ ObjectStateOptions::~ObjectStateOptions()
 
 void ObjectStateOptions::onMessage(SMessage msg)
 {
-    if (msg.Type == EMT_GUI)
+    if (msg.Type == EMT_KEY)
     {
-        s32 callerID;
-
-        if (msg.GUI.EventType == gui::EGET_BACKBUTTON_PRESSED)
-            callerID = EOI_BACK;
-        else
+        if (msg.Key.Code == irr::KEY_ANDROID_BACK)
         {
-            if (msg.GUI.EventType != gui::EGET_BUTTON_CLICKED)
-                return;
-            callerID = msg.GUI.Caller->getID();
+            Context->Renderer->getFader()->startFadeOut(1, 0, 1);
+            Context->Sets->write();
+            MainWindow->remove();
+            Context->State = new ObjectStateInit(Context);
+            delete this;
+            return;
         }
-
+    }    
+    else if (msg.Type == EMT_GUI && msg.GUI.EventType == gui::EGET_BUTTON_CLICKED)
+    {
+        s32 callerID = msg.GUI.Caller->getID();
 
         switch (callerID)
         {
@@ -133,15 +135,6 @@ void ObjectStateOptions::onMessage(SMessage msg)
             }
             else if (State == EOS_SEED)
                 static_cast<gui::IGUIButton*>(MainWindow->getElementFromId(EOI_SEED))->setPressed(true);
-            break;
-
-        case EOI_BACK:
-            Context->Renderer->getFader()->startFadeOut(1, 0, 1);
-            Context->Sets->write();
-            MainWindow->remove();
-            Context->State = new ObjectStateInit(Context);
-            delete this;
-            return;
         }
 
         deserialize();
