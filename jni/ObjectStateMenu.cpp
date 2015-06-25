@@ -78,7 +78,7 @@ void ObjectStateMenu::onMessage(SMessage msg)
     }
     else if (msg.Type == EMT_KEY)
     {
-        if (msg.Key.Code == irr::KEY_ANDROID_BACK)
+        if (msg.Key.Code == irr::KEY_BACK)
         {
             Context->Device->closeDevice();
             return;

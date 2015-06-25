@@ -50,7 +50,7 @@ void ObjectStateGame::onMessage(SMessage msg)
         debugLog("player crashed (lol n00b)");
         createGameoverWindow();
     }
-    else if (msg.Type == EMT_KEY && msg.Key.Code == irr::KEY_ANDROID_BACK)
+    else if (msg.Type == EMT_KEY && msg.Key.Code == irr::KEY_BACK)
     {
         if (!GameoverWnd)
             setPaused(!isPaused());

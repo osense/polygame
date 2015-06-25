@@ -112,7 +112,7 @@ bool ObjectEventReceiver::OnEvent(const SEvent& event)
 
         if (event.KeyInput.Key == KEY_ESCAPE && event.KeyInput.PressedDown == false)
         {
-            msg.Key.Code = irr::KEY_ANDROID_BACK;
+            msg.Key.Code = irr::KEY_BACK;
         }
         else
         {

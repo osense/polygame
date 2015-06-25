@@ -36,7 +36,7 @@ void ObjectStateOptions::onMessage(SMessage msg)
 {
     if (msg.Type == EMT_KEY)
     {
-        if (msg.Key.Code == irr::KEY_ANDROID_BACK)
+        if (msg.Key.Code == irr::KEY_BACK)
         {
             Context->Renderer->getFader()->startFadeOut(1, 0, 1);
             Context->Sets->write();
